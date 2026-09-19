@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="cbase" x1="0.2" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#2e1d11"/>
+      <stop offset="0.48" stop-color="#1a1009"/>
+      <stop offset="1" stop-color="#0a0604"/>
+    </linearGradient>
+    <radialGradient id="bokeh">
+      <stop offset="0" stop-color="#ffd49a" stop-opacity="0.9"/>
+      <stop offset="0.62" stop-color="#e6a860" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#e6a860" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cwarm" cx="0.5" cy="0.28" r="0.6">
+      <stop offset="0" stop-color="#e8a35e" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#e8a35e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cfloor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.92"/>
+    </linearGradient>
+    <radialGradient id="cvig" cx="0.5" cy="0.5" r="0.74">
+      <stop offset="0.36" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.88"/>
+    </radialGradient>
+    <filter id="cb1" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <filter id="cb2" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="56"/>
+    </filter>
+    <filter id="cb3" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="34"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#cbase)"/>
+  <rect width="1600" height="900" fill="url(#cwarm)"/>
+
+  <!-- shallow depth of field: large soft highlights behind -->
+  <g filter="url(#cb1)">
+    <circle cx="210" cy="180" r="86" fill="url(#bokeh)"/>
+    <circle cx="430" cy="110" r="58" fill="url(#bokeh)" opacity="0.8"/>
+    <circle cx="620" cy="226" r="104" fill="url(#bokeh)" opacity="0.9"/>
+    <circle cx="890" cy="132" r="68" fill="url(#bokeh)" opacity="0.85"/>
+    <circle cx="1130" cy="210" r="92" fill="url(#bokeh)"/>
+    <circle cx="1370" cy="128" r="62" fill="url(#bokeh)" opacity="0.75"/>
+    <circle cx="1520" cy="266" r="74" fill="url(#bokeh)" opacity="0.6"/>
+    <circle cx="300" cy="360" r="46" fill="url(#bokeh)" opacity="0.5"/>
+    <circle cx="760" cy="392" r="52" fill="url(#bokeh)" opacity="0.45"/>
+    <circle cx="1240" cy="406" r="40" fill="url(#bokeh)" opacity="0.42"/>
+  </g>
+
+  <!-- table plane catching the light -->
+  <g filter="url(#cb3)" opacity="0.75">
+    <ellipse cx="800" cy="760" rx="820" ry="200" fill="#4a2f18"/>
+  </g>
+  <g filter="url(#cb3)" opacity="0.5">
+    <ellipse cx="640" cy="700" rx="300" ry="90" fill="#8a5c30"/>
+  </g>
+
+  <!-- a suggestion of a cup: soft silhouette, no outline -->
+  <g filter="url(#cb3)" opacity="0.62">
+    <ellipse cx="700" cy="640" rx="118" ry="78" fill="#e8dcc6"/>
+    <ellipse cx="700" cy="588" rx="96" ry="34" fill="#c9a274"/>
+  </g>
+  <g filter="url(#cb2)" opacity="0.45">
+    <ellipse cx="700" cy="520" rx="90" ry="120" fill="#f0e2c8"/>
+  </g>
+
+  <rect x="0" y="620" width="1600" height="280" fill="url(#cfloor)"/>
+  <rect width="1600" height="900" fill="url(#cvig)"/>
+</svg>

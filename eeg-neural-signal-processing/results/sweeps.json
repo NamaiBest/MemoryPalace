@@ -1,0 +1,111 @@
+{
+  "epoch_len": [
+    {
+      "experiment": "epoch=1s rest->auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 14599,
+      "rank1_acc": 0.5035961367216932,
+      "rank5_acc": 0.8710870607575861,
+      "chance": 0.05,
+      "verification_eer": 0.1518993730644853,
+      "epoch_s": 1.0
+    },
+    {
+      "experiment": "epoch=2s rest->auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 7299,
+      "rank1_acc": 0.5906288532675709,
+      "rank5_acc": 0.9168379230031511,
+      "chance": 0.05,
+      "verification_eer": 0.12117016750672405,
+      "epoch_s": 2.0
+    },
+    {
+      "experiment": "epoch=4s rest->auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 3649,
+      "rank1_acc": 0.7064949301178405,
+      "rank5_acc": 0.9564264181967662,
+      "chance": 0.05,
+      "verification_eer": 0.08251720009808022,
+      "epoch_s": 4.0
+    },
+    {
+      "experiment": "epoch=8s rest->auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 1823,
+      "rank1_acc": 0.7772901810202962,
+      "rank5_acc": 0.9802523313219967,
+      "chance": 0.05,
+      "verification_eer": 0.06148049773363744,
+      "epoch_s": 8.0
+    },
+    {
+      "experiment": "epoch=16s rest->auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 852,
+      "rank1_acc": 0.846244131455399,
+      "rank5_acc": 0.9894366197183099,
+      "chance": 0.05,
+      "verification_eer": 0.0469174697306647,
+      "epoch_s": 16.0
+    }
+  ],
+  "enroll": [
+    {
+      "experiment": "enroll=1 resting rec(s)/subj -> auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 3649,
+      "rank1_acc": 0.5258975061660729,
+      "rank5_acc": 0.8369416278432448,
+      "chance": 0.05,
+      "verification_eer": 0.1778857942334598,
+      "n_enroll_recordings": 1,
+      "enroll_seconds_per_subject": 120
+    },
+    {
+      "experiment": "enroll=2 resting rec(s)/subj -> auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 3649,
+      "rank1_acc": 0.6308577692518498,
+      "rank5_acc": 0.9468347492463689,
+      "chance": 0.05,
+      "verification_eer": 0.0947988634232883,
+      "n_enroll_recordings": 2,
+      "enroll_seconds_per_subject": 240
+    },
+    {
+      "experiment": "enroll=3 resting rec(s)/subj -> auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 3649,
+      "rank1_acc": 0.5842696629213483,
+      "rank5_acc": 0.8717456837489723,
+      "chance": 0.05,
+      "verification_eer": 0.1349468491728087,
+      "n_enroll_recordings": 3,
+      "enroll_seconds_per_subject": 360
+    },
+    {
+      "experiment": "enroll=4 resting rec(s)/subj -> auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 3649,
+      "rank1_acc": 0.688407782954234,
+      "rank5_acc": 0.9416278432447246,
+      "chance": 0.05,
+      "verification_eer": 0.0968037385873563,
+      "n_enroll_recordings": 4,
+      "enroll_seconds_per_subject": 480
+    },
+    {
+      "experiment": "enroll=6 resting rec(s)/subj -> auditory",
+      "n_subjects": 20,
+      "n_test_epochs": 3649,
+      "rank1_acc": 0.7064949301178405,
+      "rank5_acc": 0.9564264181967662,
+      "chance": 0.05,
+      "verification_eer": 0.08251720009808022,
+      "n_enroll_recordings": 6,
+      "enroll_seconds_per_subject": 720
+    }
+  ]
+}

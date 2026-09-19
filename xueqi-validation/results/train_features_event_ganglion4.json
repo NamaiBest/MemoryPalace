@@ -1,0 +1,17 @@
+{
+  "table": "features_event",
+  "channel_set": "ganglion4",
+  "channels": [
+    "Fz",
+    "Cz",
+    "F7",
+    "F8"
+  ],
+  "n_features": 56,
+  "n_epochs": 6890,
+  "models": {
+    "logreg": {
+      "path": "/Users/xueqiy/Downloads/HackMIT-Ideas-Code-main/Xueqi's Idea/results/cache/pred_features_event_ganglion4_logreg.npz"
+    }
+  }
+}

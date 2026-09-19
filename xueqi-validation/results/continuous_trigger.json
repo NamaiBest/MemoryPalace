@@ -1,0 +1,788 @@
+{
+  "model": "logreg",
+  "channel_set": "all16",
+  "detection_window_s": 2.0,
+  "stream_window_s": 0.8,
+  "stream_hop_s": 0.2,
+  "n_subjects": 33,
+  "loso": {
+    "detection_rate": {
+      "mean": 0.014533634214485277,
+      "std": 0.02577547043060348
+    },
+    "false_triggers_per_hour": {
+      "mean": 29.226342074428835,
+      "std": 39.681512067241975
+    },
+    "bookmarks_per_hour": {
+      "mean": 30.420969868772794,
+      "std": 41.07995534999462
+    },
+    "mean_latency_s": {
+      "mean": 1.1098903619858553,
+      "std": 0.6284312567670313
+    }
+  },
+  "folds": [
+    {
+      "subject": "sub-01",
+      "op": {
+        "thr": 0.9654790759086609,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.011583011583011582,
+        "false_per_hour": 25.737645093358598
+      },
+      "test": {
+        "detection_rate": 0.020833333333333332,
+        "false_per_hour": 6.935854901915451,
+        "bookmarks_per_hour": 8.669818627394314,
+        "mean_latency_s": 1.1161366599999951,
+        "n_events": 48,
+        "n_detected": 1,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.020833333333333332
+      }
+    },
+    {
+      "subject": "sub-02",
+      "op": {
+        "thr": 0.9652777910232544,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.012130401819560273,
+        "false_per_hour": 25.21584516854542
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 13.950568485665793,
+        "bookmarks_per_hour": 13.950568485665793,
+        "mean_latency_s": null,
+        "n_events": 24,
+        "n_detected": 0,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-03",
+      "op": {
+        "thr": 0.9666016697883606,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.008494208494208495,
+        "false_per_hour": 19.258421813107578
+      },
+      "test": {
+        "detection_rate": 0.08333333333333333,
+        "false_per_hour": 155.58454212569345,
+        "bookmarks_per_hour": 162.6565667677704,
+        "mean_latency_s": 1.3890636287880191,
+        "n_events": 48,
+        "n_detected": 4,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.08333333333333333
+      }
+    },
+    {
+      "subject": "sub-04",
+      "op": {
+        "thr": 0.9680097103118896,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.010810810810810811,
+        "false_per_hour": 24.417971907025425
+      },
+      "test": {
+        "detection_rate": 0.041666666666666664,
+        "false_per_hour": 32.4279918425585,
+        "bookmarks_per_hour": 35.67079102681434,
+        "mean_latency_s": 0.07038095977452485,
+        "n_events": 48,
+        "n_detected": 2,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.041666666666666664
+      }
+    },
+    {
+      "subject": "sub-05",
+      "op": {
+        "thr": 0.9638984203338623,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.011372251705837756,
+        "false_per_hour": 20.96362810523741
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 24.295432458697764,
+        "bookmarks_per_hour": 24.295432458697764,
+        "mean_latency_s": null,
+        "n_events": 24,
+        "n_detected": 0,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-06",
+      "op": {
+        "thr": 0.9648917317390442,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.011372251705837756,
+        "false_per_hour": 22.816326787902444
+      },
+      "test": {
+        "detection_rate": 0.041666666666666664,
+        "false_per_hour": 37.90112018866335,
+        "bookmarks_per_hour": 41.34667656945093,
+        "mean_latency_s": 1.9731460867769783,
+        "n_events": 24,
+        "n_detected": 1,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.041666666666666664
+      }
+    },
+    {
+      "subject": "sub-07",
+      "op": {
+        "thr": 0.9659651517868042,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.012130401819560273,
+        "false_per_hour": 24.96843154546577
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 17.4700291943599,
+        "bookmarks_per_hour": 17.4700291943599,
+        "mean_latency_s": null,
+        "n_events": 24,
+        "n_detected": 0,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-08",
+      "op": {
+        "thr": 0.9658293128013611,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.015444015444015444,
+        "false_per_hour": 26.261387787993954
+      },
+      "test": {
+        "detection_rate": 0.0625,
+        "false_per_hour": 111.90571284315868,
+        "bookmarks_per_hour": 116.99233615421134,
+        "mean_latency_s": 1.5406624999999774,
+        "n_events": 48,
+        "n_detected": 3,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0625
+      }
+    },
+    {
+      "subject": "sub-09",
+      "op": {
+        "thr": 0.9676618576049805,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.01288855193328279,
+        "false_per_hour": 28.035228604441173
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 86.32388151958452,
+        "bookmarks_per_hour": 86.32388151958452,
+        "mean_latency_s": null,
+        "n_events": 24,
+        "n_detected": 0,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-10",
+      "op": {
+        "thr": 0.9653400182723999,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.012355212355212355,
+        "false_per_hour": 25.474438764092334
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 0.0,
+        "bookmarks_per_hour": 0.0,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-11",
+      "op": {
+        "thr": 0.9680399894714355,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.01776061776061776,
+        "false_per_hour": 29.503825174421312
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 8.672291450662371,
+        "bookmarks_per_hour": 8.672291450662371,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-12",
+      "op": {
+        "thr": 0.9666323065757751,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.014671814671814672,
+        "false_per_hour": 23.905285710341836
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 15.823093903225177,
+        "bookmarks_per_hour": 15.823093903225177,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-13",
+      "op": {
+        "thr": 0.9682578444480896,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.012355212355212355,
+        "false_per_hour": 25.21318731435053
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 9.961629279811099,
+        "bookmarks_per_hour": 9.961629279811099,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-14",
+      "op": {
+        "thr": 0.9622610807418823,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.012355212355212355,
+        "false_per_hour": 27.878072640099525
+      },
+      "test": {
+        "detection_rate": 0.020833333333333332,
+        "false_per_hour": 6.894280045655455,
+        "bookmarks_per_hour": 8.617850057069319,
+        "mean_latency_s": 1.6218599412649723,
+        "n_events": 48,
+        "n_detected": 1,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.020833333333333332
+      }
+    },
+    {
+      "subject": "sub-15",
+      "op": {
+        "thr": 0.9647839069366455,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.01288855193328279,
+        "false_per_hour": 24.90603383603884
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 6.99991444549011,
+        "bookmarks_per_hour": 6.99991444549011,
+        "mean_latency_s": null,
+        "n_events": 24,
+        "n_detected": 0,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-16",
+      "op": {
+        "thr": 0.9568784236907959,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.015444015444015444,
+        "false_per_hour": 24.756595056388626
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 109.84636530582354,
+        "bookmarks_per_hour": 109.84636530582354,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-17",
+      "op": {
+        "thr": 0.9643372893333435,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.011583011583011582,
+        "false_per_hour": 24.65988943835829
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 5.264307217170221,
+        "bookmarks_per_hour": 5.264307217170221,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-18",
+      "op": {
+        "thr": 0.9670392274856567,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013899613899613899,
+        "false_per_hour": 23.560469983079297
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 66.38846737481032,
+        "bookmarks_per_hour": 66.38846737481032,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-19",
+      "op": {
+        "thr": 0.9668344259262085,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013899613899613899,
+        "false_per_hour": 26.704210342886245
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 0.0,
+        "bookmarks_per_hour": 0.0,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-20",
+      "op": {
+        "thr": 0.9681263566017151,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.011372251705837756,
+        "false_per_hour": 24.670024713882537
+      },
+      "test": {
+        "detection_rate": 0.08333333333333333,
+        "false_per_hour": 95.6683497209673,
+        "bookmarks_per_hour": 102.50180327246497,
+        "mean_latency_s": 1.0251374911820221,
+        "n_events": 24,
+        "n_detected": 2,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.08333333333333333
+      }
+    },
+    {
+      "subject": "sub-21",
+      "op": {
+        "thr": 0.9700660109519958,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.014671814671814672,
+        "false_per_hour": 25.660513640743304
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 18.128747065523516,
+        "bookmarks_per_hour": 18.128747065523516,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-22",
+      "op": {
+        "thr": 0.9719567894935608,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013899613899613899,
+        "false_per_hour": 22.59336708949735
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 0.0,
+        "bookmarks_per_hour": 0.0,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-23",
+      "op": {
+        "thr": 0.9672123193740845,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013117283950617283,
+        "false_per_hour": 23.232771016553038
+      },
+      "test": {
+        "detection_rate": 0.021739130434782608,
+        "false_per_hour": 51.64340800587587,
+        "bookmarks_per_hour": 53.36485493940506,
+        "mean_latency_s": 0.503714662944958,
+        "n_events": 47,
+        "n_detected": 1,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.02127659574468085
+      }
+    },
+    {
+      "subject": "sub-24",
+      "op": {
+        "thr": 0.9657689332962036,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013127413127413128,
+        "false_per_hour": 25.85599490009898
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 18.004648472878454,
+        "bookmarks_per_hour": 18.004648472878454,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-25",
+      "op": {
+        "thr": 0.970208466053009,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013127413127413128,
+        "false_per_hour": 26.280764631930975
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 3.3249225108337064,
+        "bookmarks_per_hour": 3.3249225108337064,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-26",
+      "op": {
+        "thr": 0.9649841785430908,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.01061410159211524,
+        "false_per_hour": 23.63597715257445
+      },
+      "test": {
+        "detection_rate": 0.041666666666666664,
+        "false_per_hour": 23.134717499394092,
+        "bookmarks_per_hour": 26.439677142164676,
+        "mean_latency_s": 0.31170221921399843,
+        "n_events": 24,
+        "n_detected": 1,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.041666666666666664
+      }
+    },
+    {
+      "subject": "sub-27",
+      "op": {
+        "thr": 0.9648470878601074,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.01288855193328279,
+        "false_per_hour": 24.477689404770828
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 3.474205950928771,
+        "bookmarks_per_hour": 3.474205950928771,
+        "mean_latency_s": null,
+        "n_events": 24,
+        "n_detected": 0,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-28",
+      "op": {
+        "thr": 0.9643361568450928,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013899613899613899,
+        "false_per_hour": 25.810252845582117
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 1.715906837698092,
+        "bookmarks_per_hour": 1.715906837698092,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-29",
+      "op": {
+        "thr": 0.9662824273109436,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013127413127413128,
+        "false_per_hour": 26.068930859751248
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 0.0,
+        "bookmarks_per_hour": 0.0,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-30",
+      "op": {
+        "thr": 0.9635646939277649,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013127413127413128,
+        "false_per_hour": 26.181489665776986
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 3.04974128028139,
+        "bookmarks_per_hour": 3.04974128028139,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-31",
+      "op": {
+        "thr": 0.9640337824821472,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.010810810810810811,
+        "false_per_hour": 23.59413733098712
+      },
+      "test": {
+        "detection_rate": 0.0625,
+        "false_per_hour": 26.291599152436746,
+        "bookmarks_per_hour": 31.549918982924098,
+        "mean_latency_s": 1.5470994699131069,
+        "n_events": 48,
+        "n_detected": 3,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0625
+      }
+    },
+    {
+      "subject": "sub-32",
+      "op": {
+        "thr": 0.9662163257598877,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.01288855193328279,
+        "false_per_hour": 24.365436309229256
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 3.387559376387958,
+        "bookmarks_per_hour": 3.387559376387958,
+        "mean_latency_s": null,
+        "n_events": 24,
+        "n_detected": 0,
+        "n_recordings": 1,
+        "pooled_detection_rate": 0.0
+      }
+    },
+    {
+      "subject": "sub-33",
+      "op": {
+        "thr": 0.9668053388595581,
+        "k": 5,
+        "cooldown_s": 15.0,
+        "score_quantile": 0.995
+      },
+      "train_op_metrics": {
+        "detection_rate": 0.013899613899613899,
+        "false_per_hour": 28.18731499676763
+      },
+      "test": {
+        "detection_rate": 0.0,
+        "false_per_hour": 0.0,
+        "bookmarks_per_hour": 0.0,
+        "mean_latency_s": null,
+        "n_events": 48,
+        "n_detected": 0,
+        "n_recordings": 2,
+        "pooled_detection_rate": 0.0
+      }
+    }
+  ],
+  "note": "Operating point (threshold quantile, consecutive windows k, cooldown) is chosen on training subjects' continuous streams only."
+}

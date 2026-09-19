@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="dbase" x1="0.1" y1="0" x2="0.5" y2="1">
+      <stop offset="0" stop-color="#2a1e12"/>
+      <stop offset="0.5" stop-color="#150e08"/>
+      <stop offset="1" stop-color="#070503"/>
+    </linearGradient>
+    <linearGradient id="dscreen" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#9fc4d8"/>
+      <stop offset="0.55" stop-color="#5d86a0"/>
+      <stop offset="1" stop-color="#2c4658"/>
+    </linearGradient>
+    <linearGradient id="dfloor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.92"/>
+    </linearGradient>
+    <radialGradient id="dspill" cx="0.5" cy="0.42" r="0.44">
+      <stop offset="0" stop-color="#ffd6a2" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#ffd6a2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dvig" cx="0.48" cy="0.44" r="0.74">
+      <stop offset="0.36" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.86"/>
+    </radialGradient>
+    <filter id="dfocus" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+    <filter id="dnear" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="30"/>
+    </filter>
+    <filter id="dglow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="46"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#dbase)"/>
+
+  <!-- ambient bounce from the screen -->
+  <g filter="url(#dglow)" opacity="0.5">
+    <ellipse cx="820" cy="330" rx="420" ry="250" fill="#4e7b96"/>
+  </g>
+
+  <!-- the monitor: soft focus, but it survives as a shape -->
+  <g filter="url(#dfocus)">
+    <rect x="560" y="150" width="660" height="400" rx="16" fill="#0a0d10"/>
+    <rect x="578" y="168" width="624" height="364" rx="8" fill="url(#dscreen)" opacity="0.92"/>
+  </g>
+  <g filter="url(#dfocus)" opacity="0.55" fill="#0d1a22">
+    <rect x="612" y="206" width="330" height="20" rx="10"/>
+    <rect x="612" y="248" width="450" height="16" rx="8"/>
+    <rect x="612" y="284" width="270" height="16" rx="8"/>
+    <rect x="612" y="344" width="400" height="16" rx="8"/>
+    <rect x="612" y="380" width="318" height="16" rx="8"/>
+    <rect x="612" y="428" width="228" height="16" rx="8"/>
+  </g>
+  <g filter="url(#dfocus)">
+    <rect x="836" y="550" width="108" height="46" fill="#0b0e11"/>
+    <rect x="742" y="596" width="296" height="16" rx="8" fill="#161a1e"/>
+  </g>
+
+  <!-- foreground objects, thrown out of focus -->
+  <g filter="url(#dnear)" opacity="0.9">
+    <rect x="150" y="520" width="300" height="190" rx="10" fill="#1d1710"/>
+    <rect x="186" y="470" width="228" height="56" rx="6" fill="#2a2016"/>
+  </g>
+  <g filter="url(#dnear)" opacity="0.75">
+    <ellipse cx="1370" cy="620" rx="150" ry="120" fill="#24361f"/>
+    <ellipse cx="1330" cy="540" rx="70" ry="96" fill="#2f4a28"/>
+  </g>
+
+  <rect width="1600" height="900" fill="url(#dspill)"/>
+  <rect x="0" y="600" width="1600" height="300" fill="url(#dfloor)"/>
+  <rect width="1600" height="900" fill="url(#dvig)"/>
+</svg>

@@ -1,0 +1,21 @@
+{
+  "table": "features_event",
+  "channel_set": "half8",
+  "channels": [
+    "Fz",
+    "Cz",
+    "F3",
+    "F4",
+    "F7",
+    "F8",
+    "C3",
+    "C4"
+  ],
+  "n_features": 112,
+  "n_epochs": 6890,
+  "models": {
+    "logreg": {
+      "path": "/Users/xueqiy/Downloads/HackMIT-Ideas-Code-main/Xueqi's Idea/results/cache/pred_features_event_half8_logreg.npz"
+    }
+  }
+}

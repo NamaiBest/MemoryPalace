@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="tbase" x1="0" y1="0" x2="0.15" y2="1">
+      <stop offset="0" stop-color="#16222a"/>
+      <stop offset="0.5" stop-color="#22333d"/>
+      <stop offset="1" stop-color="#0a1014"/>
+    </linearGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="1" y2="0.2">
+      <stop offset="0" stop-color="#3f6478" stop-opacity="0.9"/>
+      <stop offset="0.45" stop-color="#7ba3b8" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#34525f" stop-opacity="0.9"/>
+    </linearGradient>
+    <radialGradient id="tglow" cx="0.5" cy="0.4" r="0.5">
+      <stop offset="0" stop-color="#d7ecf6" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#d7ecf6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="tvig" cx="0.5" cy="0.46" r="0.74">
+      <stop offset="0.36" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.88"/>
+    </radialGradient>
+    <filter id="tb1" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="30"/>
+    </filter>
+    <filter id="tmotion" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="46 7"/>
+    </filter>
+    <filter id="tb2" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="90"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#tbase)"/>
+
+  <!-- window aperture -->
+  <rect x="170" y="130" width="1260" height="560" rx="44" fill="url(#win)"/>
+
+  <!-- landscape smeared by motion, not drawn -->
+  <g filter="url(#tmotion)" opacity="0.62">
+    <rect x="170" y="300" width="1260" height="70" fill="#2c4b52"/>
+    <rect x="170" y="386" width="1260" height="40" fill="#43666c"/>
+    <rect x="170" y="452" width="1260" height="96" fill="#20393f"/>
+    <rect x="170" y="566" width="1260" height="50" fill="#16282d"/>
+  </g>
+  <g filter="url(#tmotion)" opacity="0.45" fill="#1b3138">
+    <rect x="230" y="210" width="90" height="180"/>
+    <rect x="420" y="176" width="54" height="214"/>
+    <rect x="640" y="240" width="120" height="150"/>
+    <rect x="900" y="196" width="66" height="194"/>
+    <rect x="1120" y="252" width="140" height="138"/>
+  </g>
+
+  <rect x="170" y="130" width="1260" height="560" rx="44" fill="url(#tglow)"/>
+
+  <!-- frame: dark, soft, sits in front -->
+  <g filter="url(#tb1)" opacity="0.95" fill="#0c1216">
+    <rect x="0" y="0" width="1600" height="150"/>
+    <rect x="0" y="670" width="1600" height="230"/>
+    <rect x="0" y="0" width="190" height="900"/>
+    <rect x="1410" y="0" width="190" height="900"/>
+  </g>
+
+  <g filter="url(#tb2)" opacity="0.5">
+    <ellipse cx="260" cy="800" rx="340" ry="130" fill="#243840"/>
+  </g>
+
+  <rect width="1600" height="900" fill="url(#tvig)"/>
+</svg>

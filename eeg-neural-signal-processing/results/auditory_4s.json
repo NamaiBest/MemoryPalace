@@ -1,0 +1,146 @@
+[
+  {
+    "experiment": "E0a LEAKY random epoch split (DO NOT TRUST)",
+    "n_subjects": 20,
+    "n_test_epochs": 2171,
+    "rank1_acc": 0.8258866881621373,
+    "rank5_acc": 0.9751266697374482,
+    "chance": 0.05,
+    "verification_eer": 0.0520861111784528
+  },
+  {
+    "experiment": "E0b honest recording-level split",
+    "n_subjects": 20,
+    "n_test_epochs": 1800,
+    "rank1_acc": 0.74,
+    "rank5_acc": 0.9522222222222222,
+    "chance": 0.05,
+    "verification_eer": 0.0827923976608187
+  },
+  {
+    "experiment": "E1 rest_eyes_open: train s01+s02 -> test s03",
+    "n_subjects": 20,
+    "n_test_epochs": 587,
+    "rank1_acc": 0.8091993185689949,
+    "rank5_acc": 0.9659284497444633,
+    "chance": 0.05,
+    "verification_eer": 0.05944588899847577
+  },
+  {
+    "experiment": "E1 rest_eyes_closed: train s01+s02 -> test s03",
+    "n_subjects": 20,
+    "n_test_epochs": 600,
+    "rank1_acc": 0.7566666666666667,
+    "rank5_acc": 0.9566666666666667,
+    "chance": 0.05,
+    "verification_eer": 0.06763157894736843
+  },
+  {
+    "experiment": "E2a train RESTING -> test AUDITORY",
+    "n_subjects": 20,
+    "n_test_epochs": 3649,
+    "rank1_acc": 0.7064949301178405,
+    "rank5_acc": 0.9564264181967662,
+    "chance": 0.05,
+    "verification_eer": 0.08251720009808022
+  },
+  {
+    "experiment": "E2b train AUDITORY -> test RESTING",
+    "n_subjects": 20,
+    "n_test_epochs": 3587,
+    "rank1_acc": 0.567884025648174,
+    "rank5_acc": 0.8449958182325062,
+    "chance": 0.05,
+    "verification_eer": 0.1569556732645665
+  },
+  {
+    "experiment": "E2c train EYES-OPEN -> test EYES-CLOSED",
+    "n_subjects": 20,
+    "n_test_epochs": 1800,
+    "rank1_acc": 0.5533333333333333,
+    "rank5_acc": 0.8277777777777777,
+    "chance": 0.05,
+    "verification_eer": 0.17434210526315785
+  },
+  {
+    "experiment": "E3 rest_eyes_closed",
+    "n_subjects": 20,
+    "n_test_epochs": 600,
+    "rank1_acc": 0.7566666666666667,
+    "rank5_acc": 0.9566666666666667,
+    "chance": 0.05,
+    "verification_eer": 0.06763157894736843
+  },
+  {
+    "experiment": "E3 rest_eyes_open",
+    "n_subjects": 20,
+    "n_test_epochs": 587,
+    "rank1_acc": 0.8091993185689949,
+    "rank5_acc": 0.9659284497444633,
+    "chance": 0.05,
+    "verification_eer": 0.05944588899847577
+  },
+  {
+    "experiment": "E4 [ALL 4 (P4,Cz,F8,T7)] rest->auditory",
+    "n_subjects": 20,
+    "n_test_epochs": 3649,
+    "rank1_acc": 0.7064949301178405,
+    "rank5_acc": 0.9564264181967662,
+    "chance": 0.05,
+    "verification_eer": 0.08251720009808022
+  },
+  {
+    "experiment": "E4 [GLASSES-REACHABLE (F8,T7)] rest->auditory",
+    "n_subjects": 20,
+    "n_test_epochs": 3649,
+    "rank1_acc": 0.4768429706768978,
+    "rank5_acc": 0.8761304466977254,
+    "chance": 0.05,
+    "verification_eer": 0.15727452366185402
+  },
+  {
+    "experiment": "E4 [NON-GLASSES (P4,Cz)] rest->auditory",
+    "n_subjects": 20,
+    "n_test_epochs": 3649,
+    "rank1_acc": 0.5489175116470266,
+    "rank5_acc": 0.9035352151274322,
+    "chance": 0.05,
+    "verification_eer": 0.1337136345934719
+  },
+  {
+    "experiment": "E4 [single T7] rest->auditory",
+    "n_subjects": 20,
+    "n_test_epochs": 3649,
+    "rank1_acc": 0.31488078925733076,
+    "rank5_acc": 0.7621266100301453,
+    "chance": 0.05,
+    "verification_eer": 0.22220218949676193
+  },
+  {
+    "experiment": "E4 [single F8] rest->auditory",
+    "n_subjects": 20,
+    "n_test_epochs": 3649,
+    "rank1_acc": 0.3146067415730337,
+    "rank5_acc": 0.7582899424499863,
+    "chance": 0.05,
+    "verification_eer": 0.22169736481516206
+  },
+  {
+    "experiment": "E4 [single Cz] rest->auditory",
+    "n_subjects": 20,
+    "n_test_epochs": 3649,
+    "rank1_acc": 0.40257604823239246,
+    "rank5_acc": 0.7741847081392162,
+    "chance": 0.05,
+    "verification_eer": 0.2098051376729025
+  },
+  {
+    "experiment": "E4 [single P4] rest->auditory",
+    "n_subjects": 20,
+    "n_test_epochs": 3649,
+    "rank1_acc": 0.38202247191011235,
+    "rank5_acc": 0.7900794738284461,
+    "chance": 0.05,
+    "verification_eer": 0.20531219800666367
+  }
+]

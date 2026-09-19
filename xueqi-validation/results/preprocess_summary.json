@@ -1,0 +1,394 @@
+[
+  {
+    "subject": "sub-01",
+    "task": "SiB",
+    "n_keep": 159,
+    "n_drop": 1,
+    "cached": true
+  },
+  {
+    "subject": "sub-01",
+    "task": "SiD",
+    "n_keep": 157,
+    "n_drop": 3,
+    "cached": true
+  },
+  {
+    "subject": "sub-02",
+    "task": "SiD",
+    "n_keep": 126,
+    "n_drop": 34,
+    "cached": true
+  },
+  {
+    "subject": "sub-03",
+    "task": "SiB",
+    "n_keep": 1,
+    "n_drop": 159,
+    "cached": true
+  },
+  {
+    "subject": "sub-03",
+    "task": "SiD",
+    "n_keep": 6,
+    "n_drop": 154,
+    "cached": true
+  },
+  {
+    "subject": "sub-04",
+    "task": "SiB",
+    "n_keep": 67,
+    "n_drop": 93,
+    "cached": true
+  },
+  {
+    "subject": "sub-04",
+    "task": "SiD",
+    "n_keep": 59,
+    "n_drop": 101,
+    "cached": true
+  },
+  {
+    "subject": "sub-05",
+    "task": "SiB",
+    "n_keep": 108,
+    "n_drop": 52,
+    "cached": true
+  },
+  {
+    "subject": "sub-06",
+    "task": "SiD",
+    "n_keep": 119,
+    "n_drop": 41,
+    "cached": true
+  },
+  {
+    "subject": "sub-07",
+    "task": "SiB",
+    "n_keep": 143,
+    "n_drop": 17,
+    "cached": true
+  },
+  {
+    "subject": "sub-08",
+    "task": "SiB",
+    "n_keep": 123,
+    "n_drop": 37,
+    "cached": true
+  },
+  {
+    "subject": "sub-08",
+    "task": "SiD",
+    "n_keep": 137,
+    "n_drop": 23,
+    "cached": true
+  },
+  {
+    "subject": "sub-09",
+    "task": "SiD",
+    "n_keep": 137,
+    "n_drop": 23,
+    "cached": true
+  },
+  {
+    "subject": "sub-10",
+    "task": "SiB",
+    "n_keep": 159,
+    "n_drop": 1,
+    "cached": true
+  },
+  {
+    "subject": "sub-10",
+    "task": "SiD",
+    "n_keep": 144,
+    "n_drop": 16,
+    "cached": true
+  },
+  {
+    "subject": "sub-11",
+    "task": "SiB",
+    "n_keep": 160,
+    "n_drop": 0,
+    "cached": true
+  },
+  {
+    "subject": "sub-11",
+    "task": "SiD",
+    "n_keep": 144,
+    "n_drop": 16,
+    "cached": true
+  },
+  {
+    "subject": "sub-12",
+    "task": "SiB",
+    "n_keep": 154,
+    "n_drop": 6,
+    "cached": true
+  },
+  {
+    "subject": "sub-12",
+    "task": "SiD",
+    "n_keep": 152,
+    "n_drop": 8,
+    "cached": true
+  },
+  {
+    "subject": "sub-13",
+    "task": "SiB",
+    "n_keep": 158,
+    "n_drop": 2,
+    "cached": true
+  },
+  {
+    "subject": "sub-13",
+    "task": "SiD",
+    "n_keep": 143,
+    "n_drop": 17,
+    "cached": true
+  },
+  {
+    "subject": "sub-14",
+    "task": "SiB",
+    "n_keep": 159,
+    "n_drop": 1,
+    "cached": true
+  },
+  {
+    "subject": "sub-14",
+    "task": "SiD",
+    "n_keep": 154,
+    "n_drop": 6,
+    "cached": true
+  },
+  {
+    "subject": "sub-15",
+    "task": "SiD",
+    "n_keep": 151,
+    "n_drop": 9,
+    "cached": true
+  },
+  {
+    "subject": "sub-16",
+    "task": "SiB",
+    "n_keep": 115,
+    "n_drop": 45,
+    "cached": true
+  },
+  {
+    "subject": "sub-16",
+    "task": "SiD",
+    "n_keep": 94,
+    "n_drop": 66,
+    "cached": true
+  },
+  {
+    "subject": "sub-17",
+    "task": "SiB",
+    "n_keep": 59,
+    "n_drop": 101,
+    "cached": true
+  },
+  {
+    "subject": "sub-17",
+    "task": "SiD",
+    "n_keep": 154,
+    "n_drop": 6,
+    "cached": true
+  },
+  {
+    "subject": "sub-18",
+    "task": "SiB",
+    "n_keep": 144,
+    "n_drop": 16,
+    "cached": true
+  },
+  {
+    "subject": "sub-18",
+    "task": "SiD",
+    "n_keep": 77,
+    "n_drop": 83,
+    "cached": true
+  },
+  {
+    "subject": "sub-19",
+    "task": "SiB",
+    "n_keep": 160,
+    "n_drop": 0,
+    "cached": true
+  },
+  {
+    "subject": "sub-19",
+    "task": "SiD",
+    "n_keep": 152,
+    "n_drop": 8,
+    "cached": true
+  },
+  {
+    "subject": "sub-20",
+    "task": "SiD",
+    "n_keep": 46,
+    "n_drop": 110,
+    "cached": true
+  },
+  {
+    "subject": "sub-21",
+    "task": "SiB",
+    "n_keep": 146,
+    "n_drop": 14,
+    "cached": true
+  },
+  {
+    "subject": "sub-21",
+    "task": "SiD",
+    "n_keep": 128,
+    "n_drop": 32,
+    "cached": true
+  },
+  {
+    "subject": "sub-22",
+    "task": "SiB",
+    "n_keep": 155,
+    "n_drop": 5,
+    "cached": true
+  },
+  {
+    "subject": "sub-22",
+    "task": "SiD",
+    "n_keep": 27,
+    "n_drop": 133,
+    "cached": true
+  },
+  {
+    "subject": "sub-23",
+    "task": "SiB",
+    "n_keep": 143,
+    "n_drop": 17,
+    "cached": true
+  },
+  {
+    "subject": "sub-23",
+    "task": "SiD",
+    "n_keep": 26,
+    "n_drop": 133,
+    "cached": true
+  },
+  {
+    "subject": "sub-24",
+    "task": "SiB",
+    "n_keep": 120,
+    "n_drop": 40,
+    "cached": true
+  },
+  {
+    "subject": "sub-24",
+    "task": "SiD",
+    "n_keep": 93,
+    "n_drop": 67,
+    "cached": true
+  },
+  {
+    "subject": "sub-25",
+    "task": "SiB",
+    "n_keep": 121,
+    "n_drop": 39,
+    "cached": true
+  },
+  {
+    "subject": "sub-25",
+    "task": "SiD",
+    "n_keep": 112,
+    "n_drop": 48,
+    "cached": true
+  },
+  {
+    "subject": "sub-26",
+    "task": "SiD",
+    "n_keep": 100,
+    "n_drop": 60,
+    "cached": true
+  },
+  {
+    "subject": "sub-27",
+    "task": "SiD",
+    "n_keep": 132,
+    "n_drop": 28,
+    "cached": true
+  },
+  {
+    "subject": "sub-28",
+    "task": "SiB",
+    "n_keep": 159,
+    "n_drop": 1,
+    "cached": true
+  },
+  {
+    "subject": "sub-28",
+    "task": "SiD",
+    "n_keep": 160,
+    "n_drop": 0,
+    "cached": true
+  },
+  {
+    "subject": "sub-29",
+    "task": "SiB",
+    "n_keep": 159,
+    "n_drop": 1,
+    "cached": true
+  },
+  {
+    "subject": "sub-29",
+    "task": "SiD",
+    "n_keep": 156,
+    "n_drop": 4,
+    "cached": true
+  },
+  {
+    "subject": "sub-30",
+    "task": "SiB",
+    "n_keep": 156,
+    "n_drop": 4,
+    "cached": true
+  },
+  {
+    "subject": "sub-30",
+    "task": "SiD",
+    "n_keep": 88,
+    "n_drop": 72,
+    "cached": true
+  },
+  {
+    "subject": "sub-31",
+    "task": "SiB",
+    "n_keep": 160,
+    "n_drop": 0,
+    "cached": true
+  },
+  {
+    "subject": "sub-31",
+    "task": "SiD",
+    "n_keep": 144,
+    "n_drop": 16,
+    "cached": true
+  },
+  {
+    "subject": "sub-32",
+    "task": "SiD",
+    "n_keep": 109,
+    "n_drop": 51,
+    "cached": true
+  },
+  {
+    "subject": "sub-33",
+    "task": "SiB",
+    "n_keep": 156,
+    "n_drop": 4,
+    "cached": true
+  },
+  {
+    "subject": "sub-33",
+    "task": "SiD",
+    "n_keep": 119,
+    "n_drop": 41,
+    "cached": true
+  }
+]

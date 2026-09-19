@@ -1,0 +1,29 @@
+{
+  "table": "features_preevent",
+  "channel_set": "all16",
+  "channels": [
+    "Fp1",
+    "C3",
+    "Fp2",
+    "C4",
+    "Fz",
+    "Cz",
+    "O1",
+    "O2",
+    "F7",
+    "F8",
+    "F3",
+    "F4",
+    "T7",
+    "T8",
+    "P3",
+    "P4"
+  ],
+  "n_features": 224,
+  "n_epochs": 6890,
+  "models": {
+    "logreg": {
+      "path": "/Users/xueqiy/Downloads/HackMIT-Ideas-Code-main/Xueqi's Idea/results/cache/pred_features_preevent_all16_logreg.npz"
+    }
+  }
+}

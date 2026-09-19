@@ -1,0 +1,15 @@
+{
+  "table": "features_event",
+  "channel_set": "glasses2",
+  "channels": [
+    "F7",
+    "F8"
+  ],
+  "n_features": 28,
+  "n_epochs": 6890,
+  "models": {
+    "logreg": {
+      "path": "/Users/xueqiy/Downloads/HackMIT-Ideas-Code-main/Xueqi's Idea/results/cache/pred_features_event_glasses2_logreg.npz"
+    }
+  }
+}

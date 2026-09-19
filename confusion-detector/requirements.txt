@@ -1,0 +1,6 @@
+numpy
+scipy
+scikit-learn
+brainflow
+opencv-python
+mne

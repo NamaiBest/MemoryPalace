@@ -1,0 +1,43 @@
+{
+  "n_trials": 192,
+  "n_epochs": 1665,
+  "three_class_acc_mean": 0.6578824073372722,
+  "three_class_acc_std": 0.04329255674933877,
+  "confusion_matrix": [
+    [
+      313,
+      98,
+      94
+    ],
+    [
+      98,
+      319,
+      85
+    ],
+    [
+      105,
+      90,
+      463
+    ]
+  ],
+  "classes": [
+    "apple",
+    "mouse",
+    "remote"
+  ],
+  "pairwise": {
+    "apple_vs_mouse": {
+      "mean": 0.7448460834387886,
+      "std": 0.04649922136444926
+    },
+    "apple_vs_remote": {
+      "mean": 0.7498171523771328,
+      "std": 0.04131324022477962
+    },
+    "mouse_vs_remote": {
+      "mean": 0.794813318459243,
+      "std": 0.03269788774080661
+    }
+  },
+  "shuffled_control_mean": 0.34785982269909893
+}

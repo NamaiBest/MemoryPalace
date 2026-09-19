@@ -1,0 +1,156 @@
+{
+  "all16": {
+    "channels": [
+      "Fp1",
+      "C3",
+      "Fp2",
+      "C4",
+      "Fz",
+      "Cz",
+      "O1",
+      "O2",
+      "F7",
+      "F8",
+      "F3",
+      "F4",
+      "T7",
+      "T8",
+      "P3",
+      "P4"
+    ],
+    "n_channels": 16,
+    "note": "All 16 dataset EEG channels.",
+    "balanced_accuracy_mean": 0.6531771303263315,
+    "balanced_accuracy_std": 0.09059830487170924,
+    "roc_auc_mean": 0.7117323917443897,
+    "recall_mean": 0.6466505041495957,
+    "specificity_mean": 0.6597037565030673,
+    "fpr_mean": 0.3402962434969327,
+    "pooled": {
+      "n": 6890,
+      "n_positive": 1025,
+      "n_negative": 5865,
+      "accuracy": 0.6741654571843251,
+      "balanced_accuracy": 0.6608733079658162,
+      "precision": 0.25946372239747634,
+      "recall": 0.6419512195121951,
+      "specificity": 0.6797953964194373,
+      "fpr": 0.3202046035805627,
+      "f1": 0.36955911260881774,
+      "confusion_matrix": {
+        "tn": 3987,
+        "fp": 1878,
+        "fn": 367,
+        "tp": 658
+      },
+      "roc_auc": 0.7065929761087894
+    }
+  },
+  "half8": {
+    "channels": [
+      "Fz",
+      "Cz",
+      "F3",
+      "F4",
+      "F7",
+      "F8",
+      "C3",
+      "C4"
+    ],
+    "n_channels": 8,
+    "note": "Frontocentral 8-channel subset (surprise / P3a-like coverage).",
+    "balanced_accuracy_mean": 0.638303713889101,
+    "balanced_accuracy_std": 0.08643244061050986,
+    "roc_auc_mean": 0.704553090554686,
+    "recall_mean": 0.635503671710608,
+    "specificity_mean": 0.6411037560675941,
+    "fpr_mean": 0.35889624393240604,
+    "pooled": {
+      "n": 6890,
+      "n_positive": 1025,
+      "n_negative": 5865,
+      "accuracy": 0.6552975326560232,
+      "balanced_accuracy": 0.6385191192065374,
+      "precision": 0.2413793103448276,
+      "recall": 0.6146341463414634,
+      "specificity": 0.6624040920716112,
+      "fpr": 0.3375959079283887,
+      "f1": 0.3466299862448418,
+      "confusion_matrix": {
+        "tn": 3885,
+        "fp": 1980,
+        "fn": 395,
+        "tp": 630
+      },
+      "roc_auc": 0.6867541638076228
+    }
+  },
+  "ganglion4": {
+    "channels": [
+      "Fz",
+      "Cz",
+      "F7",
+      "F8"
+    ],
+    "n_channels": 4,
+    "note": "4-channel subset in OpenBCI Ganglion-like 10-20 space.",
+    "balanced_accuracy_mean": 0.6248641417863425,
+    "balanced_accuracy_std": 0.08107264843272079,
+    "roc_auc_mean": 0.6969017127646169,
+    "recall_mean": 0.6094016709395863,
+    "specificity_mean": 0.6403266126330988,
+    "fpr_mean": 0.3596733873669012,
+    "pooled": {
+      "n": 6890,
+      "n_positive": 1025,
+      "n_negative": 5865,
+      "accuracy": 0.6476052249637155,
+      "balanced_accuracy": 0.6279624893435636,
+      "precision": 0.23357387011014052,
+      "recall": 0.6,
+      "specificity": 0.6559249786871271,
+      "fpr": 0.344075021312873,
+      "f1": 0.33624931656642976,
+      "confusion_matrix": {
+        "tn": 3847,
+        "fp": 2018,
+        "fn": 410,
+        "tp": 615
+      },
+      "roc_auc": 0.6820613394880751
+    }
+  },
+  "glasses2": {
+    "channels": [
+      "F7",
+      "F8"
+    ],
+    "n_channels": 2,
+    "note": "F7/F8 temple pair; plausible on blank eyeglass frames, not Meta Ray-Bans.",
+    "balanced_accuracy_mean": 0.5572604952547406,
+    "balanced_accuracy_std": 0.09997069407968655,
+    "roc_auc_mean": 0.5987511092187093,
+    "recall_mean": 0.5454256191900367,
+    "specificity_mean": 0.5690953713194444,
+    "fpr_mean": 0.4309046286805555,
+    "pooled": {
+      "n": 6890,
+      "n_positive": 1025,
+      "n_negative": 5865,
+      "accuracy": 0.5894049346879535,
+      "balanced_accuracy": 0.5720387582392448,
+      "precision": 0.19172932330827067,
+      "recall": 0.5473170731707317,
+      "specificity": 0.5967604433077579,
+      "fpr": 0.4032395566922421,
+      "f1": 0.2839787395596052,
+      "confusion_matrix": {
+        "tn": 3500,
+        "fp": 2365,
+        "fn": 464,
+        "tp": 561
+      },
+      "roc_auc": 0.5991692761940406
+    }
+  }
+}

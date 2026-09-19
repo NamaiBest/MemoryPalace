@@ -1,0 +1,3 @@
+# Core needs nothing beyond the standard library.
+# opencv is optional: enables real webcam capture in the mock instead of placeholders.
+opencv-python

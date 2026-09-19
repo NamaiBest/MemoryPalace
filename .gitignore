@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+
+# Large datasets - regenerate with each idea's download script instead of committing.
+# See eeg-neural-signal-processing/RESULTS.md "Reproducing" section.
+data/
+!app/data/
+*.npz
+*.edf
+
+# Local hardware sessions and credentials
+hardware-demo/runs/
+hardware-demo/crown/node_modules/
+hardware-demo/crown/.env
+hardware-demo/meta-android/vendor/
+hardware-demo/meta-android/local.properties

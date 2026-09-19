@@ -1,0 +1,434 @@
+[
+  {
+    "subject": "sub-02",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "unexpected_channel_names",
+    "missing": [
+      "Fp1",
+      "C3",
+      "Fp2",
+      "C4",
+      "Fz",
+      "Cz",
+      "O1",
+      "O2",
+      "F7",
+      "F8",
+      "F3",
+      "F4",
+      "T7",
+      "T8",
+      "P3",
+      "P4"
+    ],
+    "found": [
+      "EEG 000",
+      "EEG 001",
+      "EEG 002",
+      "EEG 003",
+      "EEG 004",
+      "EEG 005",
+      "EEG 006",
+      "EEG 007",
+      "EEG 008",
+      "EEG 009",
+      "EEG 010",
+      "EEG 011",
+      "EEG 012",
+      "EEG 013",
+      "EEG 014",
+      "EEG 015"
+    ]
+  },
+  {
+    "subject": "sub-05",
+    "task": "SiD",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-06",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-07",
+    "task": "SiD",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-09",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-15",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "unexpected_channel_names",
+    "missing": [
+      "Fp1",
+      "C3",
+      "Fp2",
+      "C4",
+      "Fz",
+      "Cz",
+      "O1",
+      "O2",
+      "F7",
+      "F8",
+      "F3",
+      "F4",
+      "T7",
+      "T8",
+      "P3",
+      "P4"
+    ],
+    "found": [
+      "EEG 000",
+      "EEG 001",
+      "EEG 002",
+      "EEG 003",
+      "EEG 004",
+      "EEG 005",
+      "EEG 006",
+      "EEG 007",
+      "EEG 008",
+      "EEG 009",
+      "EEG 010",
+      "EEG 011",
+      "EEG 012",
+      "EEG 013",
+      "EEG 014",
+      "EEG 015"
+    ]
+  },
+  {
+    "subject": "sub-20",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-26",
+    "task": "SiB",
+    "stage": "epoch",
+    "reason": "missing_events_tsv"
+  },
+  {
+    "subject": "sub-27",
+    "task": "SiB",
+    "stage": "epoch",
+    "reason": "missing_events_tsv"
+  },
+  {
+    "subject": "sub-32",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-02",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "unexpected_channel_names",
+    "missing": [
+      "Fp1",
+      "C3",
+      "Fp2",
+      "C4",
+      "Fz",
+      "Cz",
+      "O1",
+      "O2",
+      "F7",
+      "F8",
+      "F3",
+      "F4",
+      "T7",
+      "T8",
+      "P3",
+      "P4"
+    ],
+    "found": [
+      "EEG 000",
+      "EEG 001",
+      "EEG 002",
+      "EEG 003",
+      "EEG 004",
+      "EEG 005",
+      "EEG 006",
+      "EEG 007",
+      "EEG 008",
+      "EEG 009",
+      "EEG 010",
+      "EEG 011",
+      "EEG 012",
+      "EEG 013",
+      "EEG 014",
+      "EEG 015"
+    ]
+  },
+  {
+    "subject": "sub-05",
+    "task": "SiD",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-06",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-07",
+    "task": "SiD",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-09",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-15",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "unexpected_channel_names",
+    "missing": [
+      "Fp1",
+      "C3",
+      "Fp2",
+      "C4",
+      "Fz",
+      "Cz",
+      "O1",
+      "O2",
+      "F7",
+      "F8",
+      "F3",
+      "F4",
+      "T7",
+      "T8",
+      "P3",
+      "P4"
+    ],
+    "found": [
+      "EEG 000",
+      "EEG 001",
+      "EEG 002",
+      "EEG 003",
+      "EEG 004",
+      "EEG 005",
+      "EEG 006",
+      "EEG 007",
+      "EEG 008",
+      "EEG 009",
+      "EEG 010",
+      "EEG 011",
+      "EEG 012",
+      "EEG 013",
+      "EEG 014",
+      "EEG 015"
+    ]
+  },
+  {
+    "subject": "sub-20",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-26",
+    "task": "SiB",
+    "stage": "epoch",
+    "reason": "missing_events_tsv"
+  },
+  {
+    "subject": "sub-27",
+    "task": "SiB",
+    "stage": "epoch",
+    "reason": "missing_events_tsv"
+  },
+  {
+    "subject": "sub-32",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-02",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "unexpected_channel_names",
+    "missing": [
+      "Fp1",
+      "C3",
+      "Fp2",
+      "C4",
+      "Fz",
+      "Cz",
+      "O1",
+      "O2",
+      "F7",
+      "F8",
+      "F3",
+      "F4",
+      "T7",
+      "T8",
+      "P3",
+      "P4"
+    ],
+    "found": [
+      "EEG 000",
+      "EEG 001",
+      "EEG 002",
+      "EEG 003",
+      "EEG 004",
+      "EEG 005",
+      "EEG 006",
+      "EEG 007",
+      "EEG 008",
+      "EEG 009",
+      "EEG 010",
+      "EEG 011",
+      "EEG 012",
+      "EEG 013",
+      "EEG 014",
+      "EEG 015"
+    ]
+  },
+  {
+    "subject": "sub-05",
+    "task": "SiD",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-06",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-07",
+    "task": "SiD",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-09",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-15",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "unexpected_channel_names",
+    "missing": [
+      "Fp1",
+      "C3",
+      "Fp2",
+      "C4",
+      "Fz",
+      "Cz",
+      "O1",
+      "O2",
+      "F7",
+      "F8",
+      "F3",
+      "F4",
+      "T7",
+      "T8",
+      "P3",
+      "P4"
+    ],
+    "found": [
+      "EEG 000",
+      "EEG 001",
+      "EEG 002",
+      "EEG 003",
+      "EEG 004",
+      "EEG 005",
+      "EEG 006",
+      "EEG 007",
+      "EEG 008",
+      "EEG 009",
+      "EEG 010",
+      "EEG 011",
+      "EEG 012",
+      "EEG 013",
+      "EEG 014",
+      "EEG 015"
+    ]
+  },
+  {
+    "subject": "sub-20",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  },
+  {
+    "subject": "sub-26",
+    "task": "SiB",
+    "stage": "epoch",
+    "reason": "missing_events_tsv"
+  },
+  {
+    "subject": "sub-27",
+    "task": "SiB",
+    "stage": "epoch",
+    "reason": "missing_events_tsv"
+  },
+  {
+    "subject": "sub-32",
+    "task": "SiB",
+    "stage": "preprocess",
+    "reason": "missing_eeg_file",
+    "set": false,
+    "fdt": false
+  }
+]

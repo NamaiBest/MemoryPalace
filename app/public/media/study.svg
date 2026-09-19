@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="ybase" x1="0.15" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="#32220f"/>
+      <stop offset="0.5" stop-color="#1b1208"/>
+      <stop offset="1" stop-color="#0a0604"/>
+    </linearGradient>
+    <linearGradient id="yfloor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.94"/>
+    </linearGradient>
+    <linearGradient id="yleft" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#000" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="ylamp" cx="0.26" cy="0.46" r="0.42">
+      <stop offset="0" stop-color="#ffd096" stop-opacity="0.72"/>
+      <stop offset="0.4" stop-color="#d59a56" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#d59a56" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="yvig" cx="0.4" cy="0.46" r="0.74">
+      <stop offset="0.34" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.9"/>
+    </radialGradient>
+    <filter id="yfocus" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <filter id="ymid" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <filter id="ynear" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+    <filter id="yglow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="52"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#ybase)"/>
+
+  <!-- warm pool of lamplight, kept as a glow not a wash -->
+  <g filter="url(#yglow)" opacity="0.5">
+    <ellipse cx="430" cy="430" rx="280" ry="220" fill="#b47a38"/>
+  </g>
+
+  <!-- shelving: readable structure, softened -->
+  <g filter="url(#ymid)" opacity="0.72">
+    <rect x="760" y="120" width="840" height="22" fill="#3d2a19"/>
+    <rect x="760" y="392" width="840" height="22" fill="#332315"/>
+    <rect x="760" y="664" width="840" height="22" fill="#2a1d11"/>
+  </g>
+  <g filter="url(#yfocus)" opacity="0.8">
+    <rect x="792" y="152" width="34" height="240" fill="#7d4a2c"/>
+    <rect x="834" y="170" width="26" height="222" fill="#a2603a"/>
+    <rect x="868" y="144" width="42" height="248" fill="#56603a"/>
+    <rect x="918" y="164" width="28" height="228" fill="#8d4842"/>
+    <rect x="954" y="152" width="36" height="240" fill="#655070"/>
+    <rect x="998" y="178" width="24" height="214" fill="#a2603a"/>
+    <rect x="1030" y="146" width="44" height="246" fill="#425c6a"/>
+    <rect x="1082" y="168" width="30" height="224" fill="#7d4a2c"/>
+    <rect x="1120" y="156" width="26" height="236" fill="#56603a"/>
+    <rect x="1154" y="172" width="38" height="220" fill="#8d4842"/>
+    <rect x="1200" y="150" width="28" height="242" fill="#655070"/>
+    <rect x="1236" y="164" width="34" height="228" fill="#425c6a"/>
+
+    <rect x="792" y="424" width="30" height="240" fill="#655070"/>
+    <rect x="830" y="440" width="40" height="224" fill="#425c6a"/>
+    <rect x="878" y="420" width="26" height="244" fill="#a2603a"/>
+    <rect x="912" y="434" width="36" height="230" fill="#56603a"/>
+    <rect x="956" y="424" width="28" height="240" fill="#7d4a2c"/>
+    <rect x="992" y="446" width="34" height="218" fill="#8d4842"/>
+    <rect x="1034" y="426" width="30" height="238" fill="#655070"/>
+    <rect x="1072" y="438" width="42" height="226" fill="#425c6a"/>
+  </g>
+
+  <!-- foreground: an open book catching the lamp, well out of focus -->
+  <g filter="url(#ynear)" opacity="0.9">
+    <ellipse cx="400" cy="700" rx="290" ry="90" fill="#d9c9a6"/>
+    <rect x="230" y="700" width="340" height="80" fill="#1a1209"/>
+  </g>
+
+  <rect width="1600" height="900" fill="url(#ylamp)"/>
+  <rect x="0" y="0" width="420" height="900" fill="url(#yleft)"/>
+  <rect x="0" y="620" width="1600" height="280" fill="url(#yfloor)"/>
+  <rect width="1600" height="900" fill="url(#yvig)"/>
+</svg>

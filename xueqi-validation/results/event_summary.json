@@ -1,0 +1,862 @@
+{
+  "label_contract": {
+    "positive": "surprises",
+    "negative": "dummy-surprises",
+    "note": "Values taken from events.tsv trial_type. Not recoded."
+  },
+  "recordings": [
+    {
+      "subject": "sub-01",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 11.6495806,
+      "onset_max": 1004.3456922747
+    },
+    {
+      "subject": "sub-01",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 8.38207525619455,
+      "onset_max": 997.936156058946
+    },
+    {
+      "subject": "sub-02",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 42.7803538,
+      "onset_max": 1027.28450038657
+    },
+    {
+      "subject": "sub-02",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 40.499771256452,
+      "onset_max": 1025.5609043143
+    },
+    {
+      "subject": "sub-03",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 31.88275803,
+      "onset_max": 1018.63966666273
+    },
+    {
+      "subject": "sub-03",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 11.0591203751273,
+      "onset_max": 994.68535880989
+    },
+    {
+      "subject": "sub-04",
+      "task": "SiB",
+      "status": "ok",
+      "n": 160,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "surprises": 24
+      },
+      "onset_min": 19.53474476,
+      "onset_max": 1101.620103
+    },
+    {
+      "subject": "sub-04",
+      "task": "SiD",
+      "status": "ok",
+      "n": 160,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "surprises": 24
+      },
+      "onset_min": 6.95548256726047,
+      "onset_max": 1097.79371588167
+    },
+    {
+      "subject": "sub-05",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 18.75433296,
+      "onset_max": 1028.17198078868
+    },
+    {
+      "subject": "sub-05",
+      "task": "SiD",
+      "status": "missing_events_tsv"
+    },
+    {
+      "subject": "sub-06",
+      "task": "SiB",
+      "status": "missing_events_tsv"
+    },
+    {
+      "subject": "sub-06",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 8.60435833672518,
+      "onset_max": 1035.88775526002
+    },
+    {
+      "subject": "sub-07",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 16.20540487,
+      "onset_max": 1019.54491234344
+    },
+    {
+      "subject": "sub-07",
+      "task": "SiD",
+      "status": "missing_events_tsv"
+    },
+    {
+      "subject": "sub-08",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 26.17421186,
+      "onset_max": 1047.74180830251
+    },
+    {
+      "subject": "sub-08",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 33.9258997014008,
+      "onset_max": 1045.33592708186
+    },
+    {
+      "subject": "sub-09",
+      "task": "SiB",
+      "status": "ok",
+      "n": 136,
+      "trial_types": {
+        "probes": 100,
+        "dummy-probes": 36
+      },
+      "onset_min": 19.8613601139507,
+      "onset_max": 1101.32591586654
+    },
+    {
+      "subject": "sub-09",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 44.750771068065,
+      "onset_max": 1093.794189
+    },
+    {
+      "subject": "sub-10",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 26.74655864,
+      "onset_max": 1010.03339570854
+    },
+    {
+      "subject": "sub-10",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 21.3544647245512,
+      "onset_max": 1012.38395287211
+    },
+    {
+      "subject": "sub-11",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 29.39739149,
+      "onset_max": 1030.36656086432
+    },
+    {
+      "subject": "sub-11",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 40.248319859803,
+      "onset_max": 1019.52762329903
+    },
+    {
+      "subject": "sub-12",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 15.88202416,
+      "onset_max": 999.031320413667
+    },
+    {
+      "subject": "sub-12",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 35.24695118,
+      "onset_max": 1021.9604412353
+    },
+    {
+      "subject": "sub-13",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 33.32388662,
+      "onset_max": 1043.3342930194
+    },
+    {
+      "subject": "sub-13",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 65.274963619565,
+      "onset_max": 1096.19944639016
+    },
+    {
+      "subject": "sub-14",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 36.55772539,
+      "onset_max": 1034.21691472168
+    },
+    {
+      "subject": "sub-14",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 17.7278208090825,
+      "onset_max": 1008.78886137902
+    },
+    {
+      "subject": "sub-15",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 39.74679655,
+      "onset_max": 1036.56998801822
+    },
+    {
+      "subject": "sub-15",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 34.578493740715,
+      "onset_max": 1018.35122967848
+    },
+    {
+      "subject": "sub-16",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 76.03775594,
+      "onset_max": 1053.7354635153
+    },
+    {
+      "subject": "sub-16",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 13.3810538376712,
+      "onset_max": 998.842799147114
+    },
+    {
+      "subject": "sub-17",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 24.0868318,
+      "onset_max": 1003.67820020788
+    },
+    {
+      "subject": "sub-17",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 44.4635579268402,
+      "onset_max": 1021.16831191315
+    },
+    {
+      "subject": "sub-18",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 19.32914296,
+      "onset_max": 1081.24858274223
+    },
+    {
+      "subject": "sub-18",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 154.327541966888,
+      "onset_max": 1180.15099442032
+    },
+    {
+      "subject": "sub-19",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 17.86473484,
+      "onset_max": 1030.62980108543
+    },
+    {
+      "subject": "sub-19",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 80.8710176949357,
+      "onset_max": 1078.16589591103
+    },
+    {
+      "subject": "sub-20",
+      "task": "SiB",
+      "status": "missing_events_tsv"
+    },
+    {
+      "subject": "sub-20",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 43.8908423569894,
+      "onset_max": 1077.59149293507
+    },
+    {
+      "subject": "sub-21",
+      "task": "SiB",
+      "status": "ok",
+      "n": 160,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "surprises": 24
+      },
+      "onset_min": 35.48570723,
+      "onset_max": 1147.522064
+    },
+    {
+      "subject": "sub-21",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 26.6597955292929,
+      "onset_max": 1016.09668348548
+    },
+    {
+      "subject": "sub-22",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 16.23887081,
+      "onset_max": 997.770975698992
+    },
+    {
+      "subject": "sub-22",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 62.977303149362,
+      "onset_max": 1047.01029351573
+    },
+    {
+      "subject": "sub-23",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 12.00146037,
+      "onset_max": 1016.08745888452
+    },
+    {
+      "subject": "sub-23",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 51.4320641391265,
+      "onset_max": 12232.1799049988
+    },
+    {
+      "subject": "sub-24",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 28.69459024,
+      "onset_max": 1069.40683266046
+    },
+    {
+      "subject": "sub-24",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 40.8351568871743,
+      "onset_max": 1112.07170188738
+    },
+    {
+      "subject": "sub-25",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 27.90562515,
+      "onset_max": 1080.19860410197
+    },
+    {
+      "subject": "sub-25",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 19.97716696,
+      "onset_max": 1037.03960636741
+    },
+    {
+      "subject": "sub-26",
+      "task": "SiB",
+      "status": "missing_events_tsv"
+    },
+    {
+      "subject": "sub-26",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 16.5105631632119,
+      "onset_max": 1046.97218717891
+    },
+    {
+      "subject": "sub-27",
+      "task": "SiB",
+      "status": "missing_events_tsv"
+    },
+    {
+      "subject": "sub-27",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 32.5558788755502,
+      "onset_max": 1021.67944949756
+    },
+    {
+      "subject": "sub-28",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 52.77829712,
+      "onset_max": 1046.86209810542
+    },
+    {
+      "subject": "sub-28",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 41.8793218384506,
+      "onset_max": 1029.96691421347
+    },
+    {
+      "subject": "sub-29",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 31.80691292,
+      "onset_max": 1027.47114480017
+    },
+    {
+      "subject": "sub-29",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 29.8154216553564,
+      "onset_max": 1039.82256107075
+    },
+    {
+      "subject": "sub-30",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 12.24090478,
+      "onset_max": 1033.03151795973
+    },
+    {
+      "subject": "sub-30",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 38.3597682090972,
+      "onset_max": 1312.55151792218
+    },
+    {
+      "subject": "sub-31",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 45.40480768,
+      "onset_max": 1028.32052625435
+    },
+    {
+      "subject": "sub-31",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 35.6224737447725,
+      "onset_max": 1012.78386290007
+    },
+    {
+      "subject": "sub-32",
+      "task": "SiB",
+      "status": "missing_events_tsv"
+    },
+    {
+      "subject": "sub-32",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 41.4648484671567,
+      "onset_max": 1052.28875641083
+    },
+    {
+      "subject": "sub-33",
+      "task": "SiB",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 16.91321126,
+      "onset_max": 1028.69942296229
+    },
+    {
+      "subject": "sub-33",
+      "task": "SiD",
+      "status": "ok",
+      "n": 296,
+      "trial_types": {
+        "dummy-surprises": 136,
+        "probes": 100,
+        "dummy-probes": 36,
+        "surprises": 24
+      },
+      "onset_min": 15.8890665193371,
+      "onset_max": 1025.94887184992
+    }
+  ]
+}

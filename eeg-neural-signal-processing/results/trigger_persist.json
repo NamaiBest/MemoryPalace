@@ -1,0 +1,122 @@
+[
+  {
+    "k": 1,
+    "threshold": 0.5,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.8,
+    "false_clips_per_hour": 24.0,
+    "mean_latency_s": 4.8
+  },
+  {
+    "k": 1,
+    "threshold": 0.7,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.75,
+    "false_clips_per_hour": 22.5,
+    "mean_latency_s": 4.8
+  },
+  {
+    "k": 1,
+    "threshold": 0.9,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.65,
+    "false_clips_per_hour": 19.5,
+    "mean_latency_s": 5.4
+  },
+  {
+    "k": 2,
+    "threshold": 0.5,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.55,
+    "false_clips_per_hour": 16.5,
+    "mean_latency_s": 9.6
+  },
+  {
+    "k": 2,
+    "threshold": 0.7,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.45,
+    "false_clips_per_hour": 13.5,
+    "mean_latency_s": 10.4
+  },
+  {
+    "k": 2,
+    "threshold": 0.9,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.4,
+    "false_clips_per_hour": 12.0,
+    "mean_latency_s": 12.4
+  },
+  {
+    "k": 3,
+    "threshold": 0.5,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.25,
+    "false_clips_per_hour": 7.5,
+    "mean_latency_s": 18.2
+  },
+  {
+    "k": 3,
+    "threshold": 0.7,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.15,
+    "false_clips_per_hour": 4.5,
+    "mean_latency_s": 20.2
+  },
+  {
+    "k": 3,
+    "threshold": 0.9,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.1,
+    "false_clips_per_hour": 3.0,
+    "mean_latency_s": 21.0
+  },
+  {
+    "k": 4,
+    "threshold": 0.5,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.2,
+    "false_clips_per_hour": 6.0,
+    "mean_latency_s": 25.4
+  },
+  {
+    "k": 4,
+    "threshold": 0.7,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.15,
+    "false_clips_per_hour": 4.5,
+    "mean_latency_s": 26.6
+  },
+  {
+    "k": 4,
+    "threshold": 0.9,
+    "detect_rate": 1.0,
+    "false_alarm_rate": 0.05,
+    "false_clips_per_hour": 1.5,
+    "mean_latency_s": 27.6
+  },
+  {
+    "k": 5,
+    "threshold": 0.5,
+    "detect_rate": 0.95,
+    "false_alarm_rate": 0.2,
+    "false_clips_per_hour": 6.0,
+    "mean_latency_s": 25.68421052631579
+  },
+  {
+    "k": 5,
+    "threshold": 0.7,
+    "detect_rate": 0.95,
+    "false_alarm_rate": 0.1,
+    "false_clips_per_hour": 3.0,
+    "mean_latency_s": 29.894736842105264
+  },
+  {
+    "k": 5,
+    "threshold": 0.9,
+    "detect_rate": 0.9,
+    "false_alarm_rate": 0.0,
+    "false_clips_per_hour": 0.0,
+    "mean_latency_s": 34.44444444444444
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "state_crown8": {
+    "label": "Crown-exact (F5 F6 C3 C4 CP3 CP4 PO3 PO4)",
+    "n_subjects": 109,
+    "rank1_acc": 0.42813455657492355,
+    "eer": 0.15953958545701663
+  },
+  "state_all64": {
+    "label": "all 64 (reference ceiling)",
+    "n_subjects": 109,
+    "rank1_acc": 0.8238532110091743,
+    "eer": 0.07636198890021521
+  },
+  "mi_crown8": {
+    "label": "Crown-exact",
+    "n_subjects": 109,
+    "mean": 0.6151617576050218,
+    "std": 0.15887627442104596,
+    "median": 0.6,
+    "frac_above_70": 0.27522935779816515
+  }
+}

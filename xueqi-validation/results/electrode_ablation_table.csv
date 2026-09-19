@@ -1,0 +1,5 @@
+Configuration,Channels,n_channels,Balanced_Accuracy,AUROC,Recall,False_Positive_Rate
+A all16,Fp1 C3 Fp2 C4 Fz Cz O1 O2 F7 F8 F3 F4 T7 T8 P3 P4,16,0.653,0.712,0.647,0.340
+B half8,Fz Cz F3 F4 F7 F8 C3 C4,8,0.638,0.705,0.636,0.359
+C ganglion4,Fz Cz F7 F8,4,0.625,0.697,0.609,0.360
+D glasses2,F7 F8,2,0.557,0.599,0.545,0.431

@@ -1,0 +1,50 @@
+[
+  {
+    "n_enroll_recordings": 1,
+    "enroll_seconds_per_subject": 120,
+    "rank1_mean": 0.5384694436832009,
+    "rank1_std": 0.04637795311971834,
+    "eer_mean": 0.1950245921737751,
+    "eer_std": 0.02113105507727204
+  },
+  {
+    "n_enroll_recordings": 2,
+    "enroll_seconds_per_subject": 240,
+    "rank1_mean": 0.6250342559605371,
+    "rank1_std": 0.02772752863828975,
+    "eer_mean": 0.1306008495478213,
+    "eer_std": 0.009493162837249085
+  },
+  {
+    "n_enroll_recordings": 3,
+    "enroll_seconds_per_subject": 360,
+    "rank1_mean": 0.6724102493833928,
+    "rank1_std": 0.030862301140841715,
+    "eer_mean": 0.10848682407581024,
+    "eer_std": 0.01599155721382001
+  },
+  {
+    "n_enroll_recordings": 4,
+    "enroll_seconds_per_subject": 480,
+    "rank1_mean": 0.6860441216771719,
+    "rank1_std": 0.016009485683229546,
+    "eer_mean": 0.09941260042405273,
+    "eer_std": 0.007782430632223556
+  },
+  {
+    "n_enroll_recordings": 5,
+    "enroll_seconds_per_subject": 600,
+    "rank1_mean": 0.7016648396821047,
+    "rank1_std": 0.008996674422217639,
+    "eer_mean": 0.08609063766569067,
+    "eer_std": 0.0036773790774157853
+  },
+  {
+    "n_enroll_recordings": 6,
+    "enroll_seconds_per_subject": 720,
+    "rank1_mean": 0.7064949301178405,
+    "rank1_std": 0.0,
+    "eer_mean": 0.08251720009808022,
+    "eer_std": 0.0
+  }
+]

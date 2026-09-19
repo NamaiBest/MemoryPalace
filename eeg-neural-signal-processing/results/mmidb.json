@@ -1,0 +1,149 @@
+[
+  {
+    "experiment": "M1 R01 first half -> R01 second half (same run)",
+    "n_subjects": 109,
+    "n_test_epochs": 763,
+    "rank1_acc": 0.9868938401048493,
+    "rank5_acc": 0.9934469200524246,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.00355565263822145
+  },
+  {
+    "experiment": "M2 R01 eyes-open -> R02 eyes-closed",
+    "n_subjects": 109,
+    "n_test_epochs": 1635,
+    "rank1_acc": 0.8226299694189603,
+    "rank5_acc": 0.8788990825688073,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.07608449428021295
+  },
+  {
+    "experiment": "M2b R02 eyes-closed -> R01 eyes-open",
+    "n_subjects": 109,
+    "n_test_epochs": 1635,
+    "rank1_acc": 0.8862385321100917,
+    "rank5_acc": 0.9737003058103976,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.026330841544908813
+  },
+  {
+    "experiment": "M3 N= 10 subjects  R01->R02",
+    "n_subjects": 10,
+    "n_test_epochs": 150,
+    "rank1_acc": 0.9666666666666667,
+    "rank5_acc": 1.0,
+    "chance": 0.1,
+    "verification_eer": 0.006666666666666689,
+    "n_pop": 10
+  },
+  {
+    "experiment": "M3 N= 20 subjects  R01->R02",
+    "n_subjects": 20,
+    "n_test_epochs": 300,
+    "rank1_acc": 0.77,
+    "rank5_acc": 0.8933333333333333,
+    "chance": 0.05,
+    "verification_eer": 0.11526315789473683,
+    "n_pop": 20
+  },
+  {
+    "experiment": "M3 N= 40 subjects  R01->R02",
+    "n_subjects": 40,
+    "n_test_epochs": 600,
+    "rank1_acc": 0.8216666666666667,
+    "rank5_acc": 0.9183333333333333,
+    "chance": 0.025,
+    "verification_eer": 0.062991452991453,
+    "n_pop": 40
+  },
+  {
+    "experiment": "M3 N= 60 subjects  R01->R02",
+    "n_subjects": 60,
+    "n_test_epochs": 900,
+    "rank1_acc": 0.8444444444444444,
+    "rank5_acc": 0.9011111111111111,
+    "chance": 0.016666666666666666,
+    "verification_eer": 0.08409604519774014,
+    "n_pop": 60
+  },
+  {
+    "experiment": "M3 N= 80 subjects  R01->R02",
+    "n_subjects": 80,
+    "n_test_epochs": 1200,
+    "rank1_acc": 0.84,
+    "rank5_acc": 0.8916666666666667,
+    "chance": 0.0125,
+    "verification_eer": 0.07240506329113926,
+    "n_pop": 80
+  },
+  {
+    "experiment": "M3 N=109 subjects  R01->R02",
+    "n_subjects": 109,
+    "n_test_epochs": 1635,
+    "rank1_acc": 0.8226299694189603,
+    "rank5_acc": 0.8788990825688073,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.07608449428021295,
+    "n_pop": 109
+  },
+  {
+    "experiment": "M4 [ALL 64 channels]",
+    "n_subjects": 109,
+    "n_test_epochs": 1635,
+    "rank1_acc": 0.8226299694189603,
+    "rank5_acc": 0.8788990825688073,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.07608449428021295,
+    "n_channels": 64
+  },
+  {
+    "experiment": "M4 [CONSUMER 8 (Fp,F7/8,T7/8,O1/2)]",
+    "n_subjects": 109,
+    "n_test_epochs": 1635,
+    "rank1_acc": 0.4648318042813456,
+    "rank5_acc": 0.6941896024464832,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.1626854683429607,
+    "n_channels": 8
+  },
+  {
+    "experiment": "M4 [GLASSES-LIKE 8 (AF,Fp,F7/8,T7/8)]",
+    "n_subjects": 109,
+    "n_test_epochs": 1635,
+    "rank1_acc": 0.45137614678899085,
+    "rank5_acc": 0.6654434250764526,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.1641125835315438,
+    "n_channels": 8
+  },
+  {
+    "experiment": "M4 [GLASSES-LIKE 4 (Fp1,Fp2,T7,T8)]",
+    "n_subjects": 109,
+    "n_test_epochs": 1635,
+    "rank1_acc": 0.3596330275229358,
+    "rank5_acc": 0.6195718654434251,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.1835230490429267,
+    "n_channels": 4
+  },
+  {
+    "experiment": "M4 [CENTRAL 4 (Cz,Pz,C3,C4)]",
+    "n_subjects": 109,
+    "n_test_epochs": 1635,
+    "rank1_acc": 0.42446483180428135,
+    "rank5_acc": 0.6795107033639144,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.15734228111903953,
+    "n_channels": 4
+  },
+  {
+    "experiment": "M4 [OCCIPITAL 2 (O1,O2)]",
+    "n_subjects": 109,
+    "n_test_epochs": 1635,
+    "rank1_acc": 0.22018348623853212,
+    "rank5_acc": 0.4740061162079511,
+    "chance": 0.009174311926605505,
+    "verification_eer": 0.25148940989919577,
+    "n_channels": 2
+  }
+]

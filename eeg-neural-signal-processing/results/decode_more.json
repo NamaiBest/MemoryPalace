@@ -1,0 +1,40 @@
+{
+  "A1_3way_state_within": {
+    "acc": 0.6959938659161435,
+    "std": 0.13032488309537996,
+    "chance": 0.3333333333333333
+  },
+  "A2_3way_state_loso": {
+    "acc": 0.5400149580067783,
+    "std": 0.12477521741470422,
+    "chance": 0.3333333333333333
+  },
+  "B1_language_crossroute": {
+    "acc": 0.5083333333333334,
+    "std": 0.19238993967691992,
+    "chance": 0.5
+  },
+  "B2_route_crossstim": {
+    "acc": 0.5448529411764705,
+    "std": 0.209555440862505,
+    "chance": 0.5
+  },
+  "C_mother language (Italian vs Arabic)": {
+    "correct": 12,
+    "n": 16,
+    "acc": 0.75,
+    "p": 0.076812744140625
+  },
+  "C_age (above/below median 26)": {
+    "correct": 7,
+    "n": 16,
+    "acc": 0.4375,
+    "p": 0.803619384765625
+  },
+  "C_BMI (above/below median)": {
+    "correct": 10,
+    "n": 20,
+    "acc": 0.5,
+    "p": 1.0
+  }
+}
