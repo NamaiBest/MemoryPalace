@@ -4,99 +4,27 @@ VoloRidge: Build something interesting using one or more public datasets. We’l
 
 # Our answer
 
-Full write-up: [`FULFILLMENT_SPONSORS.md` → VoloRidge](../FULFILLMENT_SPONSORS.md#voloridge--public-data-challenge-a-simple-signal-and-the-nulls-that-test-it)
-Code, figures, data: [`eeg-state-detection/`](../eeg-state-detection/README.md)
+**→ [`eeg-state-detection/README.md`](../eeg-state-detection/README.md)** is the write-up:
+figures, tables, reproduction commands, and the limits.
+Sponsor-record summary: [`FULFILLMENT_SPONSORS.md` → VoloRidge](../FULFILLMENT_SPONSORS.md#voloridge--public-data-challenge-a-simple-signal-and-the-nulls-that-test-it).
 
-**The final model is 84 numbers and a logistic regression. Everything we added on top of it
-lost, except one parameter. We know the signal is real because we built two null
-distributions that could have said otherwise, and on the second problem they did.**
+In person VoloRidge said they judge four things: how you handle data analysis, how you
+extract signal from noise, how elegant the result is rather than how complex, and how you
+validate. The write-up answers those four in order.
 
-## The dataset
+**The short version.** On [Shin et al. 2018 dataset A](https://doc.ml.tu-berlin.de/simultaneous_EEG_NIRS/),
+28-channel EEG during an n-back task, five participants, fifteen sessions: the final model
+is 84 numbers and a logistic regression. Seven more complex alternatives, from Riemannian
+tangent space to Bayesian state-space models to zigzag persistent homology, were each tested
+as paired comparisons on the same recordings, and every one lost or tied. The only addition
+that survived is a one-parameter moving average.
 
-[Shin et al. 2018, dataset A](https://doc.ml.tu-berlin.de/simultaneous_EEG_NIRS/)
-([Scientific Data](https://doi.org/10.1038/sdata.2018.3)). 28 EEG channels plus 2 eye
-channels at 1000 Hz, n-back working memory. Participants VP002 to VP006, three sessions
-each, unmodified, experimenters' own markers as ground truth. Not committed;
-`scripts/fetch_shin.py` downloads and CRC-verifies it.
+Mean out-of-sample AUROC is 0.65 to 0.93, and **8 of 15 sessions beat a circular time-shift
+null at p ≤ 0.05**.
 
-## Extracting the signal
-
-```text
-28 channels, 200 Hz
-  → regress out the two eye channels          (fitted on a pre-task segment, then frozen)
-  → log power in theta / alpha / beta          (2 s windows, every 0.25 s → 84 numbers)
-  → logistic regression, task vs rest          (regularization chosen on whole blocks)
-  → exponential moving average of the margin   (one parameter: the half-life)
-  → margin ≥ 0 for 3 s becomes an interval
-```
-
-## Elegance: everything more complex lost
-
-Seven alternatives, each a paired comparison on the same recordings, same windows, same
-folds. Rows are different participants, so this is deliberately not a leaderboard; each row
-is only valid against its own baseline.
-
-| Added on top of band power | Complexity | Paired result | Kept |
-|---|---|---|:--:|
-| Riemannian covariance + tangent space | 1218 features vs 84 | 22.2 s of rest flagged against 2.0 s | ✗ |
-| EWMA volatility features | 3× features | Better ranking, worse balanced accuracy | ✗ |
-| Broad-band Fourier power | different estimator | A tie, for more machinery | ✗ |
-| 26 one-Hz Fourier bins | 728 features vs 84 | 0.541 vs 0.635 balanced accuracy | ✗ |
-| Bayesian DLM, AR(1) noise | latent state | 0.739 vs 0.791 for a plain moving average | ✗ |
-| Adaptive IMM switching DLM | two regimes | 0.781 vs 0.791 for a plain moving average | ✗ |
-| Zigzag persistent homology | 108 descriptors | p = 0.13 against randomly placed flags | ✗ |
-| **Exponential moving average** | **one parameter** | **7 of 9 whole tasks vs 3 of 9, same weights** | **✓** |
-
-## Validation
-
-**Circular time-shift null.** The intact score trace shifted against the labels 2000 times
-per session. Shifting preserves autocorrelation; shuffling destroys it, and overlapping EEG
-windows are not independent samples. The null intervals reach 0.8 AUROC and we report that
-rather than using a test that would have flattered us.
-
-**Random-flag null.** Flags thrown at random on the same grid, same budget, same separation,
-same matching tolerance. Chance is not zero: five random flags match about 3 of 36 events.
-
-**Eye-channel control**, the same pipeline on channels with no cortical signal:
-
-| | VP002 | VP003 | VP004 | VP005 |
-|---|---:|---:|---:|---:|
-| EEG detector | 0.925 | 0.800 | 0.652 | 0.888 |
-| Eyes only | 0.883 | 0.848 | 0.522 | 0.559 |
-
-Two participants where the eyes come close, one where the detector clears them by 0.33. Both
-columns published.
-
-**Frozen before scoring.** Protocols written in advance, models hashed before any held-out
-block is touched, fitted state verified unchanged afterwards, holdout participant consumed
-exactly once.
-
-## The result
-
-**8 of 15 sessions beat the time-shift null at p ≤ 0.05**, 14 of 15 above chance, mean
-out-of-sample AUROC 0.65 to 0.93 across five participants.
-
-And the half we find more useful: brief evoked events are undetectable by five methods on
-four participants. A zigzag persistent-homology detector matched 6 of 36 events against a
-2 of 36 baseline, which reads as a threefold improvement, and sits at p = 0.13 against
-randomly thrown darts. Without the null we would have shipped it.
-
-That decided the product. MemoryPalace captures forward on a persistence filter because
-sustained states survived the analysis and instantaneous spikes did not.
-
-## Reproduce
-
-```bash
-cd eeg-state-detection
-python -m venv .venv && .venv/bin/pip install -e '.[test,real]'
-.venv/bin/python -m pytest -q                                   # 79 tests
-.venv/bin/python scripts/fetch_shin.py --subject 2 --out data/shin2018/VP002
-.venv/bin/python -m eeg_moments backtest --out outputs/backtest_state_reproduction
-```
-
-## What we do not claim
-
-The label is task versus rest, a proxy for a state change, not confusion or insight. Ocular
-contribution is not isolated on two participants. Two of five participants are weak. 72
-seconds of labeled rest per participant cannot support a false-alarm rate per hour. Weights
-are session-specific. These are public participants, unrelated to anyone filmed in the demo.
+The half we find more useful is the negative one. Brief evoked events turned out to be
+undetectable by five methods across four participants. A zigzag persistent-homology detector
+matched 6 of 36 events against a 2 of 36 baseline, which reads as a threefold improvement,
+and sits at p = 0.13 against randomly thrown darts. **Without the null we would have shipped
+it as a result.** That finding is why MemoryPalace captures forward on a persistence filter
+rather than buffering backward for an instantaneous spike.
