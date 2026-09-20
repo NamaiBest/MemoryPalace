@@ -170,11 +170,11 @@ Current status, in one line each:
   understates it. VoloRidge said in person that they judge four things: how you handle the
   data, how you extract signal from noise, **how elegant the result is rather than how
   complex**, and how you validate. The slide should answer those four, in that order.
-  The line to land: "Our final model is 84 numbers and a logistic regression. Seven more
-  complex things we tried all lost. And the null we built proved our best looking result was
-  noise." Numbers: out-of-sample AUROC 0.65 to 0.93 across five participants, 8 of 15
-  sessions beating a circular time-shift null, and a brief-event detector that looked three
-  times better than baseline sitting at p = 0.13 against randomly thrown darts.
+  **A complete slide brief, copy-paste ready, is at
+  [`presentation/SLIDE-11-VOLORIDGE.md`](presentation/SLIDE-11-VOLORIDGE.md)**: exact slide content,
+  30-second speaker notes, what to leave off, four likely questions with answers, and the
+  source of every number. The line to land: "We tried the complicated things. They lost.
+  Then we built a test that killed our own best-looking result." 
 
 **Logos.** The slides use a typographic treatment: each sponsor's name set large in its own
 brand colour. If you want real logo art, drop official files into
