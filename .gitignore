@@ -35,3 +35,7 @@ video/
 
 # Android build output
 hardware-demo/phone-android/build/
+
+# Scratch review renders written while iterating on the logo and deck. Source lives
+# in presentation/; these are throwaway screenshots of it.
+Claude outputs/

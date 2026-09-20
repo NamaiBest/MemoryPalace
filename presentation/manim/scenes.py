@@ -1,4 +1,4 @@
-"""MemoryPalace — explanatory scenes for the HackMIT deck.
+"""MemoryPalace: explanatory scenes for the HackMIT deck.
 
 Every number in these scenes is taken from the repository:
   ds006394 preprocessing + counts .... xueqi-validation/RESULTS.md  §1, §3, §4
@@ -8,22 +8,22 @@ Every number in these scenes is taken from the repository:
 import numpy as np
 from manim import *
 
-# --- MemoryPalace palette (app/app/globals.css) ---------------------------
-BG       = "#0b0b0c"
-PANEL    = "#161617"
-IVORY    = "#f3efe6"
-DIM      = "#9c968b"
-MUTE     = "#6d6860"
-BRASS    = "#c9b896"
-CRIT     = "#c4746a"
-WARM     = "#c9a25a"
-COOL     = "#8aa3b5"
-OKG      = "#8fad8c"
-VIOLET   = "#a691b8"
+# --- MemoryPalace palette, light ---------------------------------------
+BG       = "#f3efe5"      # the app ivory, used as the ground
+PANEL    = "#fbf9f3"
+IVORY    = "#1a1917"      # role kept, value inverted: this is now the ink
+DIM      = "#4e4a42"
+MUTE     = "#6e685c"
+BRASS    = "#7a6430"
+CRIT     = "#a44b3c"
+WARM     = "#9a7526"
+COOL     = "#3b6c8a"
+OKG      = "#4a6b45"
+VIOLET   = "#6e5a85"
 
-SANS  = "Geist"
-MONO  = "Geist Mono"
-SERIF = "Instrument Serif"
+SANS  = "URW Gothic"
+MONO  = "URW Gothic"
+SERIF = "Poppins"
 
 config.background_color = BG
 
@@ -31,24 +31,28 @@ rng = np.random.default_rng(7)
 
 
 def eyebrow(s, color=MUTE):
-    t = Text(s.upper(), font=MONO, font_size=17, color=color)
-    t.set_opacity(0.95)
+    t = Text(s.upper(), font=MONO, font_size=20, color=color)
+    t.set_opacity(1.0)
     return t
 
 
 def head(s, size=52):
-    return Text(s, font=SERIF, font_size=size, color=IVORY)
+    # Poppins sets much wider than the serif this was drawn for, so every
+    # heading size is scaled down to keep long lines inside the 1920px frame.
+    return Text(s, font=SERIF, font_size=int(size * 0.74), color=IVORY, weight=MEDIUM)
 
 
 def body(s, size=25, color=DIM):
+    size = max(size, 20)
     return Text(s, font=SANS, font_size=size, color=color)
 
 
 def mono(s, size=21, color=BRASS):
+    size = max(size, 20)
     return Text(s, font=MONO, font_size=size, color=color)
 
 
-def rule(width=11.0, color=IVORY, op=0.16):
+def rule(width=11.0, color=IVORY, op=0.22):
     l = Line(LEFT * width / 2, RIGHT * width / 2, color=color, stroke_width=1.2)
     l.set_opacity(op)
     return l
@@ -82,7 +86,7 @@ def trace_poly(values, width, height, color, sw=1.6, op=1.0):
 
 
 # =========================================================================
-# SCENE 1 — where the numbers come from
+# SCENE 1: where the numbers come from
 # =========================================================================
 class DataIn(Scene):
     def construct(self):
@@ -101,7 +105,7 @@ class DataIn(Scene):
             tr = trace_poly(eeg_trace(600, seed=i, spike_at=3.4 if i in (4,9,13,14) else None),
                             width=8.6, height=0.20,
                             color=BRASS if nm in ("Fz","Cz") else IVORY,
-                            sw=1.15, op=1.0 if nm in ("Fz","Cz") else 0.42)
+                            sw=1.25, op=1.0 if nm in ("Fz","Cz") else 0.50)
             lab = Text(nm, font=MONO, font_size=13,
                        color=BRASS if nm in ("Fz","Cz") else MUTE)
             lab.next_to(tr, LEFT, buff=0.28)
@@ -144,7 +148,7 @@ class DataIn(Scene):
         spine = Line(np.array([spine_x, rows.get_top()[1] - 0.08, 0]),
                      np.array([spine_x, rows.get_bottom()[1] + 0.08, 0]),
                      color=MUTE, stroke_width=1.2)
-        spine.set_opacity(0.5)
+        spine.set_opacity(0.45)
         nodes = VGroup(*[Dot(np.array([spine_x, r.get_center()[1], 0]),
                              radius=0.055,
                              color=CRIT if i == len(rows) - 1 else BRASS)
@@ -177,7 +181,7 @@ class DataIn(Scene):
 
 
 # =========================================================================
-# SCENE 2 — why calibration is personal
+# SCENE 2: why calibration is personal
 # =========================================================================
 class WhyCalibrate(Scene):
     def construct(self):
@@ -190,13 +194,13 @@ class WhyCalibrate(Scene):
         self.play(VGroup(eb, ttl).animate.scale(0.92).to_edge(UP, buff=0.42), run_time=0.6)
 
         ax = Axes(x_range=[0, 20, 5], y_range=[0, 1.35, 0.5],
-                  x_length=9.6, y_length=3.0,
+                  x_length=7.3, y_length=3.0,
                   axis_config={"color": MUTE, "stroke_width": 1.4,
                                "include_ticks": True, "font_size": 18,
-                               "tip_length": 0.14},
-                  ).move_to(DOWN * 0.35)
+                               "include_tip": False},
+                  ).move_to(np.array([-1.55, -0.35, 0]))
         xlab = body("seconds of quiet work", 18, MUTE).next_to(ax, DOWN, buff=0.16)
-        ylab = Text("frontal θ/α load index", font=MONO, font_size=16, color=MUTE)
+        ylab = Text("theta / alpha load index", font=MONO, font_size=16, color=MUTE)
         ylab.rotate(PI / 2).next_to(ax, LEFT, buff=0.22)
         self.play(Create(ax), FadeIn(xlab), FadeIn(ylab), run_time=1.0)
 
@@ -214,17 +218,17 @@ class WhyCalibrate(Scene):
         loA, hiA = max(0.0, muA - 2 * sdA), min(1.3, muA + 2 * sdA)
         bandA = Rectangle(width=ax.x_length,
                           height=abs(ax.c2p(0, hiA)[1] - ax.c2p(0, loA)[1]),
-                          fill_color=COOL, fill_opacity=0.14, stroke_width=0)
+                          fill_color=COOL, fill_opacity=0.16, stroke_width=0)
         bandA.move_to(ax.c2p(10, (loA + hiA) / 2))
         meanA = DashedLine(ax.c2p(0, muA), ax.c2p(20, muA), color=COOL, stroke_width=1.6)
-        statA = mono("µ = 0.42   σ = 0.11", 21, COOL)
+        statA = mono("µ = 0.42    σ = 0.11", 19, COOL)
         statA.next_to(ax.c2p(20, muA), RIGHT, buff=0.24)
         self.play(FadeIn(bandA), Create(meanA), FadeIn(statA), run_time=1.0)
         self.wait(0.6)
 
         # --- the formula
         z = MathTex(r"z \;=\; \frac{x-\mu}{\sigma}",
-                    color=IVORY, font_size=42).to_edge(DOWN, buff=0.28)
+                    color=IVORY, font_size=40).to_edge(DOWN, buff=0.30)
         self.play(Write(z), run_time=1.0)
         self.wait(0.7)
 
@@ -232,10 +236,10 @@ class WhyCalibrate(Scene):
         x_raw = 0.87
         ev = Line(ax.c2p(14.2, 0), ax.c2p(14.2, x_raw), color=BRASS, stroke_width=3.0)
         dot = Dot(ax.c2p(14.2, x_raw), color=BRASS, radius=0.075)
-        evlab = mono("x = 0.87", 20, BRASS).next_to(dot, UP, buff=0.16)
+        evlab = mono("x = 0.87", 20, BRASS).next_to(dot, UP, buff=0.34).shift(LEFT * 1.35)
         self.play(Create(ev), FadeIn(dot), FadeIn(evlab), run_time=0.8)
 
-        zA = mono("z = +4.1", 30, CRIT).next_to(statA, DOWN, buff=0.30).align_to(statA, LEFT)
+        zA = mono("z = +4.1", 27, CRIT).next_to(statA, DOWN, buff=0.30).align_to(statA, LEFT)
         self.play(FadeIn(zA, shift=LEFT * 0.2), run_time=0.7)
         fires = body("fires", 20, CRIT).next_to(zA, DOWN, buff=0.12).align_to(zA, LEFT)
         self.play(FadeIn(fires), run_time=0.4)
@@ -252,15 +256,15 @@ class WhyCalibrate(Scene):
         loB, hiB = max(0.0, muB - 2 * sdB), min(1.3, muB + 2 * sdB)
         bandB = Rectangle(width=ax.x_length,
                           height=abs(ax.c2p(0, hiB)[1] - ax.c2p(0, loB)[1]),
-                          fill_color=VIOLET, fill_opacity=0.14, stroke_width=0)
+                          fill_color=VIOLET, fill_opacity=0.16, stroke_width=0)
         bandB.move_to(ax.c2p(10, (loB + hiB) / 2))
         meanB = DashedLine(ax.c2p(0, muB), ax.c2p(20, muB), color=VIOLET, stroke_width=1.6)
-        statB = mono("µ = 0.55   σ = 0.38", 21, VIOLET)
+        statB = mono("µ = 0.55    σ = 0.38", 19, VIOLET)
         statB.next_to(ax.c2p(20, muB), RIGHT, buff=0.24)
         self.play(Create(curveB), FadeIn(nameB), run_time=1.6)
         self.play(FadeIn(bandB), Create(meanB), FadeIn(statB), run_time=0.9)
 
-        zB = mono("z = +0.8", 30, OKG).next_to(statB, DOWN, buff=0.30).align_to(statB, LEFT)
+        zB = mono("z = +0.8", 27, OKG).next_to(statB, DOWN, buff=0.30).align_to(statB, LEFT)
         self.play(FadeIn(zB, shift=LEFT * 0.2), run_time=0.7)
         quiet = body("ordinary", 20, OKG).next_to(zB, DOWN, buff=0.12).align_to(zB, LEFT)
         self.play(FadeIn(quiet), run_time=0.4)
@@ -278,7 +282,8 @@ class WhyCalibrate(Scene):
         self.play(FadeIn(punch[1], shift=UP * 0.2), run_time=0.7)
         sub = body("Spatial filters are tied to electrode positions and impedances, so weights\n"
                    "do not transfer between people, sessions or headsets. Retraining on the\n"
-                   "wearer, on the day, is mandatory — which is why we built the product around it.",
+                   "wearer, on the day, is mandatory. That is why per-user adaptation is the product."
+                   ,
                    21, DIM)
         sub.next_to(punch, DOWN, buff=0.55)
         self.play(FadeIn(sub), run_time=1.0)
@@ -286,7 +291,7 @@ class WhyCalibrate(Scene):
 
 
 # =========================================================================
-# SCENE 3 — four in a row, and why windows must not overlap
+# SCENE 3: four in a row, and why windows must not overlap
 # =========================================================================
 class Persistence(Scene):
     def construct(self):
@@ -304,7 +309,7 @@ class Persistence(Scene):
         for v in zs:
             h = max(abs(v), 0.05) * 0.62
             col = CRIT if v >= 2.0 else MUTE
-            r = Rectangle(width=bw, height=h, fill_color=col, fill_opacity=0.9, stroke_width=0)
+            r = Rectangle(width=bw, height=h, fill_color=col, fill_opacity=0.88, stroke_width=0)
             bars.add(r)
         bars.arrange(RIGHT, buff=gap, aligned_edge=DOWN).move_to(DOWN * 0.7)
         base = Line(bars.get_left() + LEFT * 0.35, bars.get_right() + RIGHT * 0.35,
@@ -324,13 +329,13 @@ class Persistence(Scene):
 
         # lone spike rejected
         lone = SurroundingRectangle(bars[2], color=MUTE, stroke_width=1.6, buff=0.10)
-        lonelab = body("one window — ignored", 19, MUTE).next_to(lone, UP, buff=0.22)
+        lonelab = body("one window only: ignored", 19, MUTE).next_to(lone, UP, buff=0.22)
         self.play(Create(lone), FadeIn(lonelab), run_time=0.7)
         self.wait(0.9)
         self.play(FadeOut(lone), FadeOut(lonelab), run_time=0.4)
 
         run = SurroundingRectangle(VGroup(*bars[6:10]), color=CRIT, stroke_width=2.0, buff=0.12)
-        runlab = body("four consecutive — capture", 20, CRIT).next_to(run, UP, buff=0.22)
+        runlab = body("four consecutive: capture", 20, CRIT).next_to(run, UP, buff=0.22)
         self.play(Create(run), FadeIn(runlab), run_time=0.8)
         self.wait(1.4)
 
@@ -341,37 +346,42 @@ class Persistence(Scene):
         ttl2.next_to(eb, DOWN, buff=0.30)
         self.play(FadeTransform(ttl, ttl2), run_time=0.8)
 
+        LEFT_X, WLEN = -5.15, 1.5
+
         def window_row(hop_frac, color, label, y):
             g = VGroup()
-            span = 7.4
-            wlen = 1.55
             for i in range(4):
-                r = Rectangle(width=wlen, height=0.40, stroke_color=color,
-                              stroke_width=1.6, fill_color=color, fill_opacity=0.16)
-                r.move_to(np.array([-span / 2 + wlen / 2 + i * wlen * hop_frac, y, 0]))
+                r = Rectangle(width=WLEN, height=0.42, stroke_color=color,
+                              stroke_width=1.7, fill_color=color, fill_opacity=0.15)
+                r.move_to(np.array([LEFT_X + WLEN / 2 + i * WLEN * hop_frac, y, 0]))
                 g.add(r)
-            lab = mono(label, 19, color).next_to(g, LEFT, buff=0.4)
-            lab.align_to(g, DOWN).shift(UP * 0.08)
+            lab = mono(label, 20, color)
+            lab.move_to(np.array([LEFT_X - 0.45, y, 0]))
+            lab.align_to(np.array([LEFT_X - 0.35, 0, 0]), RIGHT)
             return VGroup(g, lab)
 
-        r_over = window_row(0.25, CRIT, "hop 1 s", 0.55)
-        r_ind = window_row(1.00, OKG, "hop 4 s", -0.85)
-        cap_over = body("75 % shared data — four looks, two of them independent", 19, DIM)
-        cap_over.next_to(r_over, DOWN, buff=0.20).align_to(r_over[0], LEFT)
-        cap_ind = body("no shared data — four genuinely independent looks", 19, DIM)
-        cap_ind.next_to(r_ind, DOWN, buff=0.20).align_to(r_ind[0], LEFT)
+        def fa_number(txt, color, y):
+            n = mono(txt, 46, color)
+            n.move_to(np.array([4.35, y + 0.14, 0]))
+            s2 = body("false alarms / hour", 17, DIM)
+            s2.next_to(n, DOWN, buff=0.10)
+            return VGroup(n, s2)
+
+        r_over = window_row(0.25, CRIT, "hop 1 s", 0.75)
+        r_ind = window_row(1.00, OKG, "hop 4 s", -0.95)
+        cap_over = body("75 % shared data: two real looks", 20, DIM)
+        cap_over.move_to(np.array([LEFT_X, 0.24, 0])).align_to(np.array([LEFT_X, 0, 0]), LEFT)
+        cap_ind = body("no shared data: four real looks", 20, DIM)
+        cap_ind.move_to(np.array([LEFT_X, -1.46, 0])).align_to(np.array([LEFT_X, 0, 0]), LEFT)
 
         self.play(FadeIn(r_over), FadeIn(cap_over), run_time=0.9)
         self.play(FadeIn(r_ind), FadeIn(cap_ind), run_time=0.9)
         self.wait(1.0)
 
-        fa1 = mono("30.3", 44, CRIT).next_to(r_over, RIGHT, buff=0.75)
-        fa1s = body("false alarms / hour", 17, DIM).next_to(fa1, DOWN, buff=0.06)
-        fa2 = mono("1.3", 44, OKG).next_to(r_ind, RIGHT, buff=0.75)
-        fa2s = body("false alarms / hour", 17, DIM).next_to(fa2, DOWN, buff=0.06)
-        VGroup(fa2, fa2s).align_to(VGroup(fa1, fa1s), LEFT)
-        self.play(FadeIn(fa1), FadeIn(fa1s), run_time=0.6)
-        self.play(FadeIn(fa2), FadeIn(fa2s), run_time=0.6)
+        fa1 = fa_number("30.3", CRIT, 0.75)
+        fa2 = fa_number("1.3", OKG, -0.95)
+        self.play(FadeIn(fa1, shift=LEFT * 0.2), run_time=0.6)
+        self.play(FadeIn(fa2, shift=LEFT * 0.2), run_time=0.6)
         self.wait(0.8)
 
         punch = body("Same code. Same threshold. 24× fewer false alarms.", 26, BRASS)

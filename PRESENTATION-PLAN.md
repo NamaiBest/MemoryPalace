@@ -1,231 +1,235 @@
-# HackMIT presentation plan — MemoryPalace
+# HackMIT presentation plan, MemoryPalace
 
-Deck: **MemoryPalace Pitch Deck** (published artifact, opens in a browser, works offline once loaded).
-Written 2026-09-20. Every number below is sourced from this repository; the "source" column
-says where, so anything that changes in the code can be corrected here in one pass.
+Deliverable: **presentation/MemoryPalace-HackMIT.pptx**, 15 slides, 16:9.
+A PDF copy sits beside it as a fallback. Rewritten 2026-09-20.
 
 ---
 
-## 1. The shape of the pitch, and why it is not a linear deck
+## 0. Before you open it once
 
-A HackMIT expo slot is ~3 minutes plus questions, delivered **eight or nine times** to
-different judges, each of whom probes somewhere different. A linear deck optimises for the
-first delivery and fails every one after it.
+**Fonts: nothing to install.** The deck is set entirely in **Century Gothic**, which ships
+with Microsoft Office on both macOS and Windows. That is the whole reason it was chosen
+over Poppins or the app's own Geist: the previous version needed three font installs, did
+not get them, and PowerPoint substituted something ugly.
 
-So the deck is built as a **spine plus jump-to answers**:
+If you end up presenting on a machine with no Office at all, present the **PDF** instead.
+It has the fonts embedded so it always renders correctly. The trade is that a PDF cannot
+play the four embedded videos, so you would run those from Finder.
 
-- **Spine — exactly 3:00, 8 slides.** Identical every time. Rehearse this to the second.
-- **Ten deep dives**, each reachable with one keypress. You do not walk through them.
-  You land on one when a judge asks the question it answers.
+**Check the videos play.** Slides 3, 6, 7 and 8 carry embedded MP4s. Open the deck once on
+the presenting machine and click each one.
 
-The three Manim explainers (calibration, the trigger, the data) are **deep dives, not spine
-slides**. The arithmetic forces it: the film is 45 s and the three animations total 60 s.
-105 seconds of video in a 180-second slot leaves 75 seconds to say everything. Played as
-*answers* they land harder anyway.
+**Theme.** Light throughout: the app's ivory (#F3EFE5) as the ground, near-black text, a
+single brass accent. The three explainer animations were re-rendered light to match, so
+nothing on screen is a dark rectangle except the film itself, which is meant to be.
 
-### Deck controls
+## 1. Shape of the deck
 
-| Key | Does |
+| Slides | What they are |
 |---|---|
-| `→` `←` `Space` | Next / previous within the current route |
-| `1` … `0` | Jump straight to a deep dive |
-| `J` | Jump menu (all ten, with one-line descriptions) |
-| `Esc` | Return to the spine, at the slide you left |
-| `N` | Speaker notes |
-| `T` | Rehearsal timer — counts against the 3:00 budget, turns red when over |
-| `R` | Replay the video on the current slide |
-| `F` | Full screen |
+| 1 to 8 | The pitch. Roughly three minutes if you do not linger. |
+| 9 to 11 | One slide per sponsor track. Show the one that is judging you. |
+| 12 to 13 | The honesty slide and the close. |
+| 14 to 15 | Appendix. Architecture, and the demo run of show. |
 
-Clicking the right-hand two-thirds of the screen advances; the left third goes back.
+You do not show all fifteen to anybody. The core run for a three minute slot is
+**1, 2, 3, 4, 5, 12, 13**, then the sponsor slide for whoever is in front of you, then the
+explainers only if asked.
 
----
-
-## 2. The spine — 3:00, to the second
+### Slide list
 
 | # | Slide | Budget | The one thing to land |
 |---|---|---|---|
 | 1 | Title | 0:10 | "Your brain already flags the moments that mattered. We wired that flag to a camera." Then stop. |
-| 2 | The problem | 0:20 | **30–45 minutes.** The measured battery life of continuous video on Ray-Ban-class hardware. |
-| 3 | The film | 0:45 | Say nothing. Click, step back, watch the judges. |
-| 4 | How it works | 0:35 | Trace the diagram, stop on the brass box: **four consecutive elevated windows.** |
-| 5 | Evidence | 0:25 | Lead with the shuffled-label control at **34.79 %**, not the headline. |
-| 6 | Sponsor tracks | 0:20 | Read the status column aloud. Ask which track they judge. |
-| 7 | What we do not claim | 0:15 | "Every end-to-end run used synthetic EEG. It proves the plumbing, not the neuroscience." |
-| 8 | What's next | 0:10 | End on the roadmap line, then stop talking. |
+| 2 | The problem | 0:20 | **30 to 45 minutes.** Measured battery life of continuous wearable video. |
+| 3 | The film, 36 s | 0:40 | Say nothing. Click, step back, watch the judges. |
+| 4 | How a moment is chosen | 0:25 | Trace the row, stop on the brass box: **four consecutive elevated windows.** |
+| 5 | What happens to the clip | 0:20 | The clip is committed locally **before** anything touches the network. |
+| 6 | Calibration, animated | on request | "Same amplitude, opposite conclusion." |
+| 7 | The trigger, animated | on request | Same code, same threshold, 24 times fewer false alarms. |
+| 8 | The data, animated | on request | What is frozen before any model is fit. |
+| 9 | Elastic | 0:30 | Built and not built, side by side. |
+| 10 | Meta | 0:30 | Same. |
+| 11 | VoloRidge | 0:30 | Same. |
+| 12 | What we do not claim | 0:15 | "Every end to end run used synthetic EEG." |
+| 13 | What is next | 0:10 | Per user adaptation is the product, not a setup step. |
+| 14 | Appendix, what runs | on request | The phone never talks to the browser. |
+| 15 | Appendix, run of show | for you | The demo order, and what to say when it breaks. |
 
-**Total 3:00.** Slide 3 is a fifth of your slot — protect it by cutting words elsewhere,
-never by talking over the film.
+Speaker notes are written into every slide. In PowerPoint use Presenter View, or
+View then Notes Page to print them.
 
-### Beat-by-beat script
+---
 
-**1 · Title (0:10)**
-> "MemoryPalace. Your brain already flags the moments that mattered — you have felt it,
-> the jolt when something surprises you. Nobody has ever wired that flag to a camera."
+## 2. Beat by beat, slides 1 to 5
 
-Do not introduce the team, the stack, or the hardware here.
+**1, Title.**
+> "MemoryPalace. Your brain already flags the moments that mattered. You have felt it, the
+> jolt when something surprises you. Nobody has ever wired that flag to a camera."
 
-**2 · Problem (0:20)**
-> "The obvious answer is record everything. We measured it: continuous video on
-> Ray-Ban-class hardware gives you thirty to forty-five minutes. Dead before lunch. And
-> even if the battery held, nobody scrubs ten hours of first-person footage, so nothing in
-> it is ever recovered. The wearable-camera research that actually helped dementia patients
-> — SenseCam — never recorded video at all. One still every thirty seconds.
+Do not introduce the team, the stack or the hardware here.
+
+**2, The problem.**
+> "The obvious answer is record everything. We measured it. Continuous video on Ray-Ban
+> class hardware gives you thirty to forty five minutes. Dead before lunch. And even if the
+> battery held, nobody scrubs ten hours of their own footage, so nothing in it is ever
+> recovered. The wearable camera research that actually helped dementia patients, SenseCam,
+> never recorded video at all. One still every thirty seconds.
 > Capture is solved. Deciding what is worth capturing is the product."
 
-**3 · Film (0:45)** — silence.
+**3, The film.** Silence. Thirty six seconds.
 
-**4 · How it works (0:35)**
-> "Every moment you just saw was chosen by a signal, not a button. Four-second windows of
-> frontal theta-alpha, z-scored against *your* calibrated baseline. When four consecutive
-> windows come back elevated, the phone wakes, records ten seconds, and closes again. That
-> clip is written to a local catalog *before* anything touches the network, then described
-> by Muse Spark, embedded by Jina, and indexed in Elastic."
+**4, How a moment is chosen.**
+> "Every moment you just saw was chosen by a signal, not a button. Four second windows of
+> frontal theta alpha power, z scored against your own calibrated baseline. When four
+> consecutive windows come back elevated, and only then, the phone wakes up."
 
 Hand on the brass box for "four consecutive".
 
-**5 · Evidence (0:25)**
-> "Three questions, three datasets. Is there real signal in personal EEG — 65.8 % on a
-> three-class task from our own recordings against 33.3 % chance, and the shuffled-label
-> control lands at 34.79 %, which is the check that it is not a leak. How few electrodes —
-> a Crown-like eight gets 0.763 against 0.778 for the full sixteen. Does it survive a
-> stranger — 0.747 leave-one-participant-out, with shuffled and pre-event controls at
-> chance. The fourth card is the electrode sensitivity sweep, still in progress, and it is
-> labelled as such."
+**5, What happens to the clip.**
+> "Ten seconds, then the camera closes again. The clip is written to a local atomic catalog
+> before anything touches the network. Only then is it described, embedded and indexed. A
+> sponsor service outage degrades search. It can never lose a memory."
 
-**6 · Sponsors (0:20)**
-> "Each sponsor owns a different edge of the same pipeline. Elastic is the retrieval layer
-> — running live, twelve of twelve moments indexed. Meta is understanding and the agent —
-> also live. VoloRidge is the public-data work; the evidence exists, the submission framing
-> does not yet, and I am not going to round that up. Which track are you judging?"
+**12, What we do not claim.** Flat delivery, no apology. Read three of the five rows.
 
-Then press `4`, `5` or `6`.
-
-**7 · What we do not claim (0:15)** — flat delivery, no apology. Read three of the five.
-
-**8 · Close (0:10)**
-> "EEG is non-stationary, so a frozen model decays. Retraining on the wearer is mandatory
-> — which is why per-user adaptation is the product and not a setup step. Every moment you
-> confirm or dismiss is a label. We will show the learning curve, and if it is flat we will
-> say so."
+**13, Close.**
+> "EEG is non stationary, so a frozen model decays. Retraining on the wearer is mandatory,
+> which is why per user adaptation is the product and not a setup step. Every moment you
+> confirm or dismiss is a label."
 
 Stop. Let them ask.
 
 ---
 
-## 3. The ten deep dives, and which question each answers
+## 3. Why there are no accuracy numbers in this deck
 
-| Key | Deep dive | Reach for it when a judge asks |
-|---|---|---|
-| `1` | Why calibration is personal (Manim) | "Why calibrate at all?" · "Why can't you ship a pre-trained model?" |
-| `2` | The trigger, and our own bug (Manim) | "How do you know it isn't noise?" · "What's your false-positive rate?" |
-| `3` | Where the numbers come from (Manim) | "Which dataset?" · anything about peak-to-peak |
-| `4` | Elastic — hybrid recall | Elastic judges · "why not just a vector database?" |
-| `5` | Meta — understanding + agent | Meta judges · "what does the model actually do?" |
-| `6` | VoloRidge — public data | VoloRidge judges · "is this reproducible?" |
-| `7` | How many electrodes, and where | "Why the Crown?" · "Could you do this with two electrodes?" |
-| `8` | Operating points | "What's your accuracy?" |
-| `9` | What actually runs | "Is any of this real?" · "Show me the architecture" |
-| `0` | The eight questions | Your own cheat sheet — rehearse, don't present |
+Deliberate, and worth being able to explain if a judge asks.
+
+The repository does contain measured results, but the strongest of them answer a
+*different* question from the one this product asks. The 3 class mental imagery result was
+recorded on an EPOC X, which is neither the product hardware nor the product task. Quoting
+it invites exactly the question you do not want: "so what is your accuracy at detecting
+confusion?" The honest answer is that no such number exists yet, because there has been no
+validated human detection.
+
+So the deck claims the **method and the engineering**, and slide 12 says plainly what is
+not yet true. When Albert's electrode sweep lands, an evidence slide goes back in between
+slides 5 and 9, and the sweep is the thing it reports: detection rate, false positives and
+false negatives at 4, 8 and 16 electrodes, tuned for recall.
+
+If a judge presses for a number before then:
+
+> "Accuracy is the wrong metric for a rare event trigger, and we do not have a validated
+> human number yet. What we can show you is the false alarm engineering."
+
+Then go to slide 7.
 
 ---
 
 ## 4. One correction to make before you rehearse
 
-The pitch has been described internally as: *train the brain to a minimum, flash something
-unexpected, measure peak-to-peak amplitude, that value differs per person, therefore
-calibration.* **The conclusion is right and the mechanism is wrong**, and a judge who opens
+The pitch has been described internally as: train the brain to a minimum, flash something
+unexpected, measure peak to peak amplitude, that value differs per person, therefore
+calibration. **The conclusion is right and the mechanism is wrong**, and a judge who opens
 the repo will notice.
 
-What `confusion-detector/` actually does (`src/config.py`, `README.md`):
+What `confusion-detector/` actually does, per `src/config.py` and its README:
 
-- 4-second **non-overlapping** windows
-- frontal **theta/alpha band power** — a state over seconds, explicitly *not* an ERP
-- z-scored against the wearer's calibrated baseline
+- 4 second **non overlapping** windows
+- frontal **theta over alpha band power**, a state over seconds, explicitly not an ERP
+- z scored against the wearer's calibrated baseline
 - fires after **k = 4** consecutive windows above **z = 2.0**
 
-Peak-to-peak appears exactly once in the pipeline: as the **±150 µV artifact-rejection
-threshold**, which throws an epoch away. It does not detect anything.
+Peak to peak appears exactly once in the pipeline, as the **plus or minus 150 microvolt
+artifact rejection threshold**, which throws an epoch away. It does not detect anything.
 
-The correct calibration story is stronger, not weaker: **µ and σ are yours.** Two people can
-show identical raw amplitude and score z = +4.1 and z = +0.8 — one fires the camera, one is
-a Tuesday. That is exactly what deep dive `1` animates.
+The correct calibration story is stronger. **Mu and sigma are yours.** Two people can show
+identical raw amplitude and score z = +4.1 and z = +0.8. One fires the camera, one is a
+Tuesday. That is what slide 6 animates.
 
-If you still want the P300 / oddball story in the pitch, it has to be labelled as the
-**proposed calibration protocol**, never as what the detector runs.
-
----
-
-## 5. Numbers you are allowed to say, and where they come from
-
-| Claim | Value | Source |
-|---|---|---|
-| Personal EEG, 3-class | 65.79 % ± 4.33 (chance 33.3 %) | `my-dataset/results.json` |
-| Shuffled-label control | 34.79 % | same |
-| Within-subject, all 16 ch | 0.778 AUC | `confusion-detector/CHANNELS.md` |
-| Within-subject, Crown-like 8 | 0.763 AUC | same |
-| Within-subject, Fz+Cz | 0.719 AUC | same |
-| Within-subject, glasses F7+F8 | 0.601 AUC (worst-ranked region) | same |
-| Cross-subject LOSO | 0.747 AUROC, 65.4 % balanced | `other/reserach/README.md`, `xueqi-validation/RESULTS.md` |
-| Negative controls | majority 0.500 · shuffled 0.477 · pre-event 0.503 | `xueqi-validation/RESULTS.md` §13 |
-| Overlap effect | 30.3 → 18.9 → 1.3 false alarms/hr | `confusion-detector/README.md` |
-| Default operating point | 100 % detection, 7.2 false/hr, 15.7 s latency | same |
-| First continuous detector | 1.5 % detection, ~29 false triggers/hr | `xueqi-validation/RESULTS.md` §10–11 |
-| Dataset | ds006394, 33 participants, 16 ch, 125 Hz, CC0, 56 usable | `xueqi-validation/RESULTS.md` §1 |
-| Elastic | 12 / 12 moments indexed, verified 2026-09-19 | `FULFILLMENT_SPONSORS.md` |
-| Phone client | verified on a physical Samsung S23, 2026-09-19 | root `README.md` |
-
-**Do not say**: a validated human detection, a calibrated probability, an accuracy figure
-for the end-to-end system, or anything about emotion.
+If you still want the P300 oddball story in the pitch, label it as the **proposed
+calibration protocol**, never as what the detector runs.
 
 ---
 
-## 6. Open items before Sunday
+## 5. Sponsor slides
 
-1. **Albert's electrode sweep.** Slide 5 has a dashed placeholder card sized for it —
-   detection rate, false positives, false negatives at 4 / 8 / 16 channels, tuned for
-   recall. Replacing the placeholder is a five-line edit.
-2. **Standardise the clip length.** The repo alternates between 10 s and 30 s. The deck
-   says **10 s** throughout. Pick one and make the code, the README and the deck agree.
-3. **MongoDB.** Deliberately cut from the deck — it is planned, not built, and a slide
-   claiming it as the persistence layer is a Q&A trap. It appears once, on the roadmap
-   pills, as a future cloud metadata layer.
-4. **VoloRidge framing.** The status pill says "evidence exists · framing pending", which
-   is accurate. If someone writes the submission framing before Sunday, change the pill to
-   `live` and say so.
-5. **The film's illustrative graphics.** `video/memory-palace/README.md` notes the on-screen
-   signal values (surprise 98 %, frustration 68 %, curiosity 37 %) are storytelling values,
-   not measurements. If a judge freezes on them, say that first — do not be caught
-   defending a number the film's own documentation disowns.
+Slides 9, 10 and 11 are each split into what we built and what we have not built. Read the
+right hand column out loud. Most teams skip it, which is exactly why doing it works.
+
+Current status, in one line each:
+
+- **Elastic.** Implemented and verified live on Elastic Cloud. Workflows and Agent Builder
+  are documented as future work, not presented as done.
+- **Meta.** Muse Spark and Voice Transcribe implemented and verified live. Output speech is
+  the browser voice, labelled as such, not a Meta TTS API. No physical glasses.
+- **VoloRidge.** The evidence exists in `xueqi-validation/` and `confusion-detector/`. The
+  sponsor specific submission framing does not. Do not round that up. If somebody writes it
+  before Sunday, change the slide.
+
+**Logos.** The slides use a typographic treatment: each sponsor's name set large in its own
+brand colour. If you want real logo art, drop official files into
+`presentation/logos/` and they can be placed on the matching slide. Do not approximate a
+sponsor's logo by hand, it reads worse than no logo at all.
 
 ---
 
-## 7. Demo run-of-show and fallbacks
+## 6. Assets built for this
 
-**If you demo live**, the order is: pair the phone → `/live` → Simulate Neural Spike →
-camera opens, records, closes → the moment appears in the gallery → `/explore`, type
-"laptop keyboard", show it returning first via `elastic-rrf-jina-v5-omni` → click the
-timeline dot to replay the source clip.
+| Path | What |
+|---|---|
+| `presentation/MemoryPalace-HackMIT.pptx` | The deck. Videos embedded. |
+| `presentation/MemoryPalace-HackMIT.pdf` | Fonts embedded, no video. Fallback. |
+| `presentation/manim/scenes.py` | The three animations, with every number sourced to a repo file. |
+| `presentation/logo/` | Three logo concepts, lockup, horizontal and app icon, light and dark, transparent PNG and SVG. |
+| `presentation/logo/thumbnail/` | Submission thumbnails at 1280x720, 1200x630 and 1080x1080. |
+| `presentation/logo/review-all-three-light.png` | All three concepts side by side on the ivory ground, for picking. |
 
-Known failure modes and what to say:
+The film used in the deck is **MemoryPalace-36s.mp4**, the newer rebuild, not the 45 second
+cut.
+
+---
+
+## 7. Open items before Sunday
+
+1. **Albert's electrode sweep.** See section 3 for exactly what slide it becomes.
+2. **Standardise the clip length.** The repo alternates between 10 s and 30 s. The deck says
+   10 s throughout. Make the code, the README and the deck agree.
+3. **Pick a logo.** Three concepts are in `presentation/logo/`. The submission thumbnail
+   needs one of them.
+4. **Confirm Century Gothic exists** on whatever machine presents, or present the PDF.
+5. **The film's on screen graphics.** `../memorypalace-video/memory-palace/PRODUCTION-NOTES.md` says the
+   signal values in the film are storytelling values, not measurements. If a judge freezes
+   on them, say that first. Do not be caught defending a number the film's own
+   documentation disowns.
+
+---
+
+## 8. Demo run of show
+
+Slide 15 carries this, so you can put it on screen while you set up.
+
+Order: pair the phone, open `/live`, simulate a neural spike, camera records ten seconds
+and closes, the moment appears in the gallery, search `/explore` for a phrase from the clip,
+click the timeline dot to replay it.
 
 | If | Then |
 |---|---|
-| The frontend looks right but nothing is interactive | You are on `next dev`. Hydration never completes. Use the production build: `npm run build && npm start`. |
-| The gallery is empty | That is the honest state, not a bug — nothing is seeded. Say so and capture one. |
-| Elastic is unreachable | Search falls back to local text matching and the label under the box says so. This is a designed degradation; show it rather than hiding it. |
+| Page renders but nothing responds | You are on `next dev`, hydration never completes. Use `npm run build && npm start`. |
+| Gallery is empty | That is the honest state, nothing is seeded. Capture one. |
+| Elastic unreachable | Search falls back to local text matching and the label says so. Show it rather than hiding it. |
 | No model key | Memory Guard answers from the local catalog with citations, clearly labelled. It never claims to be Meta or Grok. |
-| Wi-fi is gone entirely | The deck is self-contained once loaded. Run the whole backend with `hardware-demo/run.py demo --recorder phone` — no hardware needed. |
+| No wifi at all | `confusion-detector/.venv/bin/python hardware-demo/run.py demo --recorder phone` runs the whole thing with no hardware. |
 
-Open `/debug` if any link in the chain is in doubt; it names which one is down.
+`/debug` names which link in the chain is down.
 
 ---
 
-## 8. Rehearsal
+## 9. Rehearsal
 
-- Press `T` and run the spine three times until you finish between 2:50 and 3:00 without
-  hurrying slide 7.
-- Then rehearse **deep-dive entry**: have someone read a question off slide `0`, and
-  practise landing on the right key in under two seconds. That transition is what makes the
-  format work.
+- Run slides 1 to 5, then 12 and 13, on a timer. Target 2:50 to 3:00 without hurrying 12.
+- Rehearse **jumping to a sponsor slide**. Practise asking "which track are you judging?"
+  and landing on 9, 10 or 11 in under two seconds.
 - Rehearse the film in silence at least once. The instinct to narrate over it is strong and
-  it costs you the whole 45 seconds.
+  it costs you the whole thirty six seconds.
