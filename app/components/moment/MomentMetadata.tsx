@@ -20,9 +20,7 @@ export function MomentMetadata({ moment }: { moment: Moment }) {
         <h1 className="mt-3 font-serif text-3xl md:text-4xl">
           {momentTitle(moment)}
         </h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-fg-dim">
-          {moment.aiDescription ?? moment.summary}
-        </p>
+        <Description moment={moment} />
       </div>
       <dl className="grid grid-cols-2 gap-x-6 gap-y-5 text-sm md:grid-cols-1">
         <div>
@@ -67,5 +65,66 @@ export function MomentMetadata({ moment }: { moment: Moment }) {
         </div>
       </dl>
     </section>
+  );
+}
+
+/**
+ * The description has three honest states, and they must not look alike.
+ *
+ * While extraction or analysis is still pending the Meta call is in flight — that can
+ * take a while — so show that it is coming rather than quietly substituting the generic
+ * summary, which reads as "the writeup never happened". If analysis failed, say so and
+ * show the error, because a fallback sentence presented as a description is a lie by
+ * omission. Only when it genuinely completed does the AI text stand on its own. The
+ * provider polls every few seconds, so a pending state fills in without a refresh.
+ */
+function Description({ moment }: { moment: Moment }) {
+  const p = moment.processing;
+  const pending = p?.extraction === "pending" || p?.analysis === "pending";
+  const failed = moment.vision?.status === "failed" || p?.analysis === "failed";
+
+  if (pending) {
+    return (
+      <div className="mt-4 max-w-2xl" role="status" aria-live="polite">
+        <p className="flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase text-accent">
+          <span className="processing-ring h-3.5 w-3.5" aria-hidden />
+          {p?.extraction === "pending" ? "Extracting the clip…" : "Meta is describing this moment…"}
+        </p>
+        <p className="mt-2 text-base leading-7 text-fg-mute">{moment.summary}</p>
+        <p className="mt-2 text-[12px] leading-5 text-fg-mute">
+          The full description fills in here on its own — typically well under a minute,
+          occasionally longer for a busy clip. No need to refresh.
+        </p>
+      </div>
+    );
+  }
+
+  if (p?.analysis === "not_configured") {
+    return (
+      <div className="mt-4 max-w-2xl">
+        <p className="text-base leading-7 text-fg-dim">{moment.summary}</p>
+        <p className="mt-3 text-[12px] leading-5 text-fg-mute">
+          No AI description: the backend was started without <code className="font-mono">MODEL_API_KEY</code>.
+        </p>
+      </div>
+    );
+  }
+
+  if (failed) {
+    return (
+      <div className="mt-4 max-w-2xl">
+        <p className="text-base leading-7 text-fg-dim">{moment.summary}</p>
+        <p className="mt-3 border-l-2 border-error/60 pl-3 text-[12px] leading-5 text-fg-dim">
+          AI description unavailable
+          {moment.vision?.error ? `: ${moment.vision.error}` : "."}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <p className="mt-4 max-w-2xl text-base leading-7 text-fg-dim">
+      {moment.aiDescription ?? moment.summary}
+    </p>
   );
 }
