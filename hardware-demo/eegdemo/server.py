@@ -12,12 +12,13 @@ from urllib.parse import parse_qs, unquote, urlsplit
 from zoneinfo import ZoneInfo
 
 from .agent import AgentError, MemoryGuard
+from .digest import DailyDigest, DigestError
 from .elastic_store import ElasticStore
 from .imagery import ImageryError, MetaKeepsakeArtist
 from .library import MAX_UPLOAD_BYTES, Library
 from .pipeline import Pipeline
 from .recording import PhoneRecorder, TestVideoRecorder
-from .vision import MetaVideoDescriber
+from .vision import MetaVideoDescriber, VisionError
 from .voice import MAX_AUDIO_BYTES, MetaVoiceTranscriber, VoiceError
 
 
@@ -49,6 +50,9 @@ class Runtime:
         self.library = Library(self.output, self.emit, self.elastic, self.vision,
                                storage=library_dir, legacy_runs=legacy_runs,
                                session_id=self.output.name)
+        self.digest = DailyDigest(self.emit, self.library, self.guard,
+                                  state_dir=self.library.dir)
+        self.digest.start()
         self.timed_capture = None
         self.capture_timer = None
 
@@ -82,7 +86,7 @@ class Runtime:
                 "library": self.library.status(), "session_dir": str(self.output),
                 "timed_capture": self.timed_capture, "elastic": self.elastic.status(),
                 "vision": self.vision.status(), "voice": self.voice.status(),
-                "imagery": self.artist.status(),
+                "imagery": self.artist.status(), "digest": self.digest.status(),
                 "agent": self.guard.status()}
 
     @staticmethod
@@ -209,6 +213,43 @@ class Runtime:
             })
             return self._local_guard_answer(
                 question, moments, retrieval_engine, date_scope)
+
+    def daily_digest(self, body):
+        """Compose today's digest, and send it only when explicitly asked to."""
+        day = body.get("date")
+        if day is not None and not isinstance(day, str):
+            raise ValueError("date must be YYYY-MM-DD")
+        if body.get("send"):
+            return {"sent": True, **self.digest.send(day, force=bool(body.get("force")))}
+        return {"sent": False, **self.digest.build(day)}
+
+    def locate_objects(self, body):
+        """What is in this moment's frame, and where. Cached on the moment once found."""
+        moment_id = body.get("momentId")
+        if not isinstance(moment_id, str) or not moment_id:
+            raise ValueError("momentId is required")
+        with self.lock:
+            moment = next((dict(item) for item in self.library.moments
+                           if item.get("id") == moment_id
+                           and item.get("status") != "deleted"), None)
+        if moment is None:
+            raise ValueError("unknown moment")
+        if moment.get("objects") and not body.get("refresh"):
+            return {"objects": moment["objects"], "cached": True,
+                    "provider": "Meta Muse Spark", "model": self.vision.model}
+        poster = (moment.get("media") or {}).get("thumbnailUrl", "")
+        path = self.library.path_for(poster.rsplit("/", 1)[-1]) if poster else None
+        if path is None:
+            raise ValueError("this moment has no frame to look at")
+        objects = self.vision.locate_objects(path)
+        with self.lock:
+            for stored in self.library.moments:
+                if stored["id"] == moment_id:
+                    stored["objects"] = objects
+                    break
+            self.library._persist()
+        return {"objects": objects, "cached": False,
+                "provider": "Meta Muse Spark", "model": self.vision.model}
 
     def make_keepsake(self, body):
         """Turn one moment into a keepsake illustration with Meta Muse Image."""
@@ -486,6 +527,18 @@ def create_server(runtime, host="127.0.0.1", port=8771):
                 body = json.loads(self.rfile.read(length))
                 if not isinstance(body, dict):
                     raise ValueError("JSON body must be an object")
+                if route == "/digest":
+                    # Composing runs Muse Spark over the whole day, so it is slow and
+                    # must not hold the capture lock.
+                    try:
+                        return self.send(200, runtime.daily_digest(body))
+                    except DigestError as exc:
+                        return self.send(503, {"error": str(exc)})
+                if route == "/moments/objects":
+                    try:
+                        return self.send(200, runtime.locate_objects(body))
+                    except VisionError as exc:
+                        return self.send(503, {"error": str(exc)})
                 if route == "/moments/keepsake":
                     # Image generation takes tens of seconds and must not hold the lock.
                     try:

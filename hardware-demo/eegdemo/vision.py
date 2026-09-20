@@ -202,6 +202,79 @@ class MetaVideoDescriber:
                 sources.append({"title": "Public web source", "url": url[:1000]})
         return grounded, used, sources
 
+    OBJECT_SCHEMA = {
+        "type": "object", "additionalProperties": False, "required": ["objects"],
+        "properties": {"objects": {"type": "array", "items": {
+            "type": "object", "additionalProperties": False,
+            "required": ["label", "x", "y", "width", "height", "confidence"],
+            "properties": {
+                "label": {"type": "string"},
+                "x": {"type": "number"}, "y": {"type": "number"},
+                "width": {"type": "number"}, "height": {"type": "number"},
+                "confidence": {"type": "number"}}}}},
+    }
+
+    def locate_objects(self, path):
+        """Find the objects in a frame and where they are, as normalised boxes.
+
+        This is the tap-an-object feature. It uses Muse Spark rather than SAM 3.1:
+        SAM is listed on the account and ingests an image, reporting images_processed,
+        but returns an empty output through every surface the gateway exposes, so it
+        yields no mask to draw. Boxes from Spark deliver the same interaction, and the
+        moment SAM starts returning geometry this is the single call to swap.
+
+        Coordinates are fractions of the frame, x and y at the top left corner, so the
+        browser can scale them to whatever size the image is displayed at.
+        """
+        if not self.enabled:
+            raise VisionError(self.last_error or "Meta image understanding is unavailable")
+        suffix = path.suffix.lower()
+        mime = {".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+                ".png": "image/png", ".webp": "image/webp"}.get(suffix)
+        if mime is None:
+            raise VisionError("object lookup needs an image frame")
+        media = base64.b64encode(path.read_bytes()).decode("ascii")
+        payload = {
+            "model": self.model,
+            "instructions": (
+                "Locate every distinct physical object in this first-person frame. "
+                "Return normalised coordinates between 0 and 1, where x and y are the "
+                "top left corner of the box. Include only objects actually visible, at "
+                "most 8, most prominent first. Never guess at a person's identity and "
+                "never label a face."
+            ),
+            "input": [{"type": "message", "role": "user", "content": [
+                {"type": "input_text", "text": "Find the objects and their boxes."},
+                {"type": "input_image", "image_url": f"data:{mime};base64,{media}"}]}],
+            "text": {"format": {"type": "json_schema", "name": "objects",
+                                 "strict": True, "schema": self.OBJECT_SCHEMA}},
+            "reasoning": {"effort": "minimal"},
+            "max_output_tokens": 2000,
+        }
+        result = self._request(payload)
+        data = self._json_output(self._output_text(result))
+        objects = []
+        for item in (data.get("objects") or [])[:8]:
+            try:
+                box = {
+                    "label": str(item["label"])[:60],
+                    "x": max(0.0, min(1.0, float(item["x"]))),
+                    "y": max(0.0, min(1.0, float(item["y"]))),
+                    "width": max(0.0, min(1.0, float(item["width"]))),
+                    "height": max(0.0, min(1.0, float(item["height"]))),
+                    "confidence": max(0.0, min(1.0, float(item["confidence"]))),
+                }
+            except (KeyError, TypeError, ValueError):
+                continue
+            # A box that starts inside the frame but runs past its edge is clipped
+            # rather than dropped; the model is estimating, not measuring.
+            box["width"] = min(box["width"], 1.0 - box["x"])
+            box["height"] = min(box["height"], 1.0 - box["y"])
+            if box["width"] > 0.01 and box["height"] > 0.01:
+                objects.append(box)
+        self.emit("objects_located", {"count": len(objects), "model": self.model})
+        return objects
+
     def describe(self, path, context=None):
         if not self.configured:
             raise VisionError("set MODEL_API_KEY")
