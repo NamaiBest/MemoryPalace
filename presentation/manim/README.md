@@ -15,7 +15,7 @@ Needs `libcairo2-dev libpango1.0-dev dvisvgm texlive ffmpeg` plus `pip install m
 and the repo's own fonts on the font path so the animations match the app:
 
 ```bash
-cp ../../video/memory-palace/fonts/*.ttf ~/.local/share/fonts/ && fc-cache -f
+cp ../../../memorypalace-video/memory-palace/fonts/*.ttf ~/.local/share/fonts/ && fc-cache -f
 python -m manim --resolution 1920,1080 --fps 30 scenes.py DataIn
 python -m manim --resolution 1920,1080 --fps 30 scenes.py WhyCalibrate
 python -m manim --resolution 1920,1080 --fps 30 scenes.py Persistence
