@@ -161,7 +161,12 @@ class DailyDigest:
         request = urllib.request.Request(
             self.api_url, data=json.dumps(payload).encode(), method="POST",
             headers={"Authorization": f"Bearer {self.api_key}",
-                     "Content-Type": "application/json"})
+                     "Content-Type": "application/json",
+                     # Without an explicit agent, urllib sends "Python-urllib/3.x",
+                     # which the API's edge blocks with a Cloudflare 1010 before the
+                     # request ever reaches Resend. The key was never the problem.
+                     "User-Agent": "MemoryPalace/1.0",
+                     "Accept": "application/json"})
         try:
             with urllib.request.urlopen(request, timeout=30) as response:
                 return json.loads(response.read() or b"{}")
