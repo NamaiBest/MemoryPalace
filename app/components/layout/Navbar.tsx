@@ -33,8 +33,9 @@ export function Navbar() {
           aria-label="MemoryPalace home"
           className="flex items-center gap-3 font-serif text-[1.6rem] tracking-[0.12em] text-fg"
         >
-          <LogoMark />
+          <LogoMark side="calm" />
           MemoryPalace
+          <LogoMark side="spike" />
         </Link>
         <div className="flex flex-wrap items-center justify-end gap-4 md:gap-7">
           <ul className="flex items-center gap-5 sm:gap-8 md:gap-10">
