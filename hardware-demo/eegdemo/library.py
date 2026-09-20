@@ -310,6 +310,7 @@ class Library:
     def _enrich_and_index_all(self):
         for moment in list(self.moments):
             if moment.get("status") == "deleted":
+                self._purge_deleted(moment)
                 continue
             needs_analysis = (self.vision and self.vision.enabled
                               and (moment.get("vision", {}).get("status") != "complete"
@@ -321,6 +322,41 @@ class Library:
             video_url = moment.get("media", {}).get("videoUrl", "")
             media_path = self.path_for(video_url.rsplit("/", 1)[-1]) if video_url else None
             self._enrich_and_index(moment["id"], media_path)
+
+    def _purge_deleted(self, moment):
+        """Make a local deletion stick in Elastic, retrying until it does.
+
+        Deleting a moment removes it locally and asks Elastic to drop its document. If
+        that request fails, the document stays behind carrying whatever status it had
+        when it was indexed, which is "candidate". Search excludes documents whose own
+        status says "deleted", so a document that never received the delete is not
+        excluded by anything: the moment keeps coming back in search and in Memory
+        Guard's retrieval after the person deleted it.
+
+        Nothing retried that, so a delete issued during an Elastic outage was lost for
+        good. This runs on the same sweep as enrichment and indexing, so the deletion
+        heals the moment Elastic is reachable again. "purged" marks the ones that are
+        done, so a completed deletion is not retried on every pass.
+        """
+        if not (self.elastic and self.elastic.configured):
+            return
+        processing = moment.get("processing") or {}
+        if processing.get("indexing") != "complete":
+            return
+        try:
+            self.elastic.delete_moment(moment["id"])
+        except Exception as exc:
+            self.emit("elastic_purge_failed", {
+                "moment": moment["id"], "error": str(exc)[:200],
+            })
+            return
+        with self.lock:
+            for stored in self.moments:
+                if stored["id"] == moment["id"]:
+                    stored.setdefault("processing", {})["indexing"] = "purged"
+                    break
+            self._persist()
+        self.emit("elastic_moment_purged", {"moment": moment["id"]})
 
     def note_trigger(self, recording_id, detail):
         """Remember why a recording was stopped, to attach to its media later."""
@@ -504,9 +540,16 @@ class Library:
             try:
                 self.elastic.delete_moment(moment_id)
                 elastic_removed = True
+                # Every other writer mutates the catalog under the lock, so this one does
+                # too. "purged" stops the retry sweep re-deleting a document that is gone.
+                with self.lock:
+                    moment.setdefault("processing", {})["indexing"] = "purged"
+                    self._persist()
             except Exception as exc:
-                # Search also filters deleted documents, so a temporary Elastic outage
-                # cannot make the locally deleted memory visible again.
+                # Deliberately left for the retry sweep. Search filters on the document's
+                # own status field, so a document that never received this delete still
+                # reads "candidate" and is not filtered by anything. The deletion has to
+                # actually reach Elastic; it cannot be assumed away.
                 self.emit("elastic_delete_failed", {
                     "moment": moment_id, "error": str(exc)[:500],
                 })

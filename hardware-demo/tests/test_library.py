@@ -106,6 +106,47 @@ class LibraryTests(unittest.TestCase):
         library.delete_moment(moment["id"])
         self.assertEqual(elastic.deleted, [moment["id"]])
 
+    def test_a_failed_elastic_delete_is_retried_until_it_sticks(self):
+        """A deletion lost to an outage must not leave the moment searchable.
+
+        Search filters on the document's own status field, so a document that never
+        received the delete still reads "candidate" and nothing excludes it. The sweep
+        has to finish the job once Elastic is reachable again.
+        """
+        class Elastic:
+            configured = True
+
+            def __init__(self):
+                self.deleted = []
+                self.fail = True
+
+            def delete_moment(self, moment_id):
+                if self.fail:
+                    raise RuntimeError("elastic unreachable")
+                self.deleted.append(moment_id)
+
+        elastic = Elastic()
+        library = Library(self.dir.name, lambda k, d: self.events.append((k, d)),
+                          elastic=elastic)
+        with patch.object(library, "_poster", return_value=None), \
+                patch("eegdemo.library.threading.Thread"):
+            moment = library.store(b"video", "video/mp4")
+        library.moments[0].setdefault("processing", {})["indexing"] = "complete"
+
+        library.delete_moment(moment["id"])
+        self.assertEqual(elastic.deleted, [])                       # the delete was lost
+        self.assertEqual(library.moments[0]["status"], "deleted")   # but it is gone locally
+
+        # Elastic comes back. The next sweep must finish the deletion.
+        elastic.fail = False
+        library._enrich_and_index_all()
+        self.assertEqual(elastic.deleted, [moment["id"]])
+        self.assertEqual(library.moments[0]["processing"]["indexing"], "purged")
+
+        # And a completed purge is not retried forever.
+        library._enrich_and_index_all()
+        self.assertEqual(elastic.deleted, [moment["id"]])
+
     def test_imports_legacy_run_without_removing_original(self):
         root = Path(self.dir.name)
         runs = root / "runs"
