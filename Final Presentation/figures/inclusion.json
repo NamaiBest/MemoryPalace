@@ -1,13 +1,21 @@
 {
- "gate": "16-channel within-subject AUC >= 0.60",
- "included": 45,
- "excluded": 6,
+ "gate": "16-electrode within-subject AUC >= 0.70, the repo's own usability bar",
+ "total_recordings": 51,
+ "included": 38,
+ "excluded": 13,
  "excluded_recordings": {
-  "sub-20/SiD": 0.3444,
-  "sub-24/SiB": 0.5833,
-  "sub-25/SiB": 0.4859,
-  "sub-25/SiD": 0.4289,
-  "sub-29/SiB": 0.5496,
-  "sub-33/SiB": 0.5816
+  "sub-20/SiD": 0.344,
+  "sub-25/SiD": 0.429,
+  "sub-25/SiB": 0.486,
+  "sub-29/SiB": 0.55,
+  "sub-33/SiB": 0.582,
+  "sub-24/SiB": 0.583,
+  "sub-33/SiD": 0.644,
+  "sub-19/SiB": 0.667,
+  "sub-22/SiB": 0.669,
+  "sub-12/SiB": 0.677,
+  "sub-30/SiB": 0.68,
+  "sub-26/SiD": 0.687,
+  "sub-08/SiB": 0.698
  }
 }

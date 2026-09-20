@@ -141,6 +141,18 @@ export function DebugPage() {
           attributable rather than mysterious. Refreshing every {POLL_MS / 1000}s. All
           times {TIME_ZONE_LABEL}.
         </p>
+        {/* The evidence behind the trigger. Judges ask "does it work" before they ask
+            anything about plumbing, so it sits at the top of Diagnostics rather than
+            buried in a repository folder. */}
+        <Link
+          href="/stats"
+          className="mt-5 inline-flex items-center gap-3 rounded-xl border border-accent/30 bg-accent/[0.08] px-5 py-3 text-sm text-fg transition-colors hover:border-accent hover:bg-accent/[0.14]"
+        >
+          <span aria-hidden>📊</span>
+          Stats
+          <span className="text-fg-mute">Does the detector actually work?</span>
+          <span aria-hidden className="text-accent">→</span>
+        </Link>
       </header>
 
       <section className="mb-10 border border-line bg-bg-panel px-5 py-2">
@@ -174,10 +186,10 @@ export function DebugPage() {
         <Row
           label="EEG signal"
           ok={!!eeg?.signal_connected}
-          value={eeg?.phase ?? "—"}
+          value={eeg?.phase ?? "-"}
           hint={
             eeg?.signal_connected
-              ? `${eeg?.windows ?? 0} windows processed · ${eeg?.clean_calibration_windows ?? 0} clean calibration windows · ${eeg?.channels_used?.join(", ") ?? "—"} @ ${eeg?.sampling_rate ?? "—"} Hz`
+              ? `${eeg?.windows ?? 0} windows processed · ${eeg?.clean_calibration_windows ?? 0} clean calibration windows · ${eeg?.channels_used?.join(", ") ?? "-"} @ ${eeg?.sampling_rate ?? "-"} Hz`
               : "No EEG arriving. Feed it: feed_synthetic.py calibrate"
           }
         />
@@ -185,7 +197,7 @@ export function DebugPage() {
           label="Recorder"
           ok={rec?.state === "recording"}
           warn={rec?.state === "stopped" || rec?.state === "idle"}
-          value={rec?.state ?? "—"}
+          value={rec?.state ?? "-"}
           hint={
             rec?.state === "error"
               ? "The phone refused or failed a command. Check that preview is live, then send stop to clear."
@@ -244,7 +256,7 @@ export function DebugPage() {
         />
         <Row
           label="Checked at"
-          value={status?.checkedAt ? formatFull(status.checkedAt) : "—"}
+          value={status?.checkedAt ? formatFull(status.checkedAt) : "-"}
         />
         {status?.session_dir ? (
           <Row
@@ -262,7 +274,7 @@ export function DebugPage() {
         {captures.length === 0 ? (
           <p className="border border-line bg-bg-panel p-5 text-sm leading-6 text-fg-dim">
             Nothing uploaded yet. A clip appears here after the detector stops a recording
-            and the phone finishes uploading it — usually within a few seconds of the stop.
+            and the phone finishes uploading it, usually within a few seconds of the stop.
           </p>
         ) : (
           <ul className="space-y-4">
