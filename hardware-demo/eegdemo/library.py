@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 POSTER_SECONDS = 1.0
+RETRY_INTERVAL_S = 120
 POSTER_TIMEOUT = 20
 MAX_UPLOAD_BYTES = 512 * 1024 * 1024
 
@@ -47,9 +48,11 @@ class Library:
         if legacy_runs:
             self._migrate_legacy_runs(Path(legacy_runs))
         if ((self.elastic and self.elastic.configured)
-                or (self.vision and self.vision.configured)) and self.moments:
-            threading.Thread(target=self._enrich_and_index_all, daemon=True,
-                             name="memory-library-enrichment").start()
+                or (self.vision and self.vision.configured)):
+            if self.moments:
+                threading.Thread(target=self._enrich_and_index_all, daemon=True,
+                                 name="memory-library-enrichment").start()
+            self._start_retry_loop()
 
     def _load_catalog(self):
         if not self.catalog.exists():
@@ -280,6 +283,26 @@ class Library:
             self._persist()
             self.emit("legacy_memories_imported", {"count": len(imported),
                                                    "moments": imported})
+
+    def _start_retry_loop(self):
+        """Re-run the sweep periodically, so a transient failure heals without a restart.
+
+        Enrichment and indexing already run in the background the moment a clip lands,
+        and the sweep at startup picks up anything left incomplete. What was missing is
+        the middle: a Meta call that dropped on a broken pipe, or an Elastic write that
+        timed out, stayed "failed" for the life of the backend, and only a restart —
+        which happened to re-run the sweep — ever fixed it. That read as indexing being
+        something someone had to ask for. The sweep only touches moments that are not
+        complete, so once everything is done each pass costs a list scan and nothing else.
+        """
+        def loop():
+            while True:
+                time.sleep(RETRY_INTERVAL_S)
+                try:
+                    self._enrich_and_index_all()
+                except Exception as exc:  # never let the retry thread itself die
+                    self.emit("retry_sweep_failed", {"error": str(exc)[:200]})
+        threading.Thread(target=loop, daemon=True, name="memory-library-retry").start()
 
     def _enrich_and_index_all(self):
         for moment in list(self.moments):

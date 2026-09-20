@@ -179,5 +179,29 @@ class LibraryTests(unittest.TestCase):
                          "Preparing the EEG headset")
 
 
+    def test_incomplete_work_is_retried_without_a_restart(self):
+        """A transient failure must heal on its own, not wait for the next backend start."""
+        import threading
+        import time as _time
+
+        class Elastic:
+            configured = True
+
+        calls = []
+        done = threading.Event()
+
+        with patch("eegdemo.library.RETRY_INTERVAL_S", 0.02), \
+                patch.object(Library, "_enrich_and_index_all",
+                             lambda self: (calls.append(_time.monotonic()), done.set())):
+            Library(self.dir.name, lambda *_: None, elastic=Elastic())
+            self.assertTrue(done.wait(2.0), "retry sweep never ran")
+            # It keeps going, not just once. Assert while the patches are still active:
+            # the loop re-reads the interval each pass, and would otherwise sleep 120s.
+            deadline = _time.monotonic() + 2.0
+            while len(calls) < 3 and _time.monotonic() < deadline:
+                _time.sleep(0.02)
+            self.assertGreaterEqual(len(calls), 3, "retry sweep should repeat periodically")
+
+
 if __name__ == "__main__":
     unittest.main()
