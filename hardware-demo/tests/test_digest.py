@@ -101,3 +101,29 @@ class DigestTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CustomRecipientTests(DigestTests):
+    """A one-off recipient, and the HTTPS transport that conference wifi allows."""
+
+    def test_custom_recipient_overrides_the_configured_one(self):
+        sent = {}
+
+        digest = self.build({"RESEND_API_KEY": "key", "MEMORYPALACE_DIGEST_FROM": "me@x.co",
+                             "MEMORYPALACE_DIGEST_TO": "default@x.co"})
+        digest._send_https = lambda to, subject, body: sent.update(to=to) or {"id": "1"}
+        result = digest.send("2026-09-19", to="someone@else.com")
+        self.assertEqual(sent["to"], "someone@else.com")
+        self.assertEqual(result["to"], "someone@else.com")
+        self.assertEqual(result["transport"], "https")
+
+    def test_https_wins_when_both_are_configured(self):
+        digest = self.build({"RESEND_API_KEY": "key", "SMTP_HOST": "localhost",
+                             "MEMORYPALACE_DIGEST_FROM": "me@x.co"})
+        self.assertEqual(digest.transport, "https")
+
+    def test_a_malformed_address_is_refused_before_sending(self):
+        digest = self.build({"RESEND_API_KEY": "key", "MEMORYPALACE_DIGEST_FROM": "me@x.co"})
+        digest._send_https = lambda *a, **k: self.fail("should not have sent")
+        with self.assertRaises(DigestError):
+            digest.send("2026-09-19", to="not-an-address")

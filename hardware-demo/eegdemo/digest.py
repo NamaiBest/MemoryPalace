@@ -11,6 +11,8 @@ and a digest that arrives anyway trains you to ignore digests.
 import json
 import os
 import smtplib
+import urllib.error
+import urllib.request
 import threading
 import time
 from datetime import datetime, timedelta
@@ -45,17 +47,32 @@ class DailyDigest:
         self.user = os.environ.get("SMTP_USER", "").strip()
         self.password = os.environ.get("SMTP_PASSWORD", "")
         self.enabled = _truthy(os.environ.get("MEMORYPALACE_DIGEST_ENABLED", "0"))
+        # Conference and campus networks routinely block outbound SMTP, and this one
+        # does: Gmail on 587 and 465 are both unreachable while HTTPS is fine. An HTTPS
+        # mail API therefore works where smtplib cannot, and takes precedence when a key
+        # is present.
+        self.api_key = os.environ.get("RESEND_API_KEY", "").strip()
+        self.api_url = os.environ.get("RESEND_URL", "https://api.resend.com/emails")
         self.state = Path(state_dir or ".") / "digest-state.json"
         self.last_error = None
 
     @property
+    def transport(self):
+        """Which way mail can leave, if any."""
+        if self.api_key and self.sender:
+            return "https"
+        if self.host and self.sender:
+            return "smtp"
+        return None
+
+    @property
     def deliverable(self):
         """True when a message could actually be sent, not merely composed."""
-        return bool(self.host and self.recipient and self.sender)
+        return bool(self.transport and self.recipient)
 
     def status(self):
         return {"enabled": self.enabled, "hour": self.hour,
-                "deliverable": self.deliverable,
+                "deliverable": self.deliverable, "transport": self.transport,
                 "recipientConfigured": bool(self.recipient),
                 "smtpConfigured": bool(self.host),
                 "lastSent": self._last_sent(), "error": self.last_error}
@@ -137,17 +154,49 @@ class DailyDigest:
         }
 
     # ---------------------------------------------------------------- delivery
-    def send(self, day=None, force=False):
+    def _send_https(self, to, subject, body):
+        """Post the mail through an HTTPS API, for networks that block SMTP."""
+        payload = {"from": f"MemoryPalace <{self.sender}>", "to": [to],
+                   "subject": subject, "text": body}
+        request = urllib.request.Request(
+            self.api_url, data=json.dumps(payload).encode(), method="POST",
+            headers={"Authorization": f"Bearer {self.api_key}",
+                     "Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                return json.loads(response.read() or b"{}")
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode(errors="replace")[:300]
+            raise DigestError(f"mail API returned HTTP {exc.code}: {detail}") from exc
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            raise DigestError(f"mail API unreachable: {exc}") from exc
+
+    def send(self, day=None, force=False, to=None):
+        """Send the digest. `to` overrides the configured recipient for a one-off."""
+        recipient = (to or self.recipient or "").strip()
         digest = self.build(day)
         if not force and digest["unreviewed"] == 0:
             raise DigestError("every moment that day was already reviewed, so nothing was sent")
-        if not self.deliverable:
-            raise DigestError("set SMTP_HOST, MEMORYPALACE_DIGEST_TO and "
-                              "MEMORYPALACE_DIGEST_FROM to send mail")
+        if not recipient:
+            raise DigestError("no recipient: pass one, or set MEMORYPALACE_DIGEST_TO")
+        if "@" not in recipient or len(recipient) > 254:
+            raise DigestError("that does not look like an email address")
+        if not self.transport:
+            raise DigestError("no way to send: set RESEND_API_KEY, or SMTP_HOST, "
+                              "plus MEMORYPALACE_DIGEST_FROM")
+
+        if self.transport == "https":
+            result = self._send_https(recipient, digest["subject"], digest["body"])
+            self.last_error = None
+            self._record_sent(digest["day"])
+            self.emit("digest_sent", {"day": digest["day"], "to": recipient,
+                                      "transport": "https", "id": result.get("id")})
+            return {**digest, "transport": "https", "to": recipient}
+
         message = EmailMessage()
         message["Subject"] = digest["subject"]
         message["From"] = formataddr(("MemoryPalace", self.sender))
-        message["To"] = self.recipient
+        message["To"] = recipient
         message.set_content(digest["body"])
         try:
             # 465 is implicit TLS; 587 and 25 negotiate it, and a server that does not
@@ -173,9 +222,10 @@ class DailyDigest:
             raise DigestError(self.last_error) from exc
         self.last_error = None
         self._record_sent(digest["day"])
-        self.emit("digest_sent", {"day": digest["day"], "moments": len(digest["moments"]),
+        self.emit("digest_sent", {"day": digest["day"], "to": recipient,
+                                  "transport": "smtp",
                                   "unreviewed": digest["unreviewed"]})
-        return digest
+        return {**digest, "transport": "smtp", "to": recipient}
 
     # ---------------------------------------------------------------- schedule
     def start(self):

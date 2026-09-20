@@ -220,7 +220,11 @@ class Runtime:
         if day is not None and not isinstance(day, str):
             raise ValueError("date must be YYYY-MM-DD")
         if body.get("send"):
-            return {"sent": True, **self.digest.send(day, force=bool(body.get("force")))}
+            recipient = body.get("to")
+            if recipient is not None and not isinstance(recipient, str):
+                raise ValueError("to must be an email address")
+            return {"sent": True, **self.digest.send(
+                day, force=bool(body.get("force")), to=recipient)}
         return {"sent": False, **self.digest.build(day)}
 
     def locate_objects(self, body):
