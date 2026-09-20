@@ -1,1 +1,72 @@
 VoloRidge: Build something interesting using one or more public datasets. We’ll provide a curated list of public datasets.
+
+---
+
+# Our answer: signal, and proof of where there is none
+
+Full write-up: [`FULFILLMENT_SPONSORS.md` → VoloRidge](../FULFILLMENT_SPONSORS.md#voloridge--public-data-challenge-finding-signal-and-proving-where-there-is-none)
+Code, figures and data: [`eeg-state-detection/`](../eeg-state-detection/README.md)
+
+## The dataset
+
+[Shin et al. 2018, dataset A](https://doc.ml.tu-berlin.de/simultaneous_EEG_NIRS/)
+([Scientific Data](https://doi.org/10.1038/sdata.2018.3)). Open EEG/NIRS corpus, 28 EEG
+channels plus 2 eye channels at 1000 Hz, n-back working-memory task. We use participants
+VP002 to VP006, three sessions each, unmodified, with the experimenters' own markers as
+ground truth. Not committed; `scripts/fetch_shin.py` downloads and CRC-verifies it.
+
+## The question
+
+MemoryPalace triggers a camera from a physiological signal. Can scalp EEG mark a cognitive
+state change well enough to be that trigger, and how would you know you were not fooling
+yourself?
+
+## What we found
+
+**Sustained states: yes.** A session-calibrated task-versus-rest detector reaches mean
+out-of-sample AUROC 0.65 to 0.93 across five participants, with models frozen and hashed
+before any held-out block is scored. **8 of 15 sessions beat a circular time-shift null at
+p ≤ 0.05**, and 14 of 15 are above chance.
+
+**Brief evoked events: no, and the null is how we know.** Five detectors across four
+participants all landed inside the range of randomly placed flags. The sharpest case: a
+zigzag persistent-homology detector matched 6 of 36 targets against a 2 of 36 baseline,
+which reads as a threefold improvement, and the random-placement null puts it at p = 0.13.
+Without the null we would have shipped noise as a result.
+
+We then froze a protocol, ran it once on a participant no analysis had touched, and the
+rescue attempt failed its own prespecified adoption rule. The protocol, the run and the
+refusal are all committed.
+
+## Why the method is the point
+
+- **Nulls matched to the evaluation rules**, not to textbook assumptions. The time-shift
+  null preserves autocorrelation because overlapping EEG windows are not independent; the
+  random-flag null respects the same budget, separation and matching tolerance the detector
+  had to obey.
+- **Adversarial self-controls.** The identical pipeline run on eye channels alone reaches
+  0.88 on one participant and 0.56 on another. We publish both, so the reader can see where
+  the signal might be ocular and where it is not.
+- **Frozen before scoring.** Protocols written in advance, fitted state hashed before and
+  after inference, held-out data checked against every model's training hashes.
+- **The negative result changed the product.** Because sustained states survived and brief
+  events did not, MemoryPalace captures forward on a persistence filter rather than
+  buffering backward for an instantaneous spike.
+
+## Reproduce
+
+```bash
+cd eeg-state-detection
+python -m venv .venv && .venv/bin/pip install -e '.[test,real]'
+.venv/bin/python -m pytest -q                                   # 79 tests
+.venv/bin/python scripts/fetch_shin.py --subject 2 --out data/shin2018/VP002
+.venv/bin/python -m eeg_moments backtest --out outputs/backtest_state_reproduction
+```
+
+## What we do not claim
+
+The label is task versus rest, a proxy for a state change, not confusion or insight. Ocular
+contribution is not isolated on two participants. Two of five participants are weak. 72
+seconds of labeled rest per participant cannot support a false-alarm rate per hour. Weights
+are session-specific and transfer to nobody. These are public participants, unrelated to
+anyone filmed in the demo.

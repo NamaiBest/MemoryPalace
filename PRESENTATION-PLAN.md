@@ -164,9 +164,14 @@ Current status, in one line each:
   are documented as future work, not presented as done.
 - **Meta.** Muse Spark and Voice Transcribe implemented and verified live. Output speech is
   the browser voice, labelled as such, not a Meta TTS API. No physical glasses.
-- **VoloRidge.** The evidence exists in `xueqi-validation/` and `confusion-detector/`. The
-  sponsor specific submission framing does not. Do not round that up. If somebody writes it
-  before Sunday, change the slide.
+- **VoloRidge.** The submission framing now exists, written 2026-09-20:
+  `DOCS_sponsor/VoloRidge` and the VoloRidge section of `FULFILLMENT_SPONSORS.md`, backed by
+  `eeg-state-detection/`. **Slide 11 still needs updating to match** and currently
+  understates it. The line to land: "We found the signal, and we built the null that proved
+  our best looking result was noise." Numbers for the slide: out-of-sample AUROC 0.65 to
+  0.93 across five participants, 8 of 15 sessions beating a circular time-shift null, and a
+  brief-event detector that looked 3x better than baseline sitting at p = 0.13 against
+  random placement.
 
 **Logos.** The slides use a typographic treatment: each sponsor's name set large in its own
 brand colour. If you want real logo art, drop official files into
