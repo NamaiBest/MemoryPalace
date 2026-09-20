@@ -155,9 +155,15 @@ class PhoneTests(unittest.TestCase):
         self.ack("stopped"); self.assertEqual(self.r.state, "stopped")
 
     def test_expired_command_is_error_not_success(self):
+        """An expired command still means error, never a silent success.
+
+        It used to also mean that every later capture was refused until someone sent an
+        explicit stop, which made a backgrounded phone disable the demo for good. The
+        error is still recorded; it just no longer outlives the condition that caused it.
+        """
         self.r.start(); self.r.pending["expires_at"] = 0
         self.assertEqual(self.r.status()["state"], "error")
-        with self.assertRaises(ValueError): self.r.start()
+        # The explicit stop path still works for anyone who reaches for it.
         self.r.stop("recovery"); self.ack("stopped")
         self.r.start(); self.assertEqual(self.r.state, "starting")
 
@@ -276,3 +282,42 @@ class HTTPTests(unittest.TestCase):
 
 
 if __name__ == "__main__": unittest.main()
+
+
+class PhoneRecorderRecoveryTests(unittest.TestCase):
+    """A stale error state must not disable capture for the rest of the session."""
+
+    def _recorder(self):
+        from eegdemo.recording import PhoneRecorder
+        recorder = PhoneRecorder(Path("."), lambda *_: None)
+        recorder.commands()  # the phone starts polling
+        return recorder
+
+    def test_expired_start_does_not_block_the_next_capture(self):
+        recorder = self._recorder()
+        recorder.start()
+        # The phone was backgrounded, so the start command expired unacknowledged.
+        recorder.pending["expires_at"] = time.time() - 1
+        recorder.commands()
+        self.assertEqual(recorder.status()["state"], "error")
+
+        # The phone is polling again and nothing is in flight, so capture works again.
+        status = recorder.start()
+        self.assertEqual(status["state"], "starting")
+        self.assertIsNotNone(status["pending"])
+
+    def test_recovery_needs_the_phone_to_be_polling(self):
+        recorder = self._recorder()
+        recorder.start()
+        recorder.pending["expires_at"] = time.time() - 1
+        recorder.commands()
+        recorder.last_poll = None  # phone went away entirely
+        with self.assertRaises(ValueError):
+            recorder.start()
+
+    def test_a_command_in_flight_still_blocks(self):
+        recorder = self._recorder()
+        recorder.start()
+        recorder.state = "error"  # error reported while the command is still pending
+        with self.assertRaises(ValueError):
+            recorder.start()

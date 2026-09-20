@@ -103,6 +103,10 @@ class PhoneRecorder:
         self.media_path = None
         self.recording_id = None
 
+    def _phone_is_live(self):
+        """True while the phone is still polling for commands."""
+        return self.last_poll is not None and time.monotonic() - self.last_poll <= 5
+
     def issue(self, action, reason):
         self.pending = {"id": uuid.uuid4().hex, "action": action,
                         "recording_id": self.recording_id, "reason": reason,
@@ -113,9 +117,30 @@ class PhoneRecorder:
 
     def start(self):
         self.expire()
+        # "error" is sticky, and it should not be. It is set whenever a command expires,
+        # which happens routinely in a demo: the phone dozes, another app takes the
+        # foreground, or the app restarts while a command is in flight. Once set, every
+        # later capture was refused forever even though the phone had come back and was
+        # sitting idle, so the button did nothing and the phone cheerfully reported
+        # "ready for a moment". The only way out was a stop command from a different
+        # panel, which nobody finds mid-pitch.
+        #
+        # Recovering here is safe because of two guarantees on the phone side. It ignores
+        # any command whose expires_at has passed, so an expired start was provably never
+        # executed; and startRecording refuses outright when a recording is already
+        # running, acknowledging an explicit error rather than silently opening a second
+        # camera. So the worst case for a stale error is a clean refusal, not a stuck
+        # camera. A pending command still blocks, because that one may genuinely be
+        # in flight.
+        if self.state == "error" and self.pending is None and self._phone_is_live():
+            self.emit("recorder_recovered", {
+                "from": "error", "recording_id": self.recording_id,
+                "reason": "phone is polling again and no command is in flight",
+            })
+            self.state = "idle"
         if self.state in ("starting", "recording", "stopping", "error"):
             raise ValueError("phone recording is active or uncertain; resolve it before restarting")
-        if self.last_poll is None or time.monotonic() - self.last_poll > 5:
+        if not self._phone_is_live():
             raise ValueError("phone is not polling the backend")
         self.recording_id = uuid.uuid4().hex
         self.media_path = None
