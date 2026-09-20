@@ -13,6 +13,7 @@ from zoneinfo import ZoneInfo
 
 from .agent import AgentError, MemoryGuard
 from .elastic_store import ElasticStore
+from .imagery import ImageryError, MetaKeepsakeArtist
 from .library import MAX_UPLOAD_BYTES, Library
 from .pipeline import Pipeline
 from .recording import PhoneRecorder, TestVideoRecorder
@@ -21,7 +22,7 @@ from .voice import MAX_AUDIO_BYTES, MetaVoiceTranscriber, VoiceError
 
 
 MEDIA_TYPES = {".mp4": "video/mp4", ".mov": "video/quicktime",
-               ".jpg": "image/jpeg", ".png": "image/png"}
+               ".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp"}
 
 
 class Runtime:
@@ -42,6 +43,7 @@ class Runtime:
             threading.Thread(target=self.elastic.warm_up, daemon=True,
                              name="elastic-search-warmup").start()
         self.vision = MetaVideoDescriber(self.emit)
+        self.artist = MetaKeepsakeArtist(self.emit)
         self.voice = MetaVoiceTranscriber(self.emit)
         self.guard = MemoryGuard(self.emit)
         self.library = Library(self.output, self.emit, self.elastic, self.vision,
@@ -80,6 +82,7 @@ class Runtime:
                 "library": self.library.status(), "session_dir": str(self.output),
                 "timed_capture": self.timed_capture, "elastic": self.elastic.status(),
                 "vision": self.vision.status(), "voice": self.voice.status(),
+                "imagery": self.artist.status(),
                 "agent": self.guard.status()}
 
     @staticmethod
@@ -206,6 +209,24 @@ class Runtime:
             })
             return self._local_guard_answer(
                 question, moments, retrieval_engine, date_scope)
+
+    def make_keepsake(self, body):
+        """Turn one moment into a keepsake illustration with Meta Muse Image."""
+        moment_id = body.get("momentId")
+        if not isinstance(moment_id, str) or not moment_id:
+            raise ValueError("momentId is required")
+        with self.lock:
+            moment = next((dict(item) for item in self.library.moments
+                           if item.get("id") == moment_id
+                           and item.get("status") != "deleted"), None)
+        if moment is None:
+            raise ValueError("unknown moment")
+        if not self.artist.configured:
+            raise ValueError("Meta Muse Image is not configured")
+        data, fmt = self.artist.keepsake(moment)
+        updated = self.library.attach_keepsake(moment_id, data, fmt)
+        return {"moment": updated, "provider": "Meta Muse Image",
+                "model": self.artist.model, "keepsakeUrl": updated.get("keepsakeUrl")}
 
     def recap_day(self, body):
         """Every moment for a day, in order, read as one arc.
@@ -465,6 +486,12 @@ def create_server(runtime, host="127.0.0.1", port=8771):
                 body = json.loads(self.rfile.read(length))
                 if not isinstance(body, dict):
                     raise ValueError("JSON body must be an object")
+                if route == "/moments/keepsake":
+                    # Image generation takes tens of seconds and must not hold the lock.
+                    try:
+                        return self.send(200, runtime.make_keepsake(body))
+                    except ImageryError as exc:
+                        return self.send(503, {"error": str(exc)})
                 if route == "/agent/recap":
                     # Reads the whole day, so it can take longer than a chat turn and
                     # must not hold the capture lock while it does.

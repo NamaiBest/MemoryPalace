@@ -628,6 +628,29 @@ class Library:
             parts.append(f"{at:.0f}s into the session")
         return "Sustained elevated load" + (" at " + ", ".join(parts) if parts else "") + "."
 
+    def attach_keepsake(self, moment_id, data, fmt):
+        """Store a generated keepsake beside the moment's own media and record its URL.
+
+        It lives in the same media directory as the clip and poster so the existing
+        /media route serves it with no new plumbing, and it is written into the durable
+        catalog so a restart does not lose it.
+        """
+        suffix = {"webp": ".webp", "png": ".png", "jpeg": ".jpg", "jpg": ".jpg"}.get(fmt, ".webp")
+        # Same <32 hex>.<ext> shape as every other stored file, so the media route's
+        # strict name check does not have to be loosened to serve keepsakes.
+        name = f"{uuid.uuid4().hex}{suffix}"
+        (self.dir / name).write_bytes(data)
+        url = f"/api/media/{name}"
+        with self.lock:
+            moment = next((item for item in self.moments
+                           if item.get("id") == moment_id), None)
+            if moment is None:
+                raise ValueError("moment not found")
+            moment["keepsakeUrl"] = url
+            moment["keepsakeCreatedAt"] = _iso(time.time())
+            self._persist()
+            return dict(moment)
+
     def path_for(self, name):
         """Resolve a stored file, refusing anything that escapes the media dir."""
         candidate = (self.dir / name).resolve()

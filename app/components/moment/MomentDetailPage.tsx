@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { AnnotationEditor } from "@/components/moment/AnnotationEditor";
 import { EEGChart } from "@/components/moment/EEGChart";
 import { MomentActions } from "@/components/moment/MomentActions";
+import { Keepsake } from "@/components/moment/Keepsake";
 import { MomentMedia } from "@/components/moment/MomentMedia";
 import { MomentMetadata } from "@/components/moment/MomentMetadata";
 import { useMoments } from "@/context/MomentsProvider";
@@ -48,6 +49,7 @@ export function MomentDetailPage() {
         <div className="mt-8 grid gap-6">
           {moment.eeg ? <EEGChart eeg={moment.eeg} /> : null}
           <AnnotationEditor key={moment.id} moment={moment} />
+          <Keepsake key={`keepsake-${moment.id}`} moment={moment} />
         </div>
       </div>
     </main>

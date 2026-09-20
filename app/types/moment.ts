@@ -45,6 +45,8 @@ export interface Moment {
   eeg?: EEGInfo;
   contextWindow: ContextWindow;
   annotation: string;
+  /** A Muse Image illustration of this moment, once one has been drawn. */
+  keepsakeUrl?: string;
   status: MomentStatus;
   summary: string;
   semanticTitle?: string;

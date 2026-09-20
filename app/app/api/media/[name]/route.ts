@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 // Stored media is named <32 hex>.<ext> by the backend. Anything else is refused here
 // rather than forwarded, so a crafted name can never reach the filesystem.
-const NAME = /^[0-9a-f]{32}\.(mp4|mov|jpg|png)$/;
+const NAME = /^[0-9a-f]{32}\.(mp4|mov|jpg|png|webp)$/;
 
 /**
  * Serves stored media with byte-range support.
