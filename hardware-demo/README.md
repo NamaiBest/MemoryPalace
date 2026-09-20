@@ -142,8 +142,9 @@ requires stopping on the phone. This is a local prototype, not a hosted service.
 
 ## Connect Elastic Vector Database
 
-The backend can index each completed moment into the sponsor project and expose hybrid
-search at `GET /search?q=...`. It uses Elastic's preconfigured Jina v5 Omni endpoint and
+The backend first asks Meta Muse Spark to turn each completed clip into a grounded semantic
+title, factual description, keywords, and topics. It then indexes that enriched moment into
+the sponsor project and exposes hybrid search at `GET /search?q=...`. It uses Elastic's preconfigured Jina v5 Omni endpoint and
 provisions the `memorypalace-multimodal-moments` dense-vector index idempotently. Short MP4s
 are embedded directly, text queries use the same shared vector space, and Elastic combines
 BM25 with kNN using RRF. If media inference is unavailable, indexing falls back to the
@@ -151,8 +152,9 @@ moment's text without losing capture. Credentials never enter the browser, Andro
 source tree, or request URLs.
 
 ```bash
-export ELASTICSEARCH_URL="https://my-vectordb-project-bece59.es.us-east4.gcp.elastic.cloud"
+export ELASTICSEARCH_URL="https://my-elasticsearch-project-f50785.es.us-central1.gcp.elastic.cloud:443"
 export ELASTIC_API_KEY="<project API key>"
+export MODEL_API_KEY="<Meta Model API key>"
 export DEMO_TOKEN="<the same temporary LAN token used by the phone>"
 python3 hardware-demo/run.py serve --source synthetic --recorder phone --host 0.0.0.0
 ```
@@ -164,6 +166,12 @@ logged but do not fail local capture or erase the uploaded video.
 
 The prior Meta glasses experiment is retained under [`meta-android/`](meta-android/) for
 reference and a possible future/presentation path. It is not required by this build.
+
+Meta analysis is asynchronous and runs only after the video is safely stored. Clips up to
+6 MB are analyzed directly as video; larger clips use their FFmpeg-extracted poster frame
+to avoid fragile oversized inline requests. The catalog records whether the source was
+`video` or `poster`. A Meta or Elastic outage marks only that enrichment step as failed—the
+original memory remains available and is retried on the next configured backend launch.
 
 ## Memory Guard
 

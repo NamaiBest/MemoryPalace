@@ -41,8 +41,34 @@ IMPLEMENTED FIRST SLICE (2026-09-19)
   blocks or discards the uploaded moment.
 
 The live project endpoint is:
-`https://my-vectordb-project-bece59.es.us-east4.gcp.elastic.cloud`
+`https://my-elasticsearch-project-f50785.es.us-central1.gcp.elastic.cloud:443`
+
+LIVE VERIFIED IMPLEMENTATION (2026-09-19)
+
+- Meta Muse Spark generates a semantic title, factual scene description, keywords, and
+  topics before the final Elastic write. The UI and Memory Guard use these names instead
+  of exposing internal `capture-*` identifiers.
+- Jina v5 Omni embeds the source video directly when supported. If Elastic media decoding
+  rejects a clip, the indexer falls back to an embedding of the complete semantic text and
+  records the embedding source rather than losing the document.
+- The new Elastic Cloud project authenticated successfully and contains exactly 12 indexed
+  documents for the 12 preserved local moments. All 12 report indexing complete.
+- A live `laptop keyboard` request returned the keyboard moment first using
+  `elastic-rrf-jina-v5-omni`.
+- Meta's grounded public-event context is persisted before indexing. `HackMIT`, `MIT`,
+  visible sponsor text, the factual scene description, keywords, topics, and transcript
+  contribute to Elastic's precomputed `search_text` and dense vector. The operator hint is
+  retained as provenance, not blindly indexed as fact. Searches never re-index the library
+  at query time.
+- A live migration upgraded only older event-like memories missing the grounding version,
+  preserved every MP4, and re-indexed those documents under their stable moment IDs. This
+  makes `HackMIT` immediately retrievable through the same BM25 + kNN + RRF path.
+
+Official implementation references:
+
+- https://www.elastic.co/docs/solutions/search/multimodal-search
+- https://www.elastic.co/docs/solutions/search/get-started/semantic-search
+- https://www.elastic.co/docs/reference/elasticsearch/rest-apis/reciprocal-rank-fusion
 
 Still future work: Elastic Workflows and Agent Builder are pitch direction, not implemented
-claims. Jina text embeddings currently cover summaries/annotations/event labels; direct
-video/audio embedding is the next multimodal increment.
+claims. Audio transcription is not part of the active build.

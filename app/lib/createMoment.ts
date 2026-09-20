@@ -55,7 +55,9 @@ export function createSimulatedMoment(
 ): Moment {
   const media = DEFAULT_MEDIA[sequence % DEFAULT_MEDIA.length];
   const summaries: Record<EventType, string> = {
+    capture: "A manually recorded live moment from the phone camera.",
     surprise: "A candidate cognitive transition during the live monitoring session.",
+    excitement: "A manually triggered excitement moment during the live demo session.",
     insight: "A candidate cognitive transition during focused work in the live session.",
     error: "A candidate error-related event captured during the live session.",
     load: "Sustained elevated load measured against this session's baseline.",

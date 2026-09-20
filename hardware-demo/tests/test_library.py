@@ -74,6 +74,38 @@ class LibraryTests(unittest.TestCase):
         second = restored.store(b"y", "video/mp4")
         self.assertEqual(second["sequence"], 2)
 
+    def test_delete_is_durable_and_retains_source_media(self):
+        moment = self.library.store(b"irreplaceable-video", "video/mp4")
+        media_path = self.library.path_for(moment["media"]["videoUrl"].split("/")[-1])
+
+        deleted = self.library.delete_moment(moment["id"])
+
+        self.assertEqual(deleted["status"], "deleted")
+        self.assertIn("deletedAt", deleted)
+        self.assertEqual(media_path.read_bytes(), b"irreplaceable-video")
+        restored = Library(self.dir.name, lambda *_: None)
+        self.assertEqual(restored.moments[0]["status"], "deleted")
+        self.assertEqual(media_path.read_bytes(), b"irreplaceable-video")
+
+    def test_delete_removes_elastic_document(self):
+        class Elastic:
+            configured = True
+
+            def __init__(self):
+                self.deleted = []
+
+            def delete_moment(self, moment_id):
+                self.deleted.append(moment_id)
+
+        elastic = Elastic()
+        library = Library(self.dir.name, lambda k, d: self.events.append((k, d)),
+                          elastic=elastic)
+        with patch.object(library, "_poster", return_value=None), \
+                patch("eegdemo.library.threading.Thread"):
+            moment = library.store(b"video", "video/mp4")
+        library.delete_moment(moment["id"])
+        self.assertEqual(elastic.deleted, [moment["id"]])
+
     def test_imports_legacy_run_without_removing_original(self):
         root = Path(self.dir.name)
         runs = root / "runs"
@@ -145,7 +177,11 @@ class LibraryTests(unittest.TestCase):
             model = "muse-spark-1.3"
             last_error = None
 
-            def describe(self, path):
+            def needs_grounding(self, moment):
+                return False
+
+            def describe(self, path, context=None):
+                self.context = context
                 return {"title": "Preparing the EEG headset",
                         "description": "A headset and red sensor wires rest on a desk.",
                         "keywords": ["headset", "sensor wires", "desk"],
@@ -174,6 +210,7 @@ class LibraryTests(unittest.TestCase):
         self.assertEqual(moment["processing"]["indexing"], "complete")
         self.assertEqual(elastic.indexed[-1]["semanticTitle"],
                          "Preparing the EEG headset")
+        self.assertEqual(library.vision.context["timestamp"], moment["timestamp"])
         restored = Library(self.dir.name, lambda *_: None)
         self.assertEqual(restored.moments[0]["semanticTitle"],
                          "Preparing the EEG headset")

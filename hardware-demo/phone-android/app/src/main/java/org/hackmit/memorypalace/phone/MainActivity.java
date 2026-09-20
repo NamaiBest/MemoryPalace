@@ -2,7 +2,9 @@ package org.hackmit.memorypalace.phone;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,9 +23,11 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.SystemClock;
 import android.util.Log;
 import android.util.Size;
 import android.view.Gravity;
@@ -75,10 +79,14 @@ public final class MainActivity extends Activity {
   private LinearLayout statusPanel;
   private LinearLayout pairingPanel;
   private Button pairButton;
+  private Button liveButton;
+  private Button excitementButton;
   private TextView pairingStatus;
   private View idleMessage;
   private final Handler uiHandler = new Handler(android.os.Looper.getMainLooper());
   private boolean pairingStarted;
+  private boolean awaitingMetaReturn;
+  private long metaLaunchTime;
   private PhoneCamera camera;
   private BackendClient backend;
 
@@ -112,13 +120,50 @@ public final class MainActivity extends Activity {
     idleTitleParams.topMargin = dp(22);
     idle.addView(idleTitle, idleTitleParams);
     TextView idleCopy = label(
-        "Trigger a moment from the dashboard.\nYour camera stays off until capture begins.",
+        "Record a live moment, or simulate a neural spike.\nYour camera stays off until you choose.",
         16, 0xffaeb5c5, Typeface.NORMAL);
     idleCopy.setGravity(Gravity.CENTER);
     idleCopy.setLineSpacing(0, 1.18f);
     LinearLayout.LayoutParams idleCopyParams = wrapCentered();
     idleCopyParams.topMargin = dp(14);
     idle.addView(idleCopy, idleCopyParams);
+
+    liveButton = new Button(this);
+    liveButton.setText("Record live moment   ●");
+    liveButton.setTextColor(Color.WHITE);
+    liveButton.setTextSize(16);
+    liveButton.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+    liveButton.setAllCaps(false);
+    liveButton.setGravity(Gravity.CENTER);
+    liveButton.setBackground(primaryButtonBackground());
+    liveButton.setStateListAnimator(null);
+    liveButton.setOnClickListener(view -> requestPhoneCapture(false));
+    LinearLayout.LayoutParams liveParams = new LinearLayout.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT, dp(56));
+    liveParams.topMargin = dp(28);
+    idle.addView(liveButton, liveParams);
+
+    excitementButton = new Button(this);
+    excitementButton.setText("Simulate neural spike   ↗");
+    excitementButton.setTextColor(Color.WHITE);
+    excitementButton.setTextSize(16);
+    excitementButton.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+    excitementButton.setAllCaps(false);
+    excitementButton.setGravity(Gravity.CENTER);
+    excitementButton.setBackground(secondaryButtonBackground());
+    excitementButton.setStateListAnimator(null);
+    excitementButton.setOnClickListener(view -> requestPhoneCapture(true));
+    LinearLayout.LayoutParams excitementParams = new LinearLayout.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT, dp(56));
+    excitementParams.topMargin = dp(12);
+    idle.addView(excitementButton, excitementParams);
+    TextView excitementHint = label(
+        "Both record 10 real seconds · only Simulate adds a demo neural-spike label",
+        12, 0xff8f98aa, Typeface.NORMAL);
+    excitementHint.setGravity(Gravity.CENTER);
+    LinearLayout.LayoutParams excitementHintParams = wrapCentered();
+    excitementHintParams.topMargin = dp(12);
+    idle.addView(excitementHint, excitementHintParams);
     idleMessage = idle;
     idleMessage.setVisibility(View.GONE);
     root.addView(idleMessage, new FrameLayout.LayoutParams(
@@ -222,6 +267,15 @@ public final class MainActivity extends Activity {
     LinearLayout.LayoutParams statusParams = wrapCentered();
     statusParams.topMargin = dp(14);
     pairingPanel.addView(pairingStatus, statusParams);
+    TextView protocolNote = label(
+        "META AI APP HANDOFF  •  DEMO MODE\nPhone bridge: authenticated JSON start · stop · ack",
+        10, 0xff737d92, Typeface.BOLD);
+    protocolNote.setGravity(Gravity.CENTER);
+    protocolNote.setLetterSpacing(0.06f);
+    protocolNote.setLineSpacing(0, 1.2f);
+    LinearLayout.LayoutParams protocolParams = wrapCentered();
+    protocolParams.topMargin = dp(13);
+    pairingPanel.addView(protocolNote, protocolParams);
     FrameLayout.LayoutParams pairingParams = new FrameLayout.LayoutParams(
         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     root.addView(pairingPanel, pairingParams);
@@ -277,6 +331,30 @@ public final class MainActivity extends Activity {
     fill.setCornerRadius(dp(22));
     return new RippleDrawable(
         android.content.res.ColorStateList.valueOf(0x33ffffff), fill, null);
+  }
+
+  private RippleDrawable secondaryButtonBackground() {
+    GradientDrawable fill = rounded(0x241c2338, dp(22), 0x557e8cff, 1);
+    return new RippleDrawable(
+        android.content.res.ColorStateList.valueOf(0x337e8cff), fill, null);
+  }
+
+  private void requestPhoneCapture(boolean simulated) {
+    if (backend == null) {
+      showState("Session is still connecting…");
+      return;
+    }
+    liveButton.setEnabled(false);
+    excitementButton.setEnabled(false);
+    liveButton.setAlpha(0.65f);
+    excitementButton.setAlpha(0.65f);
+    backend.triggerCapture(10, simulated ? "excitement" : "capture", simulated);
+    uiHandler.postDelayed(() -> {
+      liveButton.setEnabled(true);
+      excitementButton.setEnabled(true);
+      liveButton.setAlpha(1f);
+      excitementButton.setAlpha(1f);
+    }, 20_000);
   }
 
   private static final class AmbientBackdrop extends View {
@@ -355,7 +433,49 @@ public final class MainActivity extends Activity {
     pairButton.setEnabled(false);
     pairButton.setAlpha(0.72f);
     pairingStatus.setTextColor(0xffb9c1ff);
-    pairingStatus.setText("Searching for nearby Meta glasses…");
+    pairingStatus.setText("Opening Meta AI for glasses pairing…");
+    openMetaAiForPairing();
+  }
+
+  private void openMetaAiForPairing() {
+    Intent intent = getPackageManager().getLaunchIntentForPackage("com.facebook.stella");
+    boolean companionInstalled = intent != null;
+    if (intent == null) {
+      intent = new Intent(Intent.ACTION_VIEW,
+          Uri.parse("market://details?id=com.facebook.stella"));
+    }
+    try {
+      awaitingMetaReturn = true;
+      metaLaunchTime = SystemClock.elapsedRealtime();
+      pairingStatus.setText(companionInstalled
+          ? "Continue in Meta AI, then return to MemoryPalace"
+          : "Meta AI is not installed · opening its Play Store page");
+      startActivity(intent);
+    } catch (ActivityNotFoundException error) {
+      try {
+        awaitingMetaReturn = true;
+        metaLaunchTime = SystemClock.elapsedRealtime();
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+            "https://play.google.com/store/apps/details?id=com.facebook.stella")));
+      } catch (ActivityNotFoundException ignored) {
+        awaitingMetaReturn = false;
+        pairingStatus.setText("Meta AI unavailable · continuing in simulated glasses mode");
+        continuePairingAfterMeta();
+      }
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if (awaitingMetaReturn && SystemClock.elapsedRealtime() - metaLaunchTime > 500) {
+      awaitingMetaReturn = false;
+      pairingStatus.setText("Returned from Meta AI · validating demo bridge");
+      continuePairingAfterMeta();
+    }
+  }
+
+  private void continuePairingAfterMeta() {
     if (hasCameraPermission()) {
       runPairingSequence();
     } else {
@@ -365,7 +485,7 @@ public final class MainActivity extends Activity {
   }
 
   private void runPairingSequence() {
-    pairingStatus.setText("Meta glasses found  •  securing connection");
+    pairingStatus.setText("Meta AI handoff complete  •  securing demo bridge");
     uiHandler.postDelayed(() -> pairingStatus.setText("Pairing in demo mode…"), 650);
     uiHandler.postDelayed(() -> pairingStatus.setText("Connected  •  starting your session"), 1300);
     uiHandler.postDelayed(() -> {
@@ -454,6 +574,25 @@ public final class MainActivity extends Activity {
 
     void close() {
       executor.shutdownNow();
+    }
+
+    void triggerCapture(int seconds, String event, boolean simulated) {
+      executor.execute(() -> {
+        try {
+          status.set((simulated ? "Neural spike demo" : "Live recording") +
+              " · requesting " + seconds + "-second moment…");
+          request("POST", "/recording/capture", new JSONObject()
+              .put("seconds", seconds)
+              .put("demo_event", event)
+              .put("demo", simulated));
+          status.set((simulated ? "Neural spike simulated" : "Live capture started") +
+              " · opening rear camera…");
+        } catch (Exception error) {
+          Log.e(TAG, "Could not trigger demo capture", error);
+          status.set("Trigger unavailable · " +
+              (error.getMessage() == null ? "check the server" : error.getMessage()));
+        }
+      });
     }
 
     private void pollOnce() {
@@ -710,7 +849,9 @@ public final class MainActivity extends Activity {
           recorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
           recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
           recorder.setOutputFile(activeFile.getAbsolutePath());
-          recorder.setVideoEncodingBitRate(6_000_000);
+          // Keep a 10-second moment below the reliable inline multimodal-analysis size.
+          // 720p at 3 Mbps is presentation-quality while preserving the AAC audio track.
+          recorder.setVideoEncodingBitRate(3_000_000);
           recorder.setVideoFrameRate(30);
           recorder.setVideoSize(videoSize.getWidth(), videoSize.getHeight());
           recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);

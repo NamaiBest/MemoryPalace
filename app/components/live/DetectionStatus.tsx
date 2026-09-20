@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { useTimedCapture, type CapturePhase } from "@/lib/capture";
+import { momentTitle } from "@/lib/labels";
 
 const COPY: Record<CapturePhase, string> = {
   idle: "Signal processor ready",
@@ -13,7 +14,7 @@ const COPY: Record<CapturePhase, string> = {
   uploading: "Uploading captured media…",
   extracting: "Extracting the moment…",
   analyzing: "Meta is describing the video…",
-  indexing: "Elastic hybrid index update…",
+  indexing: "Semantically indexing in Elastic…",
   saved: "Moment added to Memory Palace",
   failed: "Capture needs attention",
 };
@@ -24,6 +25,67 @@ const STEPS: { label: string; active: CapturePhase[]; done: CapturePhase[] }[] =
   { label: "Index", active: ["indexing"], done: ["saved"] },
 ];
 
+const BASE_PROGRESS: Record<CapturePhase, number> = {
+  idle: 0,
+  starting: 6,
+  recording: 12,
+  stopping: 58,
+  uploading: 66,
+  extracting: 73,
+  analyzing: 82,
+  indexing: 93,
+  saved: 100,
+  failed: 100,
+};
+
+function CaptureRing({ phase, remaining, seconds }: {
+  phase: CapturePhase;
+  remaining: number;
+  seconds: number;
+}) {
+  const progress = phase === "recording"
+    ? 12 + ((seconds - Math.min(seconds, remaining)) / seconds) * 44
+    : BASE_PROGRESS[phase];
+  const radius = 42;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference * (1 - progress / 100);
+  const center = phase === "recording"
+    ? `${remaining}s`
+    : phase === "saved"
+      ? "✓"
+      : phase === "analyzing"
+        ? "AI"
+        : phase === "indexing"
+          ? "IDX"
+          : `${Math.round(progress)}%`;
+
+  return (
+    <div className="relative h-28 w-28 shrink-0" aria-label={`${Math.round(progress)} percent complete`}>
+      <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90" aria-hidden>
+        <circle cx="50" cy="50" r={radius} fill="none" stroke="rgba(255,255,255,.08)" strokeWidth="6" />
+        <circle
+          cx="50"
+          cy="50"
+          r={radius}
+          fill="none"
+          stroke={phase === "failed" ? "var(--error)" : phase === "saved" ? "var(--ok)" : "var(--accent)"}
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className="transition-[stroke-dashoffset] duration-700 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 grid place-items-center">
+        <span className={cn(
+          "font-mono text-lg",
+          phase === "saved" ? "text-ok" : phase === "failed" ? "text-error" : "text-fg",
+        )}>{center}</span>
+      </div>
+    </div>
+  );
+}
+
 export function DetectionStatus({ phoneReady, onTrigger }: {
   phoneReady: boolean;
   onTrigger?: () => void;
@@ -31,7 +93,10 @@ export function DetectionStatus({ phoneReady, onTrigger }: {
   const [seconds, setSeconds] = useState(10);
   const [threshold, setThreshold] = useState(2);
   const [notice, setNotice] = useState(false);
-  const { phase, remaining, error, capture, busy } = useTimedCapture(seconds);
+  const { phase, remaining, error, capturedMoment, capture, busy } = useTimedCapture(seconds);
+  const searchTerm = capturedMoment?.keywords?.find((keyword) => keyword.length > 2)
+    ?? capturedMoment?.semanticTitle
+    ?? "";
 
   useEffect(() => {
     const timeout = window.setTimeout(async () => {
@@ -52,7 +117,7 @@ export function DetectionStatus({ phoneReady, onTrigger }: {
     setNotice(true);
     window.setTimeout(() => setNotice(false), 3200);
     onTrigger?.();
-    void capture("load");
+    void capture("excitement");
   };
 
   return (
@@ -95,14 +160,24 @@ export function DetectionStatus({ phoneReady, onTrigger }: {
       {notice && (
         <div role="alert" className="mt-4 rounded-2xl border border-error/35 bg-error/10 px-4 py-3 text-sm text-fg">
           <span className="mr-2 inline-block h-2 w-2 rounded-full bg-error shadow-[0_0_16px_var(--error)]" />
-          Neural spike detected
+          Neural spike detected · recording the next {seconds} seconds
         </div>
       )}
 
       <div className="mt-6 rounded-2xl border border-white/10 bg-black/15 p-4">
-        <div role="status" aria-live="polite" className="flex items-center gap-3 text-sm">
-          <span className={cn("h-2 w-2 shrink-0 rounded-full", busy ? "pulse-dot bg-accent" : phase === "saved" ? "bg-ok" : phase === "failed" ? "bg-error" : "bg-fg-mute")} />
-          <p>{COPY[phase]}{phase === "recording" ? ` · ${remaining}s left` : ""}</p>
+        <div className="flex items-center gap-5">
+          <CaptureRing phase={phase} remaining={remaining} seconds={seconds} />
+          <div role="status" aria-live="polite" className="min-w-0">
+            <p className="text-[10px] tracking-[0.14em] text-fg-mute uppercase">
+              Live memory pipeline
+            </p>
+            <p className="mt-2 text-sm leading-6 text-fg">
+              {COPY[phase]}{phase === "recording" ? ` · ${remaining}s left` : ""}
+            </p>
+            <p className="mt-1 text-xs leading-5 text-fg-mute">
+              Progress advances only when the phone and backend confirm each stage.
+            </p>
+          </div>
         </div>
         <ol className="mt-4 grid grid-cols-3 gap-2">
           {STEPS.map((step) => {
@@ -116,9 +191,54 @@ export function DetectionStatus({ phoneReady, onTrigger }: {
             );
           })}
         </ol>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <PipelineBar
+            label="Meta understanding"
+            state={phase === "analyzing" ? "active" : ["indexing", "saved"].includes(phase) ? "done" : "waiting"}
+          />
+          <PipelineBar
+            label="Elastic semantic indexing"
+            state={phase === "indexing" ? "active" : phase === "saved" ? "done" : "waiting"}
+          />
+        </div>
       </div>
 
-      {phase === "saved" && <Link href="/" className="mt-4 inline-block text-sm text-accent underline underline-offset-4">Watch your moment →</Link>}
+      {capturedMoment ? (
+        <div className={cn(
+          "mt-4 overflow-hidden rounded-2xl border",
+          phase === "saved" ? "border-ok/25 bg-ok/[.06]" : "border-accent/20 bg-accent/[.04]",
+        )}>
+          <div className="flex gap-4 p-4">
+            {capturedMoment.media.thumbnailUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={capturedMoment.media.thumbnailUrl} alt="" className="h-24 w-32 shrink-0 rounded-xl object-cover" />
+            ) : null}
+            <div className="min-w-0">
+              <p className={cn(
+                "text-[10px] tracking-[0.14em] uppercase",
+                phase === "saved" ? "text-ok" : "text-accent",
+              )}>{phase === "saved" ? "Search-ready memory" : "New memory received"}</p>
+              <p className="mt-1 truncate text-sm font-medium text-fg">{momentTitle(capturedMoment)}</p>
+              <p className="mt-1 line-clamp-2 text-xs leading-5 text-fg-dim">
+                {capturedMoment.aiDescription || capturedMoment.summary}
+              </p>
+            </div>
+          </div>
+          {phase === "saved" ? (
+            <div className="flex flex-wrap gap-3 border-t border-white/10 px-4 py-3 text-xs">
+              <Link href={`/moment/${capturedMoment.id}`} className="text-accent underline underline-offset-4">
+                Watch moment
+              </Link>
+              {searchTerm ? (
+                <Link href={`/explore?q=${encodeURIComponent(searchTerm)}`} className="text-accent underline underline-offset-4">
+                  Search “{searchTerm}”
+                </Link>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       {error && <p className="mt-4 text-sm leading-6 text-error">{error}</p>}
       <p className="mt-5 text-xs leading-6 text-fg-dim">
         {phoneReady
@@ -126,5 +246,31 @@ export function DetectionStatus({ phoneReady, onTrigger }: {
           : "Connect the phone app first. Its camera remains off until this button is pressed."}
       </p>
     </section>
+  );
+}
+
+function PipelineBar({ label, state }: {
+  label: string;
+  state: "waiting" | "active" | "done";
+}) {
+  return (
+    <div>
+      <div className="flex items-center justify-between text-[10px] tracking-[0.1em] uppercase">
+        <span className={state === "waiting" ? "text-fg-mute" : state === "done" ? "text-ok" : "text-accent"}>
+          {label}
+        </span>
+        <span className="font-mono text-fg-mute">
+          {state === "done" ? "100%" : state === "active" ? "working" : "queued"}
+        </span>
+      </div>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[.07]">
+        <div className={cn(
+          "h-full rounded-full transition-all duration-700",
+          state === "done" && "w-full bg-ok",
+          state === "active" && "w-2/3 animate-pulse bg-accent",
+          state === "waiting" && "w-0",
+        )} />
+      </div>
+    </div>
   );
 }

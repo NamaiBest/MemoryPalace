@@ -2,7 +2,8 @@
 
 This is the shared, evidence-first record of how MemoryPalace uses sponsor technology.
 Each section separates what is running from what is future work so the demo and submission
-do not overclaim.
+do not overclaim. The live verification on 2026-09-19 preserved, enriched, and indexed all
+12 historical moments.
 
 ## Common product architecture and pitch policy
 
@@ -11,7 +12,9 @@ The product agent is always named **Memory Guard**. Sponsor services have separa
 | Layer | Fixed or selectable? | Responsibility |
 |---|---|---|
 | Elastic | Fixed when configured | BM25 + vector retrieval, RRF ranking, and EEG intensity filters |
+| Voice input | Meta when configured | Muse Voice Transcribe converts a push-to-talk turn into the question Memory Guard answers |
 | Memory Guard LLM | Selected at launch | Meta Muse Spark 1.3 **or** Grok 4.6 reasons over retrieved moments |
+| Voice output | Device native | Browser speech synthesis reads the grounded answer aloud; this is not presented as a Meta TTS API |
 
 This avoids misleading overlap. In a Meta launch, Muse Spark genuinely generates Memory
 Guard's answers. In a Grok launch, Grok genuinely does. Elastic remains the search system in
@@ -34,7 +37,11 @@ EEG spike + phone video
         ↓
 durable cognitive moment
         ↓
-Jina v5 Omni video embedding through Elastic Inference Service
+Meta Muse Spark semantic title + grounded scene description
+        ↓
+Meta web grounding for supported public event context
+        ↓
+Jina v5 Omni video/text embedding through Elastic Inference Service
         ↓
 BM25 keyword retrieval + dense kNN vector retrieval
         ↓
@@ -51,6 +58,8 @@ clickable return to the original moment
 |---|---|---|
 | **Elastic Cloud Serverless Vector Database** | Stores a searchable document for every captured cognitive moment in `memorypalace-multimodal-moments`. Source video stays in the durable media library; Elastic stores its URI, metadata, and searchable vector. | `hardware-demo/eegdemo/elastic_store.py` |
 | **Elastic Inference Service** | Uses the preconfigured `.jina-embeddings-v5-omni-small` endpoint to place short videos and text queries in the same 1024-dimensional space. No separate Jina credential is exposed to the browser or phone. | `ElasticStore.embed_video()` and `ElasticStore.embed_text()` |
+| **Semantic metadata** | Indexes Meta's grounded title, description, keywords, and topics alongside structured EEG fields. BM25 can match visible scene details while dense retrieval handles paraphrases. | `hardware-demo/eegdemo/vision.py`, `Library._enrich_meta()`, and `ElasticStore.index_moment()` |
+| **Pre-indexed event context** | Stores verified public context such as `HackMIT` in the same stable moment document before query time. The operator hint is retained only as provenance; Elastic searches the grounded title, description, keywords, and topics rather than assuming the hint is true. | `MetaVideoDescriber._ground_semantics()`, `ElasticStore.searchable_text()`, and `vision` metadata |
 | **Text-to-video vector search** | Sends short MP4 bytes as base64 video input, indexes the returned cosine-similarity vector, and embeds natural-language queries with the same model for kNN retrieval. | `ElasticStore.index_moment()` and `ElasticStore.search()` |
 | **BM25 + RRF hybrid search** | Runs conventional multi-field keyword search alongside kNN and merges their rankings with reciprocal rank fusion. Exact terms and semantic intent can both win. | `retriever.rrf` body in `ElasticStore.search()` |
 | **Structured filtering** | Applies event type and lower/upper spike-intensity bounds inside both the keyword and vector branches. The UI exposes critical/red, high/orange, moderate/yellow, and weak/green bands. | `GET /search`, `app/app/api/search/route.ts`, and `ExplorePage.tsx` |
@@ -71,10 +80,12 @@ collection.
 1. Pair the Meta-style Android demo app. The phone connects with its camera off.
 2. Capture a 10- or 30-second moment from `/live`.
 3. The MP4 is finalized, uploaded, and written to the durable memory catalog.
-4. The short video is embedded by Jina v5 Omni and indexed into Elastic asynchronously.
-5. Open `/explore`, enter a natural-language memory query, and optionally choose an
+4. Meta Muse Spark generates factual media metadata, then optionally verifies relevant
+   public proper nouns using web search and the configured event hint.
+5. The video is embedded by Jina v5 Omni and the complete document is indexed into Elastic.
+6. Open `/explore`, enter a natural-language memory query, and optionally choose an
    intensity range, date, or session.
-6. Show `ELASTIC · JINA V5 OMNI · HYBRID RRF`, then click the colored timeline point to replay
+7. Show `ELASTIC · JINA V5 OMNI · HYBRID RRF`, then click the colored timeline point to replay
    the source moment.
 
 ### Persistence and privacy boundary
@@ -93,7 +104,7 @@ collection.
 ### Configuration
 
 ```bash
-export ELASTICSEARCH_URL="https://my-vectordb-project-bece59.es.us-east4.gcp.elastic.cloud"
+export ELASTICSEARCH_URL="https://my-elasticsearch-project-f50785.es.us-central1.gcp.elastic.cloud:443"
 export ELASTIC_API_KEY="<project API key>"
 python3 hardware-demo/run.py serve \
   --source synthetic --recorder phone --host 0.0.0.0
@@ -105,24 +116,33 @@ without granting access to unrelated indices.
 
 ### Verification
 
-- 34 Python tests pass, covering catalog restart survival, non-destructive legacy import,
-  launch-selected agent routing, Jina video ingestion, and RRF queries.
+- 41 Python tests pass, covering catalog restart survival, non-destructive legacy import,
+  Meta video/poster understanding, launch-selected agent routing, Jina video ingestion,
+  RRF queries, conversation history, and Meta voice request handling.
 - Frontend lint, TypeScript, and the Next.js production build pass.
 - `/status` exposes readiness and index names but never credentials.
 - Without Elastic credentials, search visibly falls back to local text matching; camera
   capture and the durable gallery remain operational.
+- Live cloud verification returned 12 documents for 12 durable memories; every catalog
+  item reports Meta analysis and Elastic indexing complete. A `laptop keyboard` query
+  returned the keyboard clip first through `elastic-rrf-jina-v5-omni`.
+- The auditorium migration used Meta web search to resolve HackMIT from the full video,
+  sponsor signage, transcript, timestamp, and configured event clue, then updated the same
+  Elastic documents. No media or historical moment was replaced.
 
 ### Honest remaining boundary
 
-The product integration is implemented, but the live Elastic Cloud project still needs a
-project API key supplied to the running backend. Elastic Workflows and Agent Builder are
-future extensions in `DOCS_sponsor/elastic`; they are not presented as completed work.
+Elastic Workflows and Agent Builder remain future extensions in `DOCS_sponsor/elastic`;
+they are not presented as completed work. The working implementation uses Elastic Cloud,
+Elastic Inference Service, Jina v5 Omni, BM25, dense kNN, RRF, and structured range filters.
 
-Jina v5 Omni supplies retrieval embeddings, not prose captions. The clean next enrichment
-is Meta Muse Spark video understanding: send the stored MP4 as an `input_video`, request a
-structured description/keywords/topics object, persist it, and let Elastic index both that
-text and the direct video vector. That adapter remains future work until Model API access is
-available; the current build does not fake generated descriptions.
+Meta Muse Spark now analyzes the stored MP4 directly when it is 6 MB or smaller. For larger
+clips it analyzes the extracted poster image so network-size failures cannot block the
+library. The recorded `vision.source` value keeps that distinction explicit. Descriptions
+are conservative scene metadata, not emotion, identity, medical, or intent inference.
+Public context is a second pass so a web result cannot override what the private clip
+actually contains. Search provenance is stored under `vision.webSearchUsed` and
+`vision.webSources`; failures leave the original media description intact.
 
 Official implementation references:
 
@@ -145,16 +165,32 @@ and Memory Guard retrieval to the same Boston calendar day. Without a model key,
 uses a clearly labelled local grounded-catalog answer with moment citations; it never labels
 that fallback as Meta or Grok inference.
 
+The same window now supports typed and spoken turns. Tapping the voice control records up to
+30 seconds, sends the audio server-side to Meta Muse Voice Transcribe, retrieves matching
+moments from Elastic, and asks the selected Memory Guard model with the preceding conversation.
+The transcript appears as the user's message, the cited moment buttons still open the original
+video, and the answer is spoken aloud. Raw microphone audio is ephemeral and is not persisted.
+Because Meta's documented voice endpoint is transcription-only, output speech uses browser or
+OS speech synthesis and is labelled `Device speech synthesis` in the runtime provenance.
+
 This provider selection affects the agentic overview only. It does not relabel Elastic search
 as an LLM feature.
 
 The Meta product path and constraints are documented in `DOCS_sponsor/meta`. The phone app
-uses a clearly labelled simulated “Pair Meta glasses” presentation flow, while the working
-camera is the phone itself. The Meta adapter is implemented, but live Muse calls remain
-dependent on Model API account availability in the current region.
+uses `Pair Meta glasses` to open the real Meta AI companion app, then returns to a clearly
+labelled simulated connection while the phone remains the working camera. The UI names its
+actual authenticated JSON start/stop/ack bridge. For a physical-glasses build, the documented
+upgrade is Meta Wearables Device Access Toolkit v0.9 registration, permission, device-session,
+and camera-stream APIs rather than an invented REST recording command. The Meta adapters were
+verified live with Muse Spark on 2026-09-19. Provider availability and credits remain external
+runtime dependencies, so durable capture and local browsing continue to work during an outage.
 
 Official references:
 
 - [Meta Model API overview](https://dev.meta.ai/docs/overview)
 - [Meta Responses API](https://dev.meta.ai/docs/protocols/responses)
+- [Meta speech-to-text guide](https://dev.meta.ai/docs/speech-to-text)
+- [Muse Voice Transcribe API](https://dev.meta.ai/docs/api-reference/voice/transcribe)
+- [Meta Wearables Android integration](https://wearables.developer.meta.com/docs/develop/dat/build-integration-android/)
+- [Official Device Access Toolkit Android repository](https://github.com/facebook/meta-wearables-dat-android)
 - [xAI Grok 4.6](https://docs.x.ai/developers/grok-4-6)

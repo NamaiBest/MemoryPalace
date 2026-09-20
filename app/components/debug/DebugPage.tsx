@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { formatFull, formatRelative, TIME_ZONE_LABEL } from "@/lib/format";
+import { momentTitle } from "@/lib/labels";
 import { OddballCalibration } from "@/components/debug/OddballCalibration";
 import type { Moment } from "@/types/moment";
 
@@ -277,10 +278,12 @@ export function DebugPage() {
                     />
                   ) : null}
                   <div className="min-w-0">
-                    <p className="font-mono text-[11px] tracking-[0.14em] text-accent">
-                      {moment.id}
+                    <p className="text-sm font-medium leading-6 text-fg">
+                      {momentTitle(moment)}
                     </p>
-                    <p className="mt-1 text-sm leading-6 text-fg">{moment.summary}</p>
+                    <p className="mt-1 text-sm leading-6 text-fg-dim">
+                      {moment.aiDescription || moment.summary}
+                    </p>
                     <p className="mt-2 font-mono text-[11px] text-fg-dim">
                       {formatFull(moment.timestamp)} · {formatRelative(moment.timestamp)}
                     </p>

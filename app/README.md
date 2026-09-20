@@ -1,8 +1,9 @@
 # MemoryPalace — web interface
 
 The browsable half of the project. It shows captured moments in a cinematic hero and
-horizontal carousel, with larger cards, scroll arrows, keyboard navigation and a warm,
-blurred backdrop.
+two-row horizontal gallery, with larger cards, scroll arrows, keyboard navigation and a
+warm, blurred backdrop. Hero titles, descriptions and annotations are clamped to two or
+three lines with an ellipsis so unusually long model output cannot dominate the home page.
 
 On `/live`, **Demo surprise** and **Demo neural spike** request a 10- or 30-second moment.
 The phone camera opens for that capture only, then closes and uploads the MP4. The backend
@@ -48,7 +49,7 @@ hydration first — load any page and check the browser console for that WebSock
 ## Routes
 
 ```text
-/                    Home — hero moment plus the carousel
+/                    Home — hero moment plus the two-row moment gallery
 /moment/[id]         One moment: media, EEG trace, annotation
 /explore             Table of every moment, with filters
 /live                Timed demo capture controls and optional simulated signal playground
@@ -62,13 +63,15 @@ The type is not cosmetic — it states what the system is claiming to have found
 | Type | Label | Origin | Meaning |
 |---|---|---|---|
 | `load` | Sustained Load | **Real detections** | Elevated cognitive load against the wearer's own calibrated baseline, held across four consecutive windows. This is what the detector actually measures. |
+| `capture` | Live Capture | Manual phone action | A real 10-second camera recording requested by the wearer, with no simulated or inferred neural event attached. |
 | `surprise` | Possible Surprise | Simulation only | Reserved for a surprise-specific detector that does not exist yet. |
 | `insight` | Possible Insight | Simulation only | Reserved. The current pipeline cannot distinguish insight from load. |
 | `error` | Error-related Event | Simulation only | Reserved for error-related negativity. Not implemented. |
 
-The EEG detector produces `load`. Manual demo buttons produce `surprise` or `load` with
-`demo: true` and a summary explicitly identifying the demo trigger. The footage is real
-when a physical phone is connected; the event label is chosen by the tester.
+The EEG detector produces `load`. Manual demo buttons produce `surprise`, `excitement`, or
+`load` with `demo: true` and a summary explicitly identifying the demo trigger. The phone's
+Record live moment action produces `capture` with `demo: false`. The footage is real when a
+physical phone is connected; only the simulated event label is chosen by the tester.
 
 If the cascade idea lands — using sustained load as a gate, then searching inside it for
 short bursts — a `burst` type slots in beside `load` without rework. Adding a type means
@@ -93,7 +96,7 @@ imbalance and any emitted probability would be badly miscalibrated.
 | Confidence | high ≥80% · medium 60–79% · low <60% | Bands over the rank score above. |
 | Modality | all · EEG · Video | `video` means media is attached; `eeg` means a trace is. |
 | Date | all · today · last 48h | Uses Boston time, like every other timestamp. |
-| Search | free text | Matches id, sequence, event label, annotation and summary. |
+| Search | free text | Matches semantic title, description, keywords, topics, annotation and summary. |
 
 Intensity is the normalized detector ranking score, not a medical severity diagnosis or a
 calibrated probability. The visual bands are **critical/red ≥85%**, **high/orange
@@ -120,6 +123,27 @@ shows its actual provider. Set `MEMORYPALACE_AGENT_PROVIDER=meta` for Muse Spark
 UI uses an explicitly labelled grounded-catalog fallback when no model key is configured
 instead of pretending an unconfigured sponsor service answered. The top-right date selector
 filters the collection and scopes Memory Guard to the same Boston calendar day.
+
+Captured moments are enriched and indexed once, immediately after upload. Asking a question
+does not re-index the library: Elastic embeds only the new query, searches the existing BM25
+and Jina vector index, and returns ranked moment IDs. Memory Guard then writes a grounded
+answer over those results. The assistant supports an independently scrollable compact card and
+a full-height right drawer, with an always-visible Expand/Compact control. Submitting clears the
+input, displays the question in the conversation, renders safe bold/bullet Markdown, turns every
+inline `Moment #NNN` citation into a link, and adds ranked video-reference buttons that open the
+same saved moments.
+The backend also warms the Elastic inference endpoint and validates the index mapping during
+startup so the first presentation query does not pay that setup cost.
+
+The microphone control provides full voice conversation rather than browser dictation. It
+records a push-to-talk turn for up to 30 seconds, sends the audio through the server-only proxy
+to Meta Muse Voice Transcribe, and uses the transcript as the next turn in the same conversation.
+Elastic retrieves the already-indexed moments, Muse Spark writes the grounded response, and the
+device reads the response aloud. The control says Talk, Stop, or Mute for its current state and
+shows elapsed recording time plus a plain-language pipeline status. Tap it again to stop recording
+or interrupt playback.
+Raw microphone audio is not retained. Output is deliberately labelled device speech synthesis:
+Meta's documented API supplies the input transcription, not text-to-speech.
 
 ## Time
 

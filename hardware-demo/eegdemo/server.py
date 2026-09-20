@@ -1,6 +1,8 @@
 """Small local/LAN backend. Credentials stay out of URLs and session logs."""
 import hmac
+import base64
 import json
+import re
 import threading
 import time
 from datetime import datetime, timedelta, timezone
@@ -15,6 +17,7 @@ from .library import MAX_UPLOAD_BYTES, Library
 from .pipeline import Pipeline
 from .recording import PhoneRecorder, TestVideoRecorder
 from .vision import MetaVideoDescriber
+from .voice import MAX_AUDIO_BYTES, MetaVoiceTranscriber, VoiceError
 
 
 MEDIA_TYPES = {".mp4": "video/mp4", ".mov": "video/quicktime",
@@ -35,7 +38,11 @@ class Runtime:
         self.recorder = cls(self.output, self.emit)
         self.pipeline = Pipeline(self.emit, self.trigger, source, notch)
         self.elastic = ElasticStore(self.emit)
+        if self.elastic.configured:
+            threading.Thread(target=self.elastic.warm_up, daemon=True,
+                             name="elastic-search-warmup").start()
         self.vision = MetaVideoDescriber(self.emit)
+        self.voice = MetaVoiceTranscriber(self.emit)
         self.guard = MemoryGuard(self.emit)
         self.library = Library(self.output, self.emit, self.elastic, self.vision,
                                storage=library_dir, legacy_runs=legacy_runs,
@@ -72,7 +79,8 @@ class Runtime:
         return {"eeg": self.pipeline.status(), "recording": self.recorder.status(),
                 "library": self.library.status(), "session_dir": str(self.output),
                 "timed_capture": self.timed_capture, "elastic": self.elastic.status(),
-                "vision": self.vision.status(), "agent": self.guard.status()}
+                "vision": self.vision.status(), "voice": self.voice.status(),
+                "agent": self.guard.status()}
 
     @staticmethod
     def _date_bounds(date_scope):
@@ -140,7 +148,20 @@ class Runtime:
                 "retrievalEngine": retrieval_engine,
                 "momentIds": [item.get("id") for item in selected]}
 
-    def ask_guard(self, question, date_scope=None):
+    @staticmethod
+    def _history(value):
+        if not isinstance(value, list):
+            return []
+        history = []
+        for item in value[-8:]:
+            if not isinstance(item, dict) or item.get("role") not in ("user", "assistant"):
+                continue
+            content = str(item.get("content", "")).strip()[:1200]
+            if content:
+                history.append({"role": item["role"], "content": content})
+        return history
+
+    def ask_guard(self, question, date_scope=None, history=None):
         question = question.strip()
         if not question:
             raise ValueError("question must not be empty")
@@ -152,27 +173,30 @@ class Runtime:
         if self.elastic.configured:
             try:
                 moments = self.elastic.search(
-                    question, limit=8, date_from=date_from, date_to=date_to)
+                    question, limit=5, date_from=date_from, date_to=date_to)
                 retrieval_engine = "elastic-rrf-jina-v5-omni"
             except Exception as exc:
                 self.emit("memory_guard_elastic_fallback", {"error": str(exc)[:500]})
         with self.lock:
-            local = {moment["id"]: dict(moment) for moment in self.library.moments}
+            local = {moment["id"]: dict(moment) for moment in self.library.moments
+                     if moment.get("status") != "deleted"}
         if date_from:
             local = {moment_id: moment for moment_id, moment in local.items()
                      if date_from <= moment.get("timestamp", "") <= date_to}
         if moments:
             # Elastic ranks the ids; the durable catalog supplies the latest transcript and
             # metadata even if asynchronous re-indexing is still finishing.
-            moments = [local.get(moment.get("id"), moment) for moment in moments]
+            moments = [local[moment.get("id")] for moment in moments
+                       if moment.get("id") in local]
         else:
             moments = sorted(local.values(), key=lambda item: item.get("timestamp", ""),
                              reverse=True)[:8]
-        if not self.guard.configured or self.guard.last_error:
+        if not self.guard.configured:
             return self._local_guard_answer(
                 question, moments, retrieval_engine, date_scope)
         try:
-            return self.guard.answer(question, moments, retrieval_engine)
+            return self.guard.answer(
+                question, moments, retrieval_engine, self._history(history))
         except AgentError as exc:
             # A valid credential can still be unusable because billing, quota, or the
             # selected model is unavailable. Keep the question useful and label the
@@ -183,12 +207,71 @@ class Runtime:
             return self._local_guard_answer(
                 question, moments, retrieval_engine, date_scope)
 
+    def compose_share(self, body):
+        """Turn a hand-picked set of moments into a note meant for another person.
+
+        Selection is the wearer's, never the model's: only the ids passed in are used,
+        in the order given, so nobody can be surprised by what got shared. Deleted
+        moments are refused rather than silently dropped.
+        """
+        ids = body.get("momentIds")
+        if not isinstance(ids, list) or not ids:
+            raise ValueError("momentIds must be a non-empty list")
+        if len(ids) > 12:
+            raise ValueError("share at most 12 moments at once")
+        recipient = str(body.get("recipient", "")).strip()
+        sender = str(body.get("sender", "")).strip()
+        for label, value in (("recipient", recipient), ("sender", sender)):
+            if len(value) > 80:
+                raise ValueError(f"{label} must be at most 80 characters")
+        with self.lock:
+            catalog = {moment["id"]: dict(moment) for moment in self.library.moments
+                       if moment.get("status") != "deleted"}
+        chosen = []
+        for moment_id in ids:
+            if not isinstance(moment_id, str) or moment_id not in catalog:
+                raise ValueError(f"unknown moment {moment_id!r}")
+            chosen.append(catalog[moment_id])
+        if not self.guard.configured:
+            raise ValueError(
+                f"{self.guard.label} is not configured, so a shareable note cannot be written")
+        try:
+            result = self.guard.share_note(chosen, recipient or None, sender or None)
+        except AgentError as exc:
+            self.emit("share_note_failed", {"error": str(exc)[:500]})
+            raise
+        result["recipient"] = recipient
+        result["moments"] = [{
+            "id": moment["id"],
+            "sequence": moment.get("sequence"),
+            "title": moment.get("semanticTitle"),
+            "timestamp": moment.get("timestamp"),
+            "media": moment.get("media", {}),
+        } for moment in chosen]
+        return result
+
+    def ask_guard_voice(self, audio, content_type, date_scope=None, history=None):
+        transcript = self.voice.transcribe(audio, content_type)
+        result = self.ask_guard(transcript, date_scope, history)
+        result["transcript"] = transcript
+        result["voice"] = {
+            "inputProvider": "Meta Muse Voice Transcribe",
+            "inputModel": self.voice.model,
+            "outputProvider": "Device speech synthesis",
+        }
+        return result
+
     def start_capture(self, body):
         seconds, event = body.get("seconds", 10), body.get("demo_event", "surprise")
+        demo = body.get("demo", True)
         if type(seconds) is not int or seconds not in (10, 30):
             raise ValueError("capture length must be 10 or 30 seconds")
-        if event not in ("surprise", "load"):
-            raise ValueError("demo_event must be surprise or load")
+        if type(demo) is not bool:
+            raise ValueError("demo must be a boolean")
+        if event not in ("capture", "surprise", "excitement", "load"):
+            raise ValueError("demo_event must be capture, surprise, excitement or load")
+        if not demo and event != "capture":
+            raise ValueError("a live recording must use the capture event")
         if not isinstance(self.recorder, PhoneRecorder):
             raise ValueError("timed captures require --recorder phone")
         result = self.recorder.start()
@@ -196,12 +279,20 @@ class Runtime:
             self.capture_timer.cancel()
         self.capture_timer = None
         self.timed_capture = {"recording_id": result["recording_id"], "seconds": seconds,
-                              "demo_event": event, "started_at": None, "ends_at": None}
-        self.library.note_trigger(result["recording_id"], {
-            "demo": True, "demo_event": event, "duration_seconds": seconds,
-            "z_score": 12.0, "spike_confidence": 0.95,
-            "detection_threshold": self.pipeline.cfg.detector.z_threshold})
-        self.emit("demo_capture_requested", self.timed_capture)
+                              "demo_event": event, "demo": demo,
+                              "started_at": None, "ends_at": None}
+        context = {
+            "demo": demo, "demo_event": event, "duration_seconds": seconds,
+            "spike_confidence": 0.95 if demo else 0.5,
+            "detection_threshold": self.pipeline.cfg.detector.z_threshold,
+        }
+        if demo:
+            context["z_score"] = 12.0
+        else:
+            context["manual_capture"] = True
+        self.library.note_trigger(result["recording_id"], context)
+        self.emit("demo_capture_requested" if demo else "live_capture_requested",
+                  self.timed_capture)
         return result
 
     def acknowledge(self, body):
@@ -281,7 +372,8 @@ def create_server(runtime, host="127.0.0.1", port=8771):
                     if not 1 <= limit <= 50:
                         raise ValueError("limit must be between 1 and 50")
                     event_type = params.get("event_type", [None])[0]
-                    if event_type and event_type not in ("surprise", "insight", "error", "load"):
+                    if event_type and event_type not in (
+                            "capture", "surprise", "excitement", "insight", "error", "load"):
                         raise ValueError("unsupported event_type")
                     minimum = params.get("min_intensity",
                                          params.get("min_confidence", [None]))[0]
@@ -336,6 +428,8 @@ def create_server(runtime, host="127.0.0.1", port=8771):
             route = urlsplit(self.path).path
             if route == "/media/upload":
                 return self.do_upload()
+            if route == "/agent/voice":
+                return self.do_voice()
             try:
                 length = int(self.headers.get("Content-Length", "0"))
                 if not 0 < length <= 1024 * 1024:
@@ -343,10 +437,17 @@ def create_server(runtime, host="127.0.0.1", port=8771):
                 body = json.loads(self.rfile.read(length))
                 if not isinstance(body, dict):
                     raise ValueError("JSON body must be an object")
+                if route == "/share/compose":
+                    # Meta composition can take seconds; never hold the capture lock.
+                    try:
+                        return self.send(200, runtime.compose_share(body))
+                    except AgentError as exc:
+                        return self.send(503, {"error": str(exc)})
                 if route == "/agent/chat":
                     # Model inference can take seconds and must never hold the EEG/capture lock.
                     return self.send(200, runtime.ask_guard(
-                        str(body.get("question", "")), body.get("date")))
+                        str(body.get("question", "")), body.get("date"),
+                        body.get("history")))
                 with runtime.lock:
                     runtime.pipeline.watchdog()
                     if self.path == "/eeg":
@@ -394,6 +495,60 @@ def create_server(runtime, host="127.0.0.1", port=8771):
             except Exception as exc:
                 runtime.emit("backend_error", {"error": str(exc)})
                 self.send(500, {"error": "backend error; inspect events.jsonl"})
+
+        def do_DELETE(self):
+            if not self.authorized():
+                return
+            route = urlsplit(self.path).path
+            if not route.startswith("/moments/"):
+                return self.send(404, {"error": "not found"})
+            moment_id = unquote(route[len("/moments/"):])
+            if not re.fullmatch(r"capture-[0-9a-f]{8}", moment_id):
+                return self.send(400, {"error": "invalid moment id"})
+            try:
+                # Elastic I/O happens outside the runtime lock, so a slow sponsor
+                # service cannot pause EEG ingestion or phone command polling.
+                moment = runtime.library.delete_moment(moment_id)
+                self.send(200, {"moment": moment, "mediaRetained": True})
+            except ValueError as exc:
+                self.send(404, {"error": str(exc)})
+            except Exception as exc:
+                runtime.emit("backend_error", {"error": str(exc)})
+                self.send(500, {"error": "delete failed; inspect events.jsonl"})
+
+        def do_voice(self):
+            """Forward an ephemeral voice turn to Meta without persisting the microphone."""
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if not 0 < length <= MAX_AUDIO_BYTES:
+                    return self.send(413, {
+                        "error": f"voice recording must be 1..{MAX_AUDIO_BYTES} bytes"})
+                content_type = self.headers.get("Content-Type", "").split(";", 1)[0]
+                if content_type not in (
+                        "audio/webm", "audio/ogg", "audio/mp4", "audio/x-m4a",
+                        "audio/wav", "audio/wave"):
+                    return self.send(415, {"error": "unsupported voice recording format"})
+                encoded_history = self.headers.get("X-Memory-History", "")
+                if len(encoded_history) > 12000:
+                    return self.send(400, {"error": "voice conversation history is too large"})
+                history = []
+                if encoded_history:
+                    padding = "=" * (-len(encoded_history) % 4)
+                    history = json.loads(base64.urlsafe_b64decode(
+                        encoded_history + padding).decode())
+                params = parse_qs(urlsplit(self.path).query)
+                date_scope = params.get("date", [None])[0]
+                audio = self.rfile.read(length)
+                result = runtime.ask_guard_voice(
+                    audio, content_type, date_scope, history)
+                self.send(200, result)
+            except (ValueError, TypeError, json.JSONDecodeError) as exc:
+                self.send(400, {"error": str(exc)})
+            except VoiceError as exc:
+                self.send(503, {"error": str(exc), "voice": runtime.voice.status()})
+            except Exception as exc:
+                runtime.emit("backend_error", {"error": str(exc)})
+                self.send(500, {"error": "voice chat failed; inspect events.jsonl"})
 
         def do_upload(self):
             """Binary media from the phone. Read outside the lock: a large upload over

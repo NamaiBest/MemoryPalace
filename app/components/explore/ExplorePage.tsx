@@ -30,6 +30,13 @@ export function ExplorePage() {
   >("idle");
 
   useEffect(() => {
+    const initial = new URLSearchParams(window.location.search).get("q")?.trim();
+    if (!initial) return;
+    const apply = window.setTimeout(() => setQuery(initial), 0);
+    return () => window.clearTimeout(apply);
+  }, []);
+
+  useEffect(() => {
     const value = query.trim();
     const hasRemoteCriteria = Boolean(value || event !== "all" || confidence !== "all"
       || date !== "all" || session !== "all" || sort !== "time");

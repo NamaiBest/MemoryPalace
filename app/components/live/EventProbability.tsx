@@ -8,7 +8,9 @@ import type { EventProbabilities } from "@/lib/integrations";
 const ORDER = ["surprise", "insight", "error"] as const satisfies readonly EventType[];
 
 const BAR: Record<EventType, string> = {
+  capture: "bg-accent",
   surprise: "bg-surprise",
+  excitement: "bg-surprise",
   insight: "bg-insight",
   error: "bg-error",
   load: "bg-load",

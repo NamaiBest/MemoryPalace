@@ -10,7 +10,9 @@ import type {
 
 const EVENT_OPTIONS: { id: EventFilter; label: string }[] = [
   { id: "all", label: "All" },
+  { id: "capture", label: "Live capture" },
   { id: "surprise", label: "Surprise" },
+  { id: "excitement", label: "Excitement" },
   { id: "insight", label: "Insight" },
   { id: "error", label: "Error" },
   { id: "load", label: "Load" },

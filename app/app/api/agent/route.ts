@@ -9,6 +9,7 @@ export async function GET() {
     return NextResponse.json({
       agent: body.agent,
       elastic: body.elastic,
+      voice: body.voice,
     });
   } catch {
     return NextResponse.json({ offline: true }, { status: 503 });
@@ -21,7 +22,11 @@ export async function POST(request: NextRequest) {
     const response = await backendFetch("/agent/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: body.question, date: body.date }),
+      body: JSON.stringify({
+        question: body.question,
+        date: body.date,
+        history: body.history,
+      }),
     });
     const result = await response.json();
     return NextResponse.json(result, { status: response.status });

@@ -6,7 +6,9 @@ import type { Moment } from "@/types/moment";
 
 function FallbackField({ moment }: { moment: Moment }) {
   const tone =
-    moment.eventType === "surprise"
+    moment.eventType === "capture"
+      ? "from-[#181b2a] via-[#11131a] to-black"
+      : moment.eventType === "surprise" || moment.eventType === "excitement"
       ? "from-[#2a2114] via-[#12110f] to-black"
       : moment.eventType === "insight"
         ? "from-[#182028] via-[#101215] to-black"
@@ -116,7 +118,12 @@ export function MediaBackdrop({
           showFront ? "opacity-100" : "opacity-0",
         )}
       >
-        <MomentVisual moment={front} active={showFront} autoplay={autoplay} />
+        {/* Keyed by moment id on purpose. A <video> with a <source> child does not
+            reload when React swaps the source's src, so without a fresh element the
+            backdrop kept playing the previously selected clip while showing the new
+            poster. Remounting also clears the per-clip imageFailed/videoReady flags,
+            which otherwise leaked from one moment to the next. */}
+        <MomentVisual key={front.id} moment={front} active={showFront} autoplay={autoplay} />
       </div>
       <div
         className={cn(
@@ -124,7 +131,7 @@ export function MediaBackdrop({
           showFront ? "opacity-0" : "opacity-100",
         )}
       >
-        <MomentVisual moment={back} active={!showFront} autoplay={autoplay} />
+        <MomentVisual key={back.id} moment={back} active={!showFront} autoplay={autoplay} />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/55 to-black/50" />
       <div className="absolute inset-0 bg-gradient-to-r from-bg/80 via-bg/25 to-transparent" />

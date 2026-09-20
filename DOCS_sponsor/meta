@@ -1,3 +1,70 @@
+IMPLEMENTED META PATH (2026-09-19)
+
+- `hardware-demo/eegdemo/vision.py` sends each safely stored phone clip to Muse Spark 1.3
+  through the Meta Responses API as `input_video` and requests a strict structured result:
+  semantic title, factual description, keywords, and topics.
+- Clips larger than 6 MB use the already-extracted poster image as `input_image`; each
+  moment records `vision.source` as `video` or `poster`, so the demo does not overstate what
+  was analyzed.
+- These grounded fields are persisted before Elastic indexing. The homepage, Explore,
+  Diagnostics, detail view, and Memory Guard show human-readable semantic titles instead
+  of internal `capture-*` storage identifiers.
+- Memory Guard separately uses Muse Spark as its launch-selected reasoning model after
+  Elastic retrieves relevant moments.
+- Live verification enriched all 12 existing memories without deleting or replacing their
+  source media. The prompt explicitly avoids inferring identity, emotion, diagnosis,
+  intent, or private attributes.
+- Public context is now a separate grounding pass. Muse first perceives the private clip,
+  then the Meta Responses API `web_search` tool verifies public proper nouns suggested by
+  visible text, speech, time, and the operator-provided event hint. A hint is never treated
+  as proof by itself.
+- The active demo uses `MEMORYPALACE_EVENT_CONTEXT="HackMIT 2026 at MIT"`. Live verification
+  upgraded the generic auditorium memories to HackMIT-specific titles and descriptions
+  after the full videos showed sponsor slides, auditorium context, and large `HACK` letters.
+  Each moment records whether search ran and the public source URLs used.
+- Memory Guard also exposes Meta web search, but only to clarify public entities already
+  present in Elastic-retrieved moments. It must distinguish public background context from
+  facts actually observed in the user's recording.
+- Memory Guard now supports a complete voice conversation from the same floating window.
+  The browser records a push-to-talk turn, the backend converts it to ephemeral 24 kHz mono
+  PCM, and Meta Muse Voice Transcribe produces the question. Elastic retrieves the relevant
+  pre-indexed moments and Muse Spark answers with conversation history and clickable video
+  citations. The answer is then spoken aloud using the device's native speech synthesizer.
+- This is not a dictation-only UI: the user speaks, Memory Guard reasons over their day, and
+  the answer is heard aloud. The implementation nevertheless labels the output accurately.
+  Meta's currently documented voice API covers transcription, not speech synthesis, so the
+  demo does not claim that Meta generates the output audio.
+- Microphone audio is limited to 30 seconds and 8 MB, is held only long enough to normalize
+  and transcribe the turn, and is not added to the memory library or Elastic index.
+
+Official implementation references:
+
+- https://dev.meta.ai/docs/protocols/responses
+- https://dev.meta.ai/docs/speech-to-text
+- https://dev.meta.ai/docs/api-reference/voice/transcribe
+
+META GLASSES PAIRING AND CAPTURE PROTOCOL (2026-09-19)
+
+- The Android `Pair Meta glasses` action opens Meta AI (`com.facebook.stella`) so the
+  presenter can show the real companion-app handoff. Returning to MemoryPalace completes a
+  clearly labelled simulated connection because the team does not have physical glasses.
+- The current working recorder is still the rear phone camera. Its protocol is authenticated
+  JSON over HTTP: `GET /commands` supplies short-lived `start`/`stop` actions,
+  `POST /commands/ack` confirms them with the recording ID, and `/media` receives the MP4.
+- For real glasses, the official protocol is Meta Wearables Device Access Toolkit v0.9:
+  `Wearables.startRegistration(activity)` deep-links to Meta AI, the app requests
+  `Permission.CAMERA`, creates a `DeviceSession`, adds the camera capability, and calls
+  `stream.start()` to collect frames. The application would encode those frames for the same
+  10-second moment pipeline. It is not represented as a REST “record glasses” endpoint.
+- The SDK is still developer preview and needs a Wearables Developer Center project,
+  callback scheme, supported glasses/firmware, Bluetooth permissions, and user consent.
+
+Official wearable references:
+
+- https://wearables.developer.meta.com/docs/develop/dat/build-integration-android/
+- https://wearables.developer.meta.com/docs/reference/android/dat/0.9
+- https://github.com/facebook/meta-wearables-dat-android
+
 what we had in mind:
 Meta Challenge
 Similar to the Tinder idea: Matches brain signatures/thoughts between people (on community platform)
@@ -111,7 +178,3 @@ Meta reserves the right to verify R2 eligibility at any time and to disqualify a
 If a winning team member is disqualified or otherwise unable to advance to R2, the R2 trip prize associated with that individual will not be awarded, and no cash equivalent or alternative prize will be provided. The Meta swag bag, once awarded at R1, will not be affected.
 General Prize Conditions
 One (1) prize maximum per person. Released Parties are not responsible for, and Winner will not receive, the difference between the actual value of the prize at the time of award and the stated ARV in these Official Rules or in any Hackathon-related correspondence or materials. The "Released Parties" means Meta Platforms, Inc. and Meta Ireland Limited (collectively, "Sponsor"), together with their respective parent, subsidiary, and affiliated companies, and each of their officers, directors, employees, agents, representatives, consultants, contractors, legal counsel, prize providers, administrators, and advertising, promotional, and marketing agencies.  Sponsor is not responsible for a Winner’s inability to accept or use the prize for any reason. Prize details will be decided at Sponsor's sole discretion.  Prizes will be distributed after the Hackathon ends. Any taxes and other costs and expenses associated with prize acceptance or use and not specified in these Official Rules as being part of the prize will be the sole responsibility of the Winner. Winner(s) may be issued a tax form for the actual value of the prize. No more than the stated prize will be awarded. Sponsor will not replace any lost, mutilated, or stolen prize or prize elements or any prize that are undeliverable or do not reach a Winner because of an incorrect or changed contact information. If Winner does not accept or use the entire prize, the unaccepted or unused part of the prize will be forfeited, and Sponsor will have no further obligation with respect to that prize or portion of the prize. No transfers, prize substitutions, or cash redemptions will be made, except at Sponsor’s sole discretion. Winner is strictly prohibited from selling, auctioning, trading, or otherwise transferring any part of the prize, except with Sponsor’s permission, which may be granted or withheld for any reason in its sole discretion. Sponsor reserves the right to substitute any prize or portion thereof with another prize or portion thereof of equal or greater value for any reason, including unavailability of the stated prize. Each Participant waives the right to assert as a cost of winning any prize any and all costs of verification and redemption or and any liability and publicity which might arise from claiming or seeking to claim said prize.
-
-
-
-

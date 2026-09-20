@@ -84,6 +84,11 @@ The UI reports success only when the uploaded moment's `recordingId` matches the
 
 The older `feed_synthetic.py trigger` path still uses calibrated EEG to stop an open clip.
 
+The paired Android screen also has **Simulate neural spike**, a manual presentation
+trigger for the same 10-second backend-owned capture. The label records presenter intent;
+it is not emotion recognition. The APK records at 720p/3 Mbps plus AAC so a typical
+10-second clip stays small enough for Meta's full video-and-embedded-audio analysis.
+
 ### Driving a capture from the terminal
 
 ```bash
@@ -309,36 +314,6 @@ and Kotlin refuses to let `init` assign a property declared later. It is now dec
 before `init`.
 
 ---
-
-## Calibration: visual oddball on /debug (2026-09-19)
-
-A block on the diagnostics page for measuring a wearer's response floor and ceiling.
-A count runs up (the standard); on 30% of trials a letter replaces it (the target) and
-the wearer presses space. Targets evoke a P300, standards do not, so EEG recorded
-through a block gives the two amplitudes a detection threshold must sit between — for
-this wearer, today.
-
-Parameters follow PMC12907112 (*Decoding P300 as a shared neural mechanism for oddball
-target detection and working memory updating*): 30% targets, 500 ms stimulus, button
-press on targets, P300 at Pz in 250–650 ms. **One deliberate deviation: the paper's
-1500 ms fixation is cut to 500 ms**, so trials run at 1 s rather than 2 s — a 30-trial
-block takes 30 s, 60 takes a minute, the paper's 180 takes three. The stimulus keeps
-its 500 ms so it stays readable, and the 250–650 ms P300 window still closes before
-the next onset. That paper used X/O; numbers versus letters keeps the same
-standard/deviant structure with a more legible standard.
-
-**Every onset is posted to the backend as a marker** (`oddball_standard` /
-`oddball_target`, with `calibration_start` / `calibration_end` bounding the block) and
-lands in the session's `events.jsonl` with trial index, stimulus and onset time, so EEG
-windows can be labelled afterwards. Measured cadence: mean 1001.9 ms, jitter 1001–1003 ms.
-The trial log is also exportable as JSON from the page, in case the backend is off.
-
-To read the result: compare the detector's z-scores in the 250–650 ms window after
-targets against those after standards. That spread is the wearer's dynamic range.
-
-Implementation is additive: a new component, a new `/api/markers` proxy, two lines in
-`DebugPage.tsx`, and four labels added to the backend's marker allowlist plus an
-optional `detail` payload. Nothing else was touched.
 
 ## Open issues
 

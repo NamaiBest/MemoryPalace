@@ -10,10 +10,10 @@ import {
 } from "react";
 import { INITIAL_MOMENTS } from "@/data/moments";
 import { dateKey } from "@/lib/format";
-import { loadMoments, persistMoment } from "@/lib/integrations";
+import { loadMoments, persistMoment, removeMoment } from "@/lib/integrations";
 import type { Moment } from "@/types/moment";
 
-const CAPTURE_POLL_MS = 5000;
+const CAPTURE_POLL_MS = 1500;
 
 interface MomentsContextValue {
   moments: Moment[];
@@ -26,7 +26,7 @@ interface MomentsContextValue {
   addMoment: (moment: Moment) => void;
   updateMoment: (id: string, patch: Partial<Moment>) => void;
   keepMoment: (id: string) => void;
-  deleteMoment: (id: string) => void;
+  deleteMoment: (id: string) => Promise<void>;
   nextSequence: () => number;
 }
 
@@ -61,9 +61,17 @@ export function MomentsProvider({ children }: { children: ReactNode }) {
       const captured = await loadMoments();
       if (cancelled || !captured?.length) return;
       setMoments((current) => {
-        const known = new Set(current.map((moment) => moment.id));
-        const fresh = captured.filter((moment) => !known.has(moment.id));
-        return fresh.length ? sortMoments([...fresh, ...current]) : current;
+        const uniqueCurrent = Array.from(
+          new Map(current.map((moment) => [moment.id, moment])).values(),
+        );
+        const uniqueCaptured = Array.from(
+          new Map(captured.map((moment) => [moment.id, moment])).values(),
+        );
+        const incoming = new Map(uniqueCaptured.map((moment) => [moment.id, moment]));
+        const merged = uniqueCurrent.map((moment) => incoming.get(moment.id) ?? moment);
+        const known = new Set(uniqueCurrent.map((moment) => moment.id));
+        const fresh = uniqueCaptured.filter((moment) => !known.has(moment.id));
+        return sortMoments([...fresh, ...merged]);
       });
     };
 
@@ -113,11 +121,10 @@ export function MomentsProvider({ children }: { children: ReactNode }) {
           ),
         );
       },
-      deleteMoment: (id) => {
+      deleteMoment: async (id) => {
+        const deleted = await removeMoment(id);
         setMoments((current) =>
-          current.map((moment) =>
-            moment.id === id ? { ...moment, status: "deleted" } : moment,
-          ),
+          current.map((moment) => moment.id === id ? deleted : moment),
         );
       },
       nextSequence: () =>

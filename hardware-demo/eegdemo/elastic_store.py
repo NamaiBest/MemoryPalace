@@ -73,6 +73,11 @@ class ElasticStore:
                     return json.loads(payload) if payload else {}
             except urllib.error.HTTPError as exc:
                 detail = exc.read().decode(errors="replace")[:500]
+                if exc.code in allow:
+                    try:
+                        return json.loads(detail) if detail else {}
+                    except json.JSONDecodeError:
+                        return {}
                 if exc.code not in (429, 500, 502, 503, 504) or attempt == 2:
                     raise ElasticError(f"Elastic returned HTTP {exc.code}: {detail}") from exc
             except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as exc:
@@ -85,6 +90,14 @@ class ElasticStore:
     def ensure_ready(self):
         with self._setup_lock:
             self._ensure_ready()
+
+    def warm_up(self):
+        """Prepare inference and index mappings before the first user search."""
+        try:
+            self.ensure_ready()
+        except Exception as exc:
+            self.last_error = str(exc)[:500]
+            self.emit("elastic_warmup_failed", {"error": self.last_error})
 
     def _ensure_ready(self):
         if self.ready:
@@ -304,6 +317,18 @@ class ElasticStore:
         self.emit("elastic_moment_indexed", {"moment": moment["id"], "index": self.index})
         return result
 
+    def delete_moment(self, moment_id):
+        """Remove a deleted memory from retrieval without touching its source media."""
+        self.ensure_ready()
+        result = self._request(
+            "DELETE",
+            "/" + urllib.parse.quote(self.index, safe="") + "/_doc/"
+            + urllib.parse.quote(moment_id, safe="") + "?refresh=wait_for",
+            allow=(200, 404),
+        )
+        self.emit("elastic_moment_deleted", {"moment": moment_id, "index": self.index})
+        return result
+
     def search(self, query, limit=20, event_type=None, min_intensity=None,
                max_intensity=None, date_from=None, date_to=None, session_id=None,
                user_id=None, sort="relevance"):
@@ -330,6 +355,9 @@ class ElasticStore:
             filters.append({"term": {"session_id": session_id}})
         if user_id:
             filters.append({"term": {"user_id": user_id}})
+        # A local deletion is authoritative even if Elastic was unavailable while the
+        # delete request ran and its old document is temporarily still present.
+        filters.append({"bool": {"must_not": [{"term": {"status": "deleted"}}]}})
         lexical = ({
             "multi_match": {
                 "query": query,

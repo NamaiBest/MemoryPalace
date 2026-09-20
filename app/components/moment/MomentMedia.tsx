@@ -26,6 +26,9 @@ export function MomentMedia({ moment }: { moment: Moment }) {
       )}
       {moment.media.videoUrl && !videoFailed ? (
         <video
+          // Same reason as MediaBackdrop: changing a <source>'s src does not reload the
+          // element, so navigating between two moment pages would keep the old clip.
+          key={moment.media.videoUrl}
           controls
           playsInline
           preload="metadata"

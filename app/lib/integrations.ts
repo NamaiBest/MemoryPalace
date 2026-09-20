@@ -51,6 +51,20 @@ export async function persistMoment(moment: Moment): Promise<void> {
   void moment;
 }
 
+export async function removeMoment(id: string): Promise<Moment> {
+  const response = await fetch(`/api/moments/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
+  const body = (await response.json().catch(() => ({}))) as {
+    moment?: Moment;
+    error?: string;
+  };
+  if (!response.ok || !body.moment) {
+    throw new Error(body.error ?? "The moment could not be deleted");
+  }
+  return body.moment;
+}
+
 export function subscribeEEG(
   onFrame: (frame: LiveEEGFrame) => void,
 ): (() => void) | null {

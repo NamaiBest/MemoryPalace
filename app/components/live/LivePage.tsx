@@ -42,7 +42,7 @@ export function LivePage() {
           <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-accent">MemoryPalace / Live demo</p>
           <h1 className="mt-4 font-serif text-5xl md:text-6xl">Watch a moment form.</h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-fg-dim">
-            Eight simulated EEG channels drive a real phone-camera capture, followed by
+            Eight channels of replayed EEG drive a real phone-camera capture, followed by
             durable moment extraction and Elastic indexing.
           </p>
         </div>

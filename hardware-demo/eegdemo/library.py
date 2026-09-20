@@ -20,6 +20,7 @@ POSTER_SECONDS = 1.0
 RETRY_INTERVAL_S = 120
 POSTER_TIMEOUT = 20
 MAX_UPLOAD_BYTES = 512 * 1024 * 1024
+META_DIRECT_VIDEO_BYTES = 6 * 1024 * 1024
 
 SUFFIXES = {"video/mp4": ".mp4", "video/quicktime": ".mov", "image/jpeg": ".jpg",
             "image/png": ".png"}
@@ -144,7 +145,9 @@ class Library:
             title = " ".join(words).rstrip(".,!?;:")
             return (title[:77] + "…") if len(title) > 78 else title
         event = moment.get("eventType", "load")
-        labels = {"surprise": "Unexpected moment", "insight": "Insight moment",
+        labels = {"surprise": "Unexpected moment", "excitement": "Exciting moment",
+                  "capture": "Live captured moment",
+                  "insight": "Insight moment",
                   "error": "Correction moment", "load": "Focused moment"}
         return labels.get(event, "Captured moment")
 
@@ -306,8 +309,11 @@ class Library:
 
     def _enrich_and_index_all(self):
         for moment in list(self.moments):
+            if moment.get("status") == "deleted":
+                continue
             needs_analysis = (self.vision and self.vision.enabled
-                              and moment.get("vision", {}).get("status") != "complete")
+                              and (moment.get("vision", {}).get("status") != "complete"
+                                   or self.vision.needs_grounding(moment)))
             needs_index = (self.elastic and self.elastic.configured
                            and moment.get("processing", {}).get("indexing") != "complete")
             if not needs_analysis and not needs_index:
@@ -369,12 +375,14 @@ class Library:
     def _enrich_and_index(self, moment_id, media_path):
         with self.lock:
             moment = next((item for item in self.moments if item["id"] == moment_id), None)
-            if moment is None:
+            if moment is None or moment.get("status") == "deleted":
                 return
             current = dict(moment)
         vision_status = current.get("vision", {}).get("status")
+        needs_grounding = (self.vision and self.vision.enabled
+                           and self.vision.needs_grounding(current))
         if (media_path and self.vision and self.vision.enabled
-                and vision_status != "complete"):
+                and (vision_status != "complete" or needs_grounding)):
             current = self._enrich_meta(moment_id, media_path)
         elif self.vision and self.vision.configured and vision_status != "complete":
             with self.lock:
@@ -390,11 +398,30 @@ class Library:
                     self._persist()
                     current = dict(moment)
         if self.elastic and self.elastic.configured:
-            self._index_elastic(current, media_path)
+            with self.lock:
+                stored = next((item for item in self.moments
+                               if item["id"] == moment_id), None)
+                deleted = stored is None or stored.get("status") == "deleted"
+            if not deleted:
+                self._index_elastic(current, media_path)
 
     def _enrich_meta(self, moment_id, media_path):
         try:
-            result = self.vision.describe(media_path)
+            with self.lock:
+                stored = next((item for item in self.moments
+                               if item["id"] == moment_id), {})
+                poster_url = stored.get("media", {}).get("thumbnailUrl", "")
+            poster_path = self.path_for(poster_url.rsplit("/", 1)[-1]) \
+                if poster_url else None
+            analysis_path = (poster_path if poster_path
+                             and media_path.stat().st_size > META_DIRECT_VIDEO_BYTES
+                             else media_path)
+            result = self.vision.describe(analysis_path, context={
+                "timestamp": stored.get("timestamp"),
+                "existingTitle": stored.get("semanticTitle"),
+                "existingDescription": stored.get("aiDescription"),
+                "transcript": stored.get("transcript", "")[:1600],
+            })
             with self.lock:
                 moment = next((item for item in self.moments
                                if item["id"] == moment_id), None)
@@ -439,9 +466,14 @@ class Library:
             with self.lock:
                 current = next((item for item in self.moments
                                 if item["id"] == moment["id"]), None)
-                if current is not None:
+                deleted = current is None or current.get("status") == "deleted"
+                if current is not None and not deleted:
                     current.setdefault("processing", {})["indexing"] = "complete"
                     self._persist()
+            # A delete can race an embedding request already in flight. Deleting the
+            # just-written document again closes that window deterministically.
+            if deleted:
+                self.elastic.delete_moment(moment["id"])
         except Exception as exc:
             # Elastic enrichment is additive. Never lose a real camera capture
             # because the sponsor service or network is unavailable.
@@ -450,9 +482,39 @@ class Library:
             with self.lock:
                 current = next((item for item in self.moments
                                 if item["id"] == moment["id"]), None)
-                if current is not None:
+                if current is not None and current.get("status") != "deleted":
                     current.setdefault("processing", {})["indexing"] = "failed"
                     self._persist()
+
+    def delete_moment(self, moment_id):
+        """Soft-delete one moment durably while retaining the original media files."""
+        with self.lock:
+            moment = next((item for item in self.moments
+                           if item.get("id") == moment_id), None)
+            if moment is None:
+                raise ValueError("moment not found")
+            if moment.get("status") != "deleted":
+                moment["status"] = "deleted"
+                moment["deletedAt"] = _iso(time.time())
+                self._persist()
+            deleted = dict(moment)
+
+        elastic_removed = False
+        if self.elastic and self.elastic.configured:
+            try:
+                self.elastic.delete_moment(moment_id)
+                elastic_removed = True
+            except Exception as exc:
+                # Search also filters deleted documents, so a temporary Elastic outage
+                # cannot make the locally deleted memory visible again.
+                self.emit("elastic_delete_failed", {
+                    "moment": moment_id, "error": str(exc)[:500],
+                })
+        self.emit("moment_deleted", {
+            "moment": moment_id, "media_retained": True,
+            "elastic_removed": elastic_removed,
+        })
+        return deleted
 
     def _build(self, media_id, video, poster, context, source):
         now = time.time()
@@ -506,8 +568,12 @@ class Library:
 
     def _summary(self, context, source):
         if context.get("demo"):
-            label = "surprise" if context.get("demo_event") == "surprise" else "neural spike"
+            label = ({"surprise": "surprise", "excitement": "excitement"}
+                     .get(context.get("demo_event"), "neural spike"))
             return f"A {context['duration_seconds']}-second moment captured with the {label} demo trigger."
+        if context.get("manual_capture"):
+            return (f"A {context.get('duration_seconds', 10)}-second live moment recorded "
+                    "manually with the phone camera.")
         if not context:
             return f"Captured from the {source} with no detector context attached."
         z = context.get("z_score")

@@ -193,7 +193,26 @@ class HTTPTests(unittest.TestCase):
                         call("/recording/capture", {"seconds": seconds})
                 with self.assertRaisesRegex(RuntimeError, "400"):
                     call("/recording/capture", {"seconds": 10, "demo_event": "insight"})
-                for seconds, event in ((10, "surprise"), (30, "load")):
+                with self.assertRaisesRegex(RuntimeError, "400"):
+                    call("/recording/capture", {"seconds": 10, "demo": "no"})
+                with self.assertRaisesRegex(RuntimeError, "400"):
+                    call("/recording/capture", {"seconds": 10, "demo": False,
+                                                "demo_event": "load"})
+                call("/recording/capture", {"seconds": 10, "demo": False,
+                                             "demo_event": "capture"})
+                live_context = runtime.library.contexts[runtime.recorder.recording_id]
+                self.assertFalse(live_context["demo"])
+                self.assertTrue(live_context["manual_capture"])
+                cmd = call("/commands")["command"]
+                call("/commands/ack", {"id": cmd["id"],
+                                       "recording_id": cmd["recording_id"],
+                                       "state": "recording"})
+                runtime.finish_capture(cmd["recording_id"])
+                stop = call("/commands")["command"]
+                call("/commands/ack", {"id": stop["id"],
+                                       "recording_id": stop["recording_id"],
+                                       "state": "stopped"})
+                for seconds, event in ((10, "surprise"), (10, "excitement"), (30, "load")):
                     call("/recording/capture", {"seconds": seconds, "demo_event": event})
                     self.assertIsNone(runtime.capture_timer)
                     self.assertNotEqual(runtime.pipeline.phase, "ready")

@@ -1,7 +1,7 @@
 // "load" is what the detector actually measures: sustained elevated cognitive load
 // against this session's own baseline. The other three describe simulated moments and
 // are not something the current pipeline can distinguish.
-export type EventType = "surprise" | "insight" | "error" | "load";
+export type EventType = "capture" | "surprise" | "excitement" | "insight" | "error" | "load";
 
 export type MomentStatus = "candidate" | "kept" | "deleted";
 
@@ -61,6 +61,7 @@ export interface Moment {
     provider: "meta";
     model: string;
     status: "complete" | "failed";
+    source?: "video" | "poster";
     error?: string;
   };
 }

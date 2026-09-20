@@ -3,7 +3,9 @@ import { eventLabel } from "@/lib/labels";
 import type { EventType } from "@/types/moment";
 
 const TONE: Record<EventType, string> = {
+  capture: "text-accent",
   surprise: "text-surprise",
+  excitement: "text-surprise",
   insight: "text-insight",
   error: "text-error",
   load: "text-load",
@@ -17,7 +19,15 @@ export function EventIcon({
   className?: string;
 }) {
   const common = cn("h-3.5 w-3.5", TONE[type], className);
-  if (type === "surprise") {
+  if (type === "capture") {
+    return (
+      <svg viewBox="0 0 16 16" className={common} aria-hidden>
+        <rect x="2" y="3.5" width="12" height="9" rx="2" fill="none" stroke="currentColor" strokeWidth="1.3" />
+        <circle cx="8" cy="8" r="2.2" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      </svg>
+    );
+  }
+  if (type === "surprise" || type === "excitement") {
     return (
       <svg viewBox="0 0 16 16" className={common} aria-hidden>
         <path

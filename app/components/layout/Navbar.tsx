@@ -8,6 +8,7 @@ import { DateSwitcher } from "@/components/layout/DateSwitcher";
 const LINKS = [
   { href: "/", label: "Home" },
   { href: "/explore", label: "Explore" },
+  { href: "/share", label: "Share" },
   { href: "/live", label: "Live" },
   { href: "/debug", label: "Debug" },
 ] as const;

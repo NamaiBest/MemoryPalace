@@ -6,8 +6,9 @@ dependency**.
 
 ## Presentation flow
 
-The launch screen contains one action: **Pair Meta glasses**. Tapping it shows a short
-simulated pairing sequence, then automatically:
+The launch screen contains one action: **Pair Meta glasses**. Tapping it opens the installed
+Meta AI companion app. When the presenter returns to MemoryPalace, a short simulated pairing
+sequence automatically:
 
 1. connects to the real MemoryPalace backend;
 2. leaves the camera and microphone off; and
@@ -18,6 +19,9 @@ upload use the real phone and backend. The screen explicitly says that the phone
 the demo capture source so the presentation does not claim unavailable glasses were
 physically tested.
 
+If Meta AI is not installed, the action opens its Play Store page. Returning to
+MemoryPalace still permits the explicitly labelled phone-camera demo.
+
 The app polls the Python backend every 250 ms. A backend `start` command opens the rear
 camera and begins an H.264/AAC MP4. A `stop` command finalizes the MP4, releases the camera
 and microphone, acknowledges completion, and uploads the bytes. Preview is visible only
@@ -27,6 +31,39 @@ to release the device between moments.
 Use **Demo surprise** or **Demo neural spike** in the website's Live tab. The duration
 selector offers 10 or 30 seconds; the server times the recording after the phone confirms
 start. Demo captures do not require EEG calibration. Keep the phone app in the foreground.
+
+After pairing, the phone exposes two explicit paths:
+
+- **Record live moment** records a real 10-second rear-camera clip without claiming that a
+  neural event occurred. The saved event is labelled `Live Capture`.
+- **Simulate neural spike** records the same real footage but attaches the clearly labelled
+  excitement demo trigger. “Excitement” is not inferred from the wearer.
+
+Meta analyzes either resulting MP4's visual frames and embedded audio, and Elastic indexes
+the returned semantic metadata and Jina vector.
+
+## Meta recording protocol
+
+The hardware-free demo does **not** claim to command glasses through an invented endpoint.
+Its working phone bridge uses authenticated JSON over HTTP:
+
+1. `GET /commands` returns a short-lived `start` or `stop` action with a recording ID.
+2. The Android client records only between those commands and calls
+   `POST /commands/ack` with the same recording ID.
+3. The finalized MP4 is uploaded to `/media`; Meta enrichment and Elastic indexing then run.
+
+With physical glasses, Meta's public Android Device Access Toolkit v0.9 replaces the phone
+camera layer. `Wearables.startRegistration(activity)` hands registration to Meta AI, camera
+permission is requested through `Wearables.RequestPermissionContract()`,
+`Wearables.createSession(AutoDeviceSelector())` starts a device session, and
+`session.addCamera(config).stream.start()` provides video frames for the app to encode over
+the 10-second moment window. This is a session and camera-stream API, not a generic REST
+“record” request to the glasses.
+
+Official references:
+
+- https://wearables.developer.meta.com/docs/develop/dat/build-integration-android/
+- https://github.com/facebook/meta-wearables-dat-android
 
 ## Build and install
 

@@ -1,16 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { Moment } from "@/types/moment";
 
 export const DEFAULT_CAPTURE_SECONDS = 10;
 export type CapturePhase = "idle" | "starting" | "recording" | "stopping" | "uploading" | "extracting" | "analyzing" | "indexing" | "saved" | "failed";
-export type DemoEvent = "load";
+export type DemoEvent = "excitement" | "load";
 
 /** The backend owns the stop timer, so leaving this page cannot extend a clip. */
 export function useTimedCapture(seconds = DEFAULT_CAPTURE_SECONDS) {
   const [phase, setPhase] = useState<CapturePhase>("idle");
   const [remaining, setRemaining] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [capturedMoment, setCapturedMoment] = useState<Moment | null>(null);
   const inFlight = useRef(false);
   const mounted = useRef(true);
 
@@ -23,6 +25,8 @@ export function useTimedCapture(seconds = DEFAULT_CAPTURE_SECONDS) {
     if (inFlight.current) return;
     inFlight.current = true;
     setError(null);
+    setCapturedMoment(null);
+    setRemaining(seconds);
     setPhase("starting");
     try {
       const response = await fetch("/api/recording", {
@@ -59,18 +63,32 @@ export function useTimedCapture(seconds = DEFAULT_CAPTURE_SECONDS) {
           })).json();
           const moment = library.moments?.find((item: { recordingId?: string }) =>
             item.recordingId === id,
-          ) as { processing?: Record<string, string> } | undefined;
+          ) as Moment | undefined;
           if (moment) {
+            if (mounted.current) setCapturedMoment(moment);
             const processing = moment.processing;
             if (!processing) {
-              if (mounted.current) setPhase("saved");
+              if (mounted.current) {
+                setPhase("saved");
+              }
               return;
+            }
+            if (processing.extraction === "failed") {
+              throw new Error("The video was uploaded, but moment extraction failed.");
+            }
+            if (processing.analysis === "failed") {
+              throw new Error("The video is safe, but Meta could not describe it yet.");
+            }
+            if (processing.indexing === "failed") {
+              throw new Error("The video is safe, but Elastic indexing needs a retry.");
             }
             if (processing.extraction !== "complete") setPhase("extracting");
             else if (processing.analysis === "pending") setPhase("analyzing");
             else if (processing.indexing === "pending") setPhase("indexing");
             else {
-              if (mounted.current) setPhase("saved");
+              if (mounted.current) {
+                setPhase("saved");
+              }
               return;
             }
           }
@@ -88,6 +106,6 @@ export function useTimedCapture(seconds = DEFAULT_CAPTURE_SECONDS) {
     }
   }, [seconds]);
 
-  return { phase, remaining, error, capture,
+  return { phase, remaining, error, capturedMoment, capture,
     busy: !["idle", "saved", "failed"].includes(phase) };
 }

@@ -138,7 +138,15 @@ export function EEGMonitor({ burstId = 0 }: { burstId?: number }) {
       <header className="flex flex-wrap items-center justify-between gap-4 border-b border-line px-5 py-4">
         <div>
           <h2 className="text-[11px] tracking-[0.2em] uppercase text-fg-dim">8-channel EEG</h2>
-          <p className="mt-1 font-mono text-[11px] text-fg-mute">250 Hz · simulated stream</p>
+          {/* Says what the trace actually is. The waveform is a real EPOC X recording on
+              a loop, not a live read from whoever is wearing the headset, and the demo
+              should never let an audience assume otherwise. */}
+          <p
+            className="mt-1 font-mono text-[11px] text-fg-mute"
+            title="Waveform: a real 30 s Emotiv EPOC X recording from dataset/epocx-imagery, bandpassed 1-40 Hz and common average referenced, looping. Channel labels are the montage the detector targets, not the EPOC X electrode the trace was recorded from."
+          >
+            EPOC X replay on target montage · 128 Hz
+          </p>
         </div>
         <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-ok">● Incoming</span>
       </header>
@@ -157,7 +165,7 @@ export function EEGMonitor({ burstId = 0 }: { burstId?: number }) {
         </button>
       </div>
       <canvas ref={canvasRef} className="min-h-[320px] flex-1 w-full" role="img"
-        aria-label="Live eight-channel EEG monitor with highlighted simulated neural spike" />
+        aria-label="Eight-channel EEG monitor replaying a recorded EPOC X session, with a highlighted simulated neural spike" />
     </section>
   );
 }

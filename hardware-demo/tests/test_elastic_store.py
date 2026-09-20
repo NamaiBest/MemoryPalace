@@ -84,6 +84,18 @@ class ElasticStoreTests(unittest.TestCase):
                         if method == "PUT" and "/_doc/" in path)
         self.assertEqual(document["embedding_source"], "video")
 
+    def test_deletes_document_without_touching_media(self):
+        store = FakeElastic()
+        store.ready = True
+        store.delete_moment("capture-123")
+        self.assertIn(
+            ("DELETE", "/memorypalace-multimodal-moments/_doc/capture-123?refresh=wait_for", None),
+            store.calls,
+        )
+        self.assertIn(("elastic_moment_deleted", {
+            "moment": "capture-123", "index": store.index,
+        }), store.events)
+
     def test_search_uses_rrf_to_fuse_bm25_and_knn(self):
         store = FakeElastic()
         store.ready = True
@@ -116,6 +128,8 @@ class ElasticStoreTests(unittest.TestCase):
                          {"range": {"spike_intensity": {"gte": 0.6, "lte": 0.84}}})
         self.assertEqual(retrievers[1]["knn"]["filter"][3],
                          {"term": {"session_id": "session-7"}})
+        self.assertEqual(retrievers[1]["knn"]["filter"][-1],
+                         {"bool": {"must_not": [{"term": {"status": "deleted"}}]}})
         self.assertEqual(moments[0]["id"], "capture-123")
         self.assertEqual(moments[0]["eventType"], "surprise")
         self.assertEqual(moments[0]["semanticTitle"], "Reading interrupted by a loud sound")

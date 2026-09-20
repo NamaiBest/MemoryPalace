@@ -7,6 +7,10 @@
   <uses-feature android:name="android.hardware.camera" android:required="true" />
   <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
+  <queries>
+    <package android:name="com.facebook.stella" />
+  </queries>
+
   <application
       android:allowBackup="false"
       android:label="MemoryPalace Camera"
