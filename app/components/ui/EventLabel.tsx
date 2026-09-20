@@ -1,5 +1,5 @@
 import { cn } from "@/lib/cn";
-import { eventLabel } from "@/lib/labels";
+import { eventLabel, isUncategorized } from "@/lib/labels";
 import type { EventType } from "@/types/moment";
 
 const TONE: Record<EventType, string> = {
@@ -72,15 +72,35 @@ export function EventIcon({
 
 export function EventLabel({
   type,
+  confidence,
   className,
 }: {
   type: EventType;
+  /** Ranking score. Below the category threshold the label stays neutral. */
+  confidence?: number;
   className?: string;
 }) {
+  const neutral = isUncategorized(type, confidence);
   return (
-    <span className={cn("inline-flex items-center gap-2", TONE[type], className)}>
-      <EventIcon type={type} />
-      <span>{eventLabel(type)}</span>
+    <span
+      className={cn(
+        "inline-flex items-center gap-2",
+        neutral ? "text-fg-mute" : TONE[type],
+        className,
+      )}
+      title={neutral
+        ? "The spike was too weak to assign a category, so none is claimed."
+        : undefined}
+    >
+      {neutral ? (
+        <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden>
+          <circle cx="8" cy="8" r="5" fill="none" stroke="currentColor"
+            strokeWidth="1.3" strokeDasharray="2.4 2.2" />
+        </svg>
+      ) : (
+        <EventIcon type={type} />
+      )}
+      <span>{eventLabel(type, confidence)}</span>
     </span>
   );
 }

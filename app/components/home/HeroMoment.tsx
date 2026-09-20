@@ -14,6 +14,7 @@ export function HeroMoment({ moment }: { moment: Moment }) {
         <IntensityDot value={moment.confidence} showLabel />
         <EventLabel
           type={moment.eventType}
+          confidence={moment.confidence}
           className="text-[11px] tracking-[0.24em] uppercase"
         />
         <span className="text-line-strong" aria-hidden>

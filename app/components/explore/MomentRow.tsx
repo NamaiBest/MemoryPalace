@@ -51,7 +51,7 @@ export function MomentRow({ moment }: { moment: Moment }) {
       <td className="whitespace-nowrap py-4 pr-6 text-fg-dim">
         {formatDateTime(moment.timestamp)}
       </td>
-      <td className="py-4 pr-6">{eventLabel(moment.eventType)}</td>
+      <td className="py-4 pr-6">{eventLabel(moment.eventType, moment.confidence)}</td>
       <td className="whitespace-nowrap py-4 pr-6">
         <span className="inline-flex items-center gap-2 font-mono text-[12px]">
           <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: intensity.color }} />

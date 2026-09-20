@@ -42,6 +42,7 @@ export function MomentMedia({ moment }: { moment: Moment }) {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-5 md:p-8">
         <EventLabel
           type={moment.eventType}
+          confidence={moment.confidence}
           className="text-[11px] tracking-[0.2em] uppercase"
         />
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[12px] text-fg-dim">
