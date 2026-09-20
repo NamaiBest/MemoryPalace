@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { EmailDigest } from "@/components/share/EmailDigest";
 import { IntensityDot } from "@/components/ui/IntensityDot";
 import { useMoments } from "@/context/MomentsProvider";
 import { cn } from "@/lib/cn";
@@ -89,18 +90,26 @@ export function SharePage() {
 
   return (
     <main className="mx-auto w-full max-w-[1500px] px-6 pb-24 pt-32 md:px-12">
-      <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-accent">
-        MemoryPalace / Share
-      </p>
-      <h1 className="mt-5 max-w-3xl text-balance font-serif text-5xl leading-[1.12] md:text-6xl">
-        Send someone your day.
-      </h1>
-      <p className="mt-6 max-w-xl text-base leading-8 text-fg-dim">
-        Pick the moments that mattered
-        {selectedDate ? ` on ${formatDateKey(selectedDate)}` : " today"}, and Meta Muse
-        Spark writes them into something a person who was not there can actually feel.
-        You get the last word before anything is sent.
-      </p>
+      {/* The heading left a wide empty column on desktop. Mailing yourself the day is
+          the same instinct as sharing it with someone, one hour later, so it belongs
+          beside the title rather than buried in settings. */}
+      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0 flex-1">
+          <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-accent">
+            MemoryPalace / Share
+          </p>
+          <h1 className="mt-5 max-w-3xl text-balance font-serif text-5xl leading-[1.12] md:text-6xl">
+            Send someone your day.
+          </h1>
+          <p className="mt-6 max-w-xl text-base leading-8 text-fg-dim">
+            Pick the moments that mattered
+            {selectedDate ? ` on ${formatDateKey(selectedDate)}` : " today"}, and Meta Muse
+            Spark writes them into something a person who was not there can actually feel.
+            You get the last word before anything is sent.
+          </p>
+        </div>
+        <EmailDigest date={selectedDate} />
+      </div>
 
       {visibleMoments.length === 0 ? (
         <p className="mt-12 text-fg-mute">
