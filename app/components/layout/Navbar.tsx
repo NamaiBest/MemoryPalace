@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
+import Image from "next/image";
 import { DateSwitcher } from "@/components/layout/DateSwitcher";
-import { LogoMark } from "@/components/layout/LogoMark";
+import lockup from "@/public/memorypalace-lockup.png";
 
 const LINKS = [
   { href: "/", label: "Home" },
@@ -28,14 +29,17 @@ export function Navbar() {
       )}
     >
       <nav className="mx-auto flex min-h-20 max-w-[1500px] flex-wrap items-center justify-between gap-x-8 gap-y-4 px-6 py-5 md:px-12">
-        <Link
-          href="/"
-          aria-label="MemoryPalace home"
-          className="flex items-center gap-3 font-serif text-[1.6rem] tracking-[0.12em] text-fg"
-        >
-          <LogoMark side="calm" />
-          MemoryPalace
-          <LogoMark side="spike" />
+        {/* The lockup from design/branding/variants/01-clean.png, keyed off its ivory
+            ground and with the wordmark inverted to --fg so it reads on the dark UI.
+            The traces keep their own colours: slate blue running in calm from the left,
+            brass spiking away on the right. */}
+        <Link href="/" aria-label="MemoryPalace home" className="flex items-center">
+          <Image
+            src={lockup}
+            alt="MemoryPalace"
+            priority
+            className="h-8 w-auto md:h-9"
+          />
         </Link>
         <div className="flex flex-wrap items-center justify-end gap-4 md:gap-7">
           <ul className="flex items-center gap-5 sm:gap-8 md:gap-10">
