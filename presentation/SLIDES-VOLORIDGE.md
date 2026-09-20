@@ -7,13 +7,13 @@ and every number is sourced.
 
 It serves two readers. Take only your half.
 
-| Section | Who it is for |
-|---|---|
-| **Slide 11a / 11b → the content blocks** | The person or agent **building the slides**. The text in the blockquotes and code fences is literal slide copy. |
-| **Speaker notes** | The **presenter**, spoken aloud. **Never put these on a slide.** |
-| **If they ask** | The presenter, during Q&A. Not on a slide. |
-| **Appendix slides, only if asked** | Both. Build these, keep them after the last slide. |
-| **Every number, sourced** | Both. Check against these; do not invent a figure. |
+| Section                                         | Who it is for                                                                                                        |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Slide 11a / 11b → the content blocks** | The person or agent**building the slides**. The text in the blockquotes and code fences is literal slide copy. |
+| **Speaker notes**                         | The**presenter**, spoken aloud. **Never put these on a slide.**                                          |
+| **If they ask**                           | The presenter, during Q&A. Not on a slide.                                                                           |
+| **Appendix slides, only if asked**        | Both. Build these, keep them after the last slide.                                                                   |
+| **Every number, sourced**                 | Both. Check against these; do not invent a figure.                                                                   |
 
 **Agent building these slides: your instructions are the two slide sections and the
 "deliberately not on either slide" table. Stop there.** If a line appears under Speaker
@@ -32,10 +32,10 @@ VoloRidge said in person they judge four things: how you handle data analysis, h
 extract signal from noise, **how elegant the result is rather than how complex**, and how
 you validate. Two slides cover all four without crowding either:
 
-| Slide | Criteria it answers |
-|---|---|
-| **11a, the approach** | Signal extraction, and elegance over complexity |
-| **11b, the validation** | How you validate, and how you handle the data |
+| Slide                         | Criteria it answers                             |
+| ----------------------------- | ----------------------------------------------- |
+| **11a, the approach**   | Signal extraction, and elegance over complexity |
+| **11b, the validation** | How you validate, and how you handle the data   |
 
 A third slide is not needed. The per-participant table, the walk-forward trace and the
 limits are appendix material, listed at the end of this file. They appear only if asked.
@@ -138,46 +138,50 @@ question usually recovers anyway.
 
 ## What is deliberately not on either slide
 
-| Left off | Why |
-|---|---|
-| The word "confusion" | The label is task versus rest. Saying confusion invites the one question we cannot answer. |
-| Accuracy percentages | AUROC against a null is what they asked for. A bare 92% invites "out of sample?" and burns your remaining time. |
-| The AUROC range 0.65 to 0.93 | Spoken, not shown. On screen it invites a number-by-number reading. |
-| The per-participant table | Appendix. |
-| "State of the art", "novel", "deep learning" | The whole argument is that we did the plain thing and tested it hard. |
-| The other EEG folders in this repo | They corroborate, but they dilute a one-minute slot. |
+| Left off                                     | Why                                                                                                             |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| The word "confusion"                         | The label is task versus rest. Saying confusion invites the one question we cannot answer.                      |
+| Accuracy percentages                         | AUROC against a null is what they asked for. A bare 92% invites "out of sample?" and burns your remaining time. |
+| The AUROC range 0.65 to 0.93                 | Spoken, not shown. On screen it invites a number-by-number reapding.                                            |
+| The per-participant table                    | Appendix.                                                                                                       |
+| "State of the art", "novel", "deep learning" | The whole argument is that we did the plain thing and tested it hard.                                           |
+| The other EEG folders in this repo           | They corroborate, but they dilute a one-minute slot.                                                            |
 
 ## Appendix slides, only if asked
 
-| Question it answers | Asset |
-|---|---|
-| "What does one session actually look like?" | `eeg-state-detection/outputs/backtest_state/walkforward_VP002.png` |
-| "Show me every participant" | The results table in `eeg-state-detection/README.md` § Results |
-| "Where does it fail?" | `eeg-state-detection/outputs/backtest_state/walkforward_VP006.png`, the weak participant |
-| "How did you kill the topology result?" | `eeg-state-detection/outputs/burst_diagnostic_dev/diagnostic.png` |
+| Question it answers                         | Asset                                                                                      |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| "What does one session actually look like?" | `eeg-state-detection/outputs/backtest_state/walkforward_VP002.png`                       |
+| "Show me every participant"                 | The results table in`eeg-state-detection/README.md` § Results                           |
+| "Where does it fail?"                       | `eeg-state-detection/outputs/backtest_state/walkforward_VP006.png`, the weak participant |
+| "How did you kill the topology result?"     | `eeg-state-detection/outputs/burst_diagnostic_dev/diagnostic.png`                        |
 
 ---
 
 ## If they ask
 
 **"Is this just eye movement?"**
+
 > "Fair, and we ran that control. The same pipeline on eye channels alone. On two
 > participants the eyes get close, 0.88 against our 0.92, so on those we cannot claim it is
 > purely cortical. On another the detector gets 0.89 and the eyes get 0.56. We publish both
 > columns."
 
 **"Why a shift null instead of a permutation test?"**
+
 > "Overlapping EEG windows are not independent, so shuffling breaks the autocorrelation and
 > gives you a p-value that is much too generous. Shifting the whole trace keeps the
 > structure. It is a harder test, and our null intervals reach 0.8 AUROC because of it. We
 > report that width rather than hiding it."
 
 **"Only 8 of 15 sessions? That is barely half."**
+
 > "Yes, and two of our five participants are genuinely weak. We show them rather than
 > dropping them. A method that works on three people in five, honestly measured, is more
 > useful to you than one that works on a cherry-picked one."
 
 **"What would you do with more time?"**
+
 > "More training data per person, not a more complex model. We tested that direction too:
 > restricting channels and fixed physiological features did not help, which points at the
 > amount of labelled data rather than the representation."
@@ -186,11 +190,11 @@ question usually recovers anyway.
 
 ## Every number, sourced
 
-| Claim | Where it comes from |
-|---|---|
+| Claim                                               | Where it comes from                                        |
+| --------------------------------------------------- | ---------------------------------------------------------- |
 | 84 features, log band power, 3 bands × 28 channels | `eeg-state-detection/README.md` § Extracting the signal |
-| Seven complex alternatives, all lost | `eeg-state-detection/README.md` § Elegance, table |
-| 1218 / 728 / 108 feature counts | same table |
-| 8 of 15 sessions at p ≤ 0.05, AUROC 0.65–0.93 | `outputs/backtest_state/report.json` |
-| Zigzag 6/36 vs 2/36, p = 0.13 | `outputs/burst_diagnostic_dev/report.json` |
-| Eye control 0.883 vs 0.925, and 0.559 vs 0.888 | `outputs/backtest_state/report.json` |
+| Seven complex alternatives, all lost                | `eeg-state-detection/README.md` § Elegance, table       |
+| 1218 / 728 / 108 feature counts                     | same table                                                 |
+| 8 of 15 sessions at p ≤ 0.05, AUROC 0.65–0.93     | `outputs/backtest_state/report.json`                     |
+| Zigzag 6/36 vs 2/36, p = 0.13                       | `outputs/burst_diagnostic_dev/report.json`               |
+| Eye control 0.883 vs 0.925, and 0.559 vs 0.888      | `outputs/backtest_state/report.json`                     |

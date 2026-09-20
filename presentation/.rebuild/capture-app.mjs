@@ -1,0 +1,12 @@
+import {chromium} from 'playwright';
+import fs from 'node:fs/promises';
+const browser=await chromium.launch({headless:true,executablePath:"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"});
+const page=await browser.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});
+await page.goto('http://localhost:3000/explore',{waitUntil:'networkidle'});
+console.log(await page.locator('input').evaluateAll(els=>els.map(e=>({placeholder:e.placeholder,type:e.type}))));
+await page.screenshot({path:'presentation/revised/assets/explore.png'});
+await page.locator('input').first().fill('laptop keyboard');
+await page.waitForTimeout(2500);await page.screenshot({path:'presentation/revised/assets/search-keyboard.png'});
+console.log((await page.locator('body').innerText()).slice(-2500));
+await page.goto('http://localhost:3000/share',{waitUntil:'networkidle'});await page.screenshot({path:'presentation/revised/assets/share.png'});
+await browser.close();

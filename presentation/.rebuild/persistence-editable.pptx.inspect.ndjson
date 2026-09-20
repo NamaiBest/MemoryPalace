@@ -1,0 +1,113 @@
+{"kind":"deck","id":"pr/c2p57s","name":"Deck"}
+{"kind":"layout","layoutId":"f9b88d78-9da4-4703-8d10-f3eb5ff5330c","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"01f091da-e0a8-46e4-b106-50e7c5edda78","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/90e50b","slide":1,"title":"Four fresh windows confirm one event","textShapes":13}
+{"kind":"textbox","id":"sh/pk7ah8zq","slide":1,"name":"Four fresh windows confirm one event","text":"Four fresh windows confirm one event","textPreview":"Four fresh windows confirm one event","textChars":36,"textLines":1,"bbox":[105,78,1710,130]}
+{"kind":"textbox","id":"sh/ihgb6d0f","slide":1,"name":"Each window uses new EEG samples. A dip below the ","text":"Each window uses new EEG samples. A dip below the threshold resets the count.","textPreview":"Each window uses new EEG samples. A dip below the threshold resets the count.","textChars":77,"textLines":1,"bbox":[110,213,1700,100]}
+{"kind":"shape","id":"sh/3ipsfihk","slide":1,"name":"diagram","bbox":[110,420,370,220]}
+{"kind":"textbox","id":"sh/gfet43i9","slide":1,"name":"0–4 s","text":"0–4 s","textPreview":"0–4 s","textChars":5,"textLines":1,"bbox":[128,456,334,80]}
+{"kind":"textbox","id":"sh/hgnad8zu","slide":1,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[128,553,334,60]}
+{"kind":"shape","id":"sh/udwb2t03","slide":1,"name":"diagram","bbox":[535,420,370,220]}
+{"kind":"textbox","id":"sh/ve5sbyho","slide":1,"name":"4–8 s","text":"4–8 s","textPreview":"4–8 s","textChars":5,"textLines":1,"bbox":[553,456,334,80]}
+{"kind":"textbox","id":"sh/8re90jix","slide":1,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[553,553,334,60]}
+{"kind":"shape","id":"sh/tcna9ozi","slide":1,"bbox":[480,530,55,0]}
+{"kind":"shape","id":"sh/54je5gbq","slide":1,"name":"diagram","bbox":[960,420,370,220]}
+{"kind":"textbox","id":"sh/k3axcbul","slide":1,"name":"8–12 s","text":"8–12 s","textPreview":"8–12 s","textChars":6,"textLines":1,"bbox":[978,456,334,80]}
+{"kind":"textbox","id":"sh/j21w36t0","slide":1,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[978,553,334,60]}
+{"kind":"shape","id":"sh/ih8fa1cf","slide":1,"bbox":[905,530,55,0]}
+{"kind":"shape","id":"sh/xgze1wbu","slide":1,"name":"diagram","bbox":[1385,420,370,220]}
+{"kind":"textbox","id":"sh/wfqx8ru9","slide":1,"name":"12–16 s","text":"12–16 s","textPreview":"12–16 s","textChars":7,"textLines":1,"bbox":[1403,456,334,80]}
+{"kind":"textbox","id":"sh/vehwzmto","slide":1,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[1403,553,334,60]}
+{"kind":"shape","id":"sh/ad8f6hc3","slide":1,"bbox":[1330,530,55,0]}
+{"kind":"textbox","id":"sh/9czexwby","slide":1,"name":"0 / 4 confirmed","text":"0 / 4 confirmed","textPreview":"0 / 4 confirmed","textChars":15,"textLines":1,"bbox":[110,735,1300,100]}
+{"kind":"textbox","id":"sh/8bqx4rud","slide":1,"name":"Wait for sustained evidence","text":"Wait for sustained evidence","textPreview":"Wait for sustained evidence","textChars":27,"textLines":1,"bbox":[110,862,1450,90]}
+{"kind":"textbox","id":"sh/0vaxkr29","slide":1,"name":"Current detector: 4-second non-overlapping windows","text":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textPreview":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textChars":81,"textLines":1,"bbox":[110,996,1690,50]}
+{"kind":"notes","id":"nt/90e50b","slide":1,"text":"Four consecutive windows above z=2.0 are required. No overlap means samples are not reused; it does not prove statistical independence of brain activity. The active backend finalizes an ongoing recording on this trigger, attaches the signal context, and saves it. The concept film illustrates the broader event-capture vision. Sources: confusion-detector/src/config.py; hardware-demo/eegdemo/server.py Runtime.trigger."}
+{"kind":"slide","id":"sl/79nfws","slide":2,"title":"Four fresh windows confirm one event","textShapes":13}
+{"kind":"textbox","id":"sh/4zmp03ex","slide":2,"name":"Four fresh windows confirm one event","text":"Four fresh windows confirm one event","textPreview":"Four fresh windows confirm one event","textChars":36,"textLines":1,"bbox":[105,78,1710,130]}
+{"kind":"textbox","id":"sh/3ed8ryxs","slide":2,"name":"Each window uses new EEG samples. A dip below the ","text":"Each window uses new EEG samples. A dip below the threshold resets the count.","textPreview":"Each window uses new EEG samples. A dip below the threshold resets the count.","textChars":77,"textLines":1,"bbox":[110,213,1700,100]}
+{"kind":"shape","id":"sh/2d47ydw7","slide":2,"name":"diagram","bbox":[110,420,370,220]}
+{"kind":"textbox","id":"sh/hcvqp8fm","slide":2,"name":"0–4 s","text":"0–4 s","textPreview":"0–4 s","textChars":5,"textLines":1,"bbox":[128,456,334,80]}
+{"kind":"textbox","id":"sh/gbmpw3e1","slide":2,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[128,553,334,60]}
+{"kind":"shape","id":"sh/fad8nyxg","slide":2,"name":"diagram","bbox":[535,420,370,220]}
+{"kind":"textbox","id":"sh/u9k7utwv","slide":2,"name":"4–8 s","text":"4–8 s","textPreview":"4–8 s","textChars":5,"textLines":1,"bbox":[553,456,334,80]}
+{"kind":"textbox","id":"sh/18fq1sfq","slide":2,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[553,553,334,60]}
+{"kind":"shape","id":"sh/07698ne5","slide":2,"bbox":[480,530,55,0]}
+{"kind":"shape","id":"sh/69kba5sv","slide":2,"name":"diagram","bbox":[960,420,370,220]}
+{"kind":"textbox","id":"sh/ratc3atg","slide":2,"name":"8–12 s","text":"8–12 s","textPreview":"8–12 s","textChars":6,"textLines":1,"bbox":[978,456,334,80]}
+{"kind":"textbox","id":"sh/sb2tcfal","slide":2,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[978,553,334,60]}
+{"kind":"shape","id":"sh/tcbu50b6","slide":2,"bbox":[905,530,55,0]}
+{"kind":"shape","id":"sh/il0b6lsj","slide":2,"name":"diagram","bbox":[1385,420,370,220]}
+{"kind":"textbox","id":"sh/jm9czqt4","slide":2,"name":"12–16 s","text":"12–16 s","textPreview":"12–16 s","textChars":7,"textLines":1,"bbox":[1403,456,334,80]}
+{"kind":"textbox","id":"sh/4n2t8vap","slide":2,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[1403,553,334,60]}
+{"kind":"shape","id":"sh/5obu10ba","slide":2,"bbox":[1330,530,55,0]}
+{"kind":"textbox","id":"sh/2h4bips3","slide":2,"name":"1 / 4 confirmed","text":"1 / 4 confirmed","textPreview":"1 / 4 confirmed","textChars":15,"textLines":1,"bbox":[110,735,1300,100]}
+{"kind":"textbox","id":"sh/3idcbut8","slide":2,"name":"Wait for sustained evidence","text":"Wait for sustained evidence","textPreview":"Wait for sustained evidence","textChars":27,"textLines":1,"bbox":[110,862,1450,90]}
+{"kind":"textbox","id":"sh/zm583m90","slide":2,"name":"Current detector: 4-second non-overlapping windows","text":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textPreview":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textChars":81,"textLines":1,"bbox":[110,996,1690,50]}
+{"kind":"notes","id":"nt/79nfws","slide":2,"text":"Four consecutive windows above z=2.0 are required. No overlap means samples are not reused; it does not prove statistical independence of brain activity. The active backend finalizes an ongoing recording on this trigger, attaches the signal context, and saves it. The concept film illustrates the broader event-capture vision. Sources: confusion-detector/src/config.py; hardware-demo/eegdemo/server.py Runtime.trigger."}
+{"kind":"slide","id":"sl/gjxn7l","slide":3,"title":"Four fresh windows confirm one event","textShapes":13}
+{"kind":"textbox","id":"sh/2dona5c7","slide":3,"name":"Four fresh windows confirm one event","text":"Four fresh windows confirm one event","textPreview":"Four fresh windows confirm one event","textChars":36,"textLines":1,"bbox":[105,78,1710,130]}
+{"kind":"textbox","id":"sh/pgf6lkvi","slide":3,"name":"Each window uses new EEG samples. A dip below the ","text":"Each window uses new EEG samples. A dip below the threshold resets the count.","textPreview":"Each window uses new EEG samples. A dip below the threshold resets the count.","textChars":77,"textLines":1,"bbox":[110,213,1700,100]}
+{"kind":"shape","id":"sh/of65cfux","slide":3,"name":"diagram","bbox":[110,420,370,220]}
+{"kind":"textbox","id":"sh/bixonado","slide":3,"name":"0–4 s","text":"0–4 s","textPreview":"0–4 s","textChars":5,"textLines":1,"bbox":[128,456,334,80]}
+{"kind":"textbox","id":"sh/ahonepc3","slide":3,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[128,553,334,60]}
+{"kind":"shape","id":"sh/xkf6pkvu","slide":3,"name":"diagram","bbox":[535,420,370,220]}
+{"kind":"textbox","id":"sh/cj65gfu9","slide":3,"name":"4–8 s","text":"4–8 s","textPreview":"4–8 s","textChars":5,"textLines":1,"bbox":[553,456,334,80]}
+{"kind":"textbox","id":"sh/rmd4bqdk","slide":3,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[553,553,334,60]}
+{"kind":"shape","id":"sh/6lkn2lcz","slide":3,"bbox":[480,530,55,0]}
+{"kind":"shape","id":"sh/s3650rm9","slide":3,"name":"diagram","bbox":[960,420,370,220]}
+{"kind":"textbox","id":"sh/t4fm9w3u","slide":3,"name":"8–12 s","text":"8–12 s","textPreview":"8–12 s","textChars":6,"textLines":1,"bbox":[978,456,334,80]}
+{"kind":"textbox","id":"sh/61onyh43","slide":3,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[978,553,334,60]}
+{"kind":"shape","id":"sh/72x47mlo","slide":3,"bbox":[905,530,55,0]}
+{"kind":"shape","id":"sh/grq54rm5","slide":3,"name":"diagram","bbox":[1385,420,370,220]}
+{"kind":"textbox","id":"sh/hszmdw3q","slide":3,"name":"12–16 s","text":"12–16 s","textPreview":"12–16 s","textChars":7,"textLines":1,"bbox":[1403,456,334,80]}
+{"kind":"textbox","id":"sh/u58n214z","slide":3,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[1403,553,334,60]}
+{"kind":"shape","id":"sh/f6h4bmlk","slide":3,"bbox":[1330,530,55,0]}
+{"kind":"textbox","id":"sh/wbmls7m1","slide":3,"name":"2 / 4 confirmed","text":"2 / 4 confirmed","textPreview":"2 / 4 confirmed","textChars":15,"textLines":1,"bbox":[110,735,1300,100]}
+{"kind":"textbox","id":"sh/xwvm1c3m","slide":3,"name":"Wait for sustained evidence","text":"Wait for sustained evidence","textPreview":"Wait for sustained evidence","textChars":27,"textLines":1,"bbox":[110,862,1450,90]}
+{"kind":"textbox","id":"sh/xsn25ofa","slide":3,"name":"Current detector: 4-second non-overlapping windows","text":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textPreview":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textChars":81,"textLines":1,"bbox":[110,996,1690,50]}
+{"kind":"notes","id":"nt/gjxn7l","slide":3,"text":"Four consecutive windows above z=2.0 are required. No overlap means samples are not reused; it does not prove statistical independence of brain activity. The active backend finalizes an ongoing recording on this trigger, attaches the signal context, and saves it. The concept film illustrates the broader event-capture vision. Sources: confusion-detector/src/config.py; hardware-demo/eegdemo/server.py Runtime.trigger."}
+{"kind":"slide","id":"sl/krz8fa","slide":4,"title":"Four fresh windows confirm one event","textShapes":13}
+{"kind":"textbox","id":"sh/sfud8n2p","slide":4,"name":"Four fresh windows confirm one event","text":"Four fresh windows confirm one event","textPreview":"Four fresh windows confirm one event","textChars":36,"textLines":1,"bbox":[105,78,1710,130]}
+{"kind":"textbox","id":"sh/relcz214","slide":4,"name":"Each window uses new EEG samples. A dip below the ","text":"Each window uses new EEG samples. A dip below the threshold resets the count.","textPreview":"Each window uses new EEG samples. A dip below the threshold resets the count.","textChars":77,"textLines":1,"bbox":[110,213,1700,100]}
+{"kind":"shape","id":"sh/qdsb6xkj","slide":4,"name":"diagram","bbox":[110,420,370,220]}
+{"kind":"textbox","id":"sh/5cjuxsjy","slide":4,"name":"0–4 s","text":"0–4 s","textPreview":"0–4 s","textChars":5,"textLines":1,"bbox":[128,456,334,80]}
+{"kind":"textbox","id":"sh/4bat4n2d","slide":4,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[128,553,334,60]}
+{"kind":"shape","id":"sh/3a1cvi18","slide":4,"name":"diagram","bbox":[535,420,370,220]}
+{"kind":"textbox","id":"sh/i9sb2dkn","slide":4,"name":"4–8 s","text":"4–8 s","textPreview":"4–8 s","textChars":5,"textLines":1,"bbox":[553,456,334,80]}
+{"kind":"textbox","id":"sh/h8jut8j2","slide":4,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[553,553,334,60]}
+{"kind":"shape","id":"sh/g7at032h","slide":4,"bbox":[480,530,55,0]}
+{"kind":"shape","id":"sh/qpw3utof","slide":4,"name":"diagram","bbox":[960,420,370,220]}
+{"kind":"textbox","id":"sh/rq54ny50","slide":4,"name":"8–12 s","text":"8–12 s","textPreview":"8–12 s","textChars":6,"textLines":1,"bbox":[978,456,334,80]}
+{"kind":"textbox","id":"sh/crelwj6l","slide":4,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[978,553,334,60]}
+{"kind":"shape","id":"sh/dsnmpon6","slide":4,"bbox":[905,530,55,0]}
+{"kind":"shape","id":"sh/2lc3q9oj","slide":4,"name":"diagram","bbox":[1385,420,370,220]}
+{"kind":"textbox","id":"sh/3mlkje5o","slide":4,"name":"12–16 s","text":"12–16 s","textPreview":"12–16 s","textChars":7,"textLines":1,"bbox":[1403,456,334,80]}
+{"kind":"textbox","id":"sh/4nelsj69","slide":4,"name":"Next window","text":"Next window","textPreview":"Next window","textChars":11,"textLines":1,"bbox":[1403,553,334,60]}
+{"kind":"shape","id":"sh/ponmlonu","slide":4,"bbox":[1330,530,55,0]}
+{"kind":"textbox","id":"sh/uxc3m9o7","slide":4,"name":"3 / 4 confirmed","text":"3 / 4 confirmed","textPreview":"3 / 4 confirmed","textChars":15,"textLines":1,"bbox":[110,735,1300,100]}
+{"kind":"textbox","id":"sh/fylkfu5s","slide":4,"name":"Wait for sustained evidence","text":"Wait for sustained evidence","textPreview":"Wait for sustained evidence","textChars":27,"textLines":1,"bbox":[110,862,1450,90]}
+{"kind":"textbox","id":"sh/jqhs76h8","slide":4,"name":"Current detector: 4-second non-overlapping windows","text":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textPreview":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textChars":81,"textLines":1,"bbox":[110,996,1690,50]}
+{"kind":"notes","id":"nt/krz8fa","slide":4,"text":"Four consecutive windows above z=2.0 are required. No overlap means samples are not reused; it does not prove statistical independence of brain activity. The active backend finalizes an ongoing recording on this trigger, attaches the signal context, and saves it. The concept film illustrates the broader event-capture vision. Sources: confusion-detector/src/config.py; hardware-demo/eegdemo/server.py Runtime.trigger."}
+{"kind":"slide","id":"sl/1hhi8v","slide":5,"title":"Four fresh windows confirm one event","textShapes":13}
+{"kind":"textbox","id":"sh/udc3mh0r","slide":5,"name":"Four fresh windows confirm one event","text":"Four fresh windows confirm one event","textPreview":"Four fresh windows confirm one event","textChars":36,"textLines":1,"bbox":[105,78,1710,130]}
+{"kind":"textbox","id":"sh/h0n2xcj2","slide":5,"name":"Each window uses new EEG samples. A dip below the ","text":"Each window uses new EEG samples. A dip below the threshold resets the count.","textPreview":"Each window uses new EEG samples. A dip below the threshold resets the count.","textChars":77,"textLines":1,"bbox":[110,213,1700,100]}
+{"kind":"shape","id":"sh/gzelo7ih","slide":5,"name":"diagram","bbox":[110,420,370,220]}
+{"kind":"textbox","id":"sh/7alkr210","slide":5,"name":"0–4 s","text":"0–4 s","textPreview":"0–4 s","textChars":5,"textLines":1,"bbox":[128,456,334,80]}
+{"kind":"textbox","id":"sh/69c3ix0f","slide":5,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[128,553,334,60]}
+{"kind":"shape","id":"sh/tc32tcj6","slide":5,"name":"diagram","bbox":[535,420,370,220]}
+{"kind":"textbox","id":"sh/8bulk7il","slide":5,"name":"4–8 s","text":"4–8 s","textPreview":"4–8 s","textChars":5,"textLines":1,"bbox":[553,456,334,80]}
+{"kind":"textbox","id":"sh/j61kni14","slide":5,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[553,553,334,60]}
+{"kind":"shape","id":"sh/y5s3ed0j","slide":5,"bbox":[480,530,55,0]}
+{"kind":"shape","id":"sh/87uxkbet","slide":5,"name":"diagram","bbox":[960,420,370,220]}
+{"kind":"textbox","id":"sh/983edgfe","slide":5,"name":"8–12 s","text":"8–12 s","textPreview":"8–12 s","textChars":6,"textLines":1,"bbox":[978,456,334,80]}
+{"kind":"textbox","id":"sh/m5sfi1wn","slide":5,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[978,553,334,60]}
+{"kind":"shape","id":"sh/n61wb6x8","slide":5,"bbox":[905,530,55,0]}
+{"kind":"shape","id":"sh/03axgbeh","slide":5,"name":"diagram","bbox":[1385,420,370,220]}
+{"kind":"textbox","id":"sh/14je9wf2","slide":5,"name":"12–16 s","text":"12–16 s","textPreview":"12–16 s","textChars":7,"textLines":1,"bbox":[1403,456,334,80]}
+{"kind":"textbox","id":"sh/e1sve1wr","slide":5,"name":"Elevated","text":"Elevated","textPreview":"Elevated","textChars":8,"textLines":1,"bbox":[1403,553,334,60]}
+{"kind":"shape","id":"sh/z21w76xw","slide":5,"bbox":[1330,530,55,0]}
+{"kind":"textbox","id":"sh/kzexsve1","slide":5,"name":"4 / 4 confirmed","text":"4 / 4 confirmed","textPreview":"4 / 4 confirmed","textChars":15,"textLines":1,"bbox":[110,735,1300,100]}
+{"kind":"textbox","id":"sh/50nel0v6","slide":5,"name":"Flag the moment","text":"Flag the moment","textPreview":"Flag the moment","textChars":15,"textLines":1,"bbox":[110,862,1450,90]}
+{"kind":"textbox","id":"sh/twje50nq","slide":5,"name":"Current detector: 4-second non-overlapping windows","text":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textPreview":"Current detector: 4-second non-overlapping windows • illustrative signal sequence","textChars":81,"textLines":1,"bbox":[110,996,1690,50]}
+{"kind":"notes","id":"nt/1hhi8v","slide":5,"text":"Four consecutive windows above z=2.0 are required. No overlap means samples are not reused; it does not prove statistical independence of brain activity. The active backend finalizes an ongoing recording on this trigger, attaches the signal context, and saves it. The concept film illustrates the broader event-capture vision. Sources: confusion-detector/src/config.py; hardware-demo/eegdemo/server.py Runtime.trigger."}
