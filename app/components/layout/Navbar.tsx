@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { DateSwitcher } from "@/components/layout/DateSwitcher";
+import { LogoMark } from "@/components/layout/LogoMark";
 
 const LINKS = [
   { href: "/", label: "Home" },
@@ -29,8 +30,10 @@ export function Navbar() {
       <nav className="mx-auto flex min-h-20 max-w-[1500px] flex-wrap items-center justify-between gap-x-8 gap-y-4 px-6 py-5 md:px-12">
         <Link
           href="/"
-          className="font-serif text-[1.6rem] tracking-[0.12em] text-fg"
+          aria-label="MemoryPalace home"
+          className="flex items-center gap-3 font-serif text-[1.6rem] tracking-[0.12em] text-fg"
         >
+          <LogoMark />
           MemoryPalace
         </Link>
         <div className="flex flex-wrap items-center justify-end gap-4 md:gap-7">
