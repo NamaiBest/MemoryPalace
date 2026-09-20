@@ -108,7 +108,7 @@ export function SharePage() {
             You get the last word before anything is sent.
           </p>
         </div>
-        <EmailDigest date={selectedDate} />
+        <EmailDigest date={selectedDate} selectedIds={picked} />
       </div>
 
       {visibleMoments.length === 0 ? (

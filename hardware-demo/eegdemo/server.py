@@ -215,17 +215,30 @@ class Runtime:
                 question, moments, retrieval_engine, date_scope)
 
     def daily_digest(self, body):
-        """Compose today's digest, and send it only when explicitly asked to."""
+        """Compose a digest over a day, a window of days, or a hand-picked set."""
         day = body.get("date")
         if day is not None and not isinstance(day, str):
             raise ValueError("date must be YYYY-MM-DD")
+        try:
+            days = max(1, min(14, int(body.get("days", 1))))
+        except (TypeError, ValueError) as exc:
+            raise ValueError("days must be a whole number") from exc
+        ids = body.get("momentIds")
+        if ids is not None:
+            if not isinstance(ids, list) or not all(isinstance(x, str) for x in ids):
+                raise ValueError("momentIds must be a list of ids")
+            ids = ids[:40]
+        attach = bool(body.get("attach"))
         if body.get("send"):
             recipient = body.get("to")
             if recipient is not None and not isinstance(recipient, str):
                 raise ValueError("to must be an email address")
             return {"sent": True, **self.digest.send(
-                day, force=bool(body.get("force")), to=recipient)}
-        return {"sent": False, **self.digest.build(day)}
+                day, force=bool(body.get("force")), to=recipient,
+                days=days, moment_ids=ids, attach=attach)}
+        built = self.digest.build(day, days=days, moment_ids=ids, attach=attach)
+        built.pop("attachments", None)
+        return {"sent": False, **built}
 
     def locate_objects(self, body):
         """What is in this moment's frame, and where. Cached on the moment once found."""

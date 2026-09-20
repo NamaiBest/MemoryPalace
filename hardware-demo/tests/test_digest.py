@@ -111,7 +111,7 @@ class CustomRecipientTests(DigestTests):
 
         digest = self.build({"RESEND_API_KEY": "key", "MEMORYPALACE_DIGEST_FROM": "me@x.co",
                              "MEMORYPALACE_DIGEST_TO": "default@x.co"})
-        digest._send_https = lambda to, subject, body: sent.update(to=to) or {"id": "1"}
+        digest._send_https = lambda to, subject, body, files=(): sent.update(to=to) or {"id": "1"}
         result = digest.send("2026-09-19", to="someone@else.com")
         self.assertEqual(sent["to"], "someone@else.com")
         self.assertEqual(result["to"], "someone@else.com")
@@ -127,3 +127,58 @@ class CustomRecipientTests(DigestTests):
         digest._send_https = lambda *a, **k: self.fail("should not have sent")
         with self.assertRaises(DigestError):
             digest.send("2026-09-19", to="not-an-address")
+
+
+class AttachmentTests(DigestTests):
+    """Posters always travel; clips travel while they fit."""
+
+    class Lib(FakeLibrary):
+        def __init__(self, moments, sizes):
+            super().__init__(moments)
+            self.sizes = sizes
+            self.dir = Path(".")
+
+        def path_for(self, name):
+            import tempfile
+            size = self.sizes.get(name)
+            if size is None:
+                return None
+            f = Path(tempfile.gettempdir()) / name
+            if not f.exists() or f.stat().st_size != size:
+                f.write_bytes(b"\0" * size)
+            return f
+
+    def _digest(self, sizes, moments):
+        d = self.build()
+        d.library = self.Lib(moments, sizes)
+        return d
+
+    def test_clips_beyond_the_budget_are_reported_not_hidden(self):
+        moments = [
+            {"id": "a", "confidence": 0.9, "timestamp": "2026-09-19T18:00:00Z",
+             "media": {"thumbnailUrl": "/m/a.jpg", "videoUrl": "/m/a.mp4"}},
+            {"id": "b", "confidence": 0.5, "timestamp": "2026-09-19T18:01:00Z",
+             "media": {"thumbnailUrl": "/m/b.jpg", "videoUrl": "/m/b.mp4"}},
+        ]
+        # One clip fits inside the budget, the second cannot.
+        sizes = {"a.jpg": 1000, "b.jpg": 1000,
+                 "a.mp4": 10 * 1024 * 1024, "b.mp4": 10 * 1024 * 1024}
+        files, used, skipped = self._digest(sizes, moments).attachments_for(moments)
+        names = [f["filename"] for f in files]
+        self.assertIn("a.jpg", names)
+        self.assertIn("b.jpg", names)          # every poster travels
+        self.assertIn("a.mp4", names)          # the stronger moment's clip wins
+        self.assertNotIn("b.mp4", names)
+        self.assertEqual(skipped, 1)
+        self.assertLess(used, 18 * 1024 * 1024)
+
+    def test_a_window_spans_several_local_days(self):
+        digest = self.build()
+        self.assertEqual([m["id"] for m in digest.moments_for("2026-09-21", days=3)],
+                         ["a", "b", "c"])
+        self.assertEqual([m["id"] for m in digest.moments_for("2026-09-21", days=1)],
+                         ["c"])
+
+    def test_explicit_moments_override_the_window(self):
+        built = self.build().build("2026-09-19", moment_ids=["c"])
+        self.assertEqual([m["id"] for m in built["moments"]], ["c"])

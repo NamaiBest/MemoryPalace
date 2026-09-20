@@ -16,6 +16,9 @@ export async function POST(request: NextRequest) {
         send: Boolean(body.send),
         force: true,
         to: body.to,
+        days: body.days,
+        momentIds: body.momentIds,
+        attach: body.attach,
       }),
     });
     const result = await response.json();

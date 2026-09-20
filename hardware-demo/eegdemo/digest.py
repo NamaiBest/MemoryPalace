@@ -8,6 +8,7 @@ It only sends when the day went unreviewed. If you already went through your mom
 keeping some, writing a note, making a keepsake, then you do not need an email about it,
 and a digest that arrives anyway trains you to ignore digests.
 """
+import base64
 import json
 import os
 import smtplib
@@ -24,6 +25,10 @@ from zoneinfo import ZoneInfo
 
 ZONE = ZoneInfo("America/New_York")
 CHECK_INTERVAL_S = 600
+# Gmail rejects a message over 25 MB and the mail API caps the payload at 40 MB, so the
+# budget sits below both. Clips run about 4 MB each, posters about 30 KB, which is why
+# every poster travels and only some clips do.
+ATTACHMENT_BUDGET = 18 * 1024 * 1024
 
 
 class DigestError(RuntimeError):
@@ -98,10 +103,12 @@ class DailyDigest:
                 or bool((moment.get("annotation") or "").strip())
                 or bool(moment.get("keepsakeUrl")))
 
-    def moments_for(self, day):
-        """Every live moment captured on that local day, oldest first."""
-        start = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=ZONE)
-        end = start + timedelta(days=1)
+    def moments_for(self, day, days=1):
+        """Every live moment in a window of local days ending on `day`, oldest first."""
+        days = max(1, min(14, int(days)))
+        end_day = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=ZONE)
+        start = end_day - timedelta(days=days - 1)
+        end = end_day + timedelta(days=1)
         out = []
         for moment in self.library.moments:
             if moment.get("status") == "deleted":
@@ -118,17 +125,58 @@ class DailyDigest:
         out.sort(key=lambda item: item.get("timestamp", ""))
         return out
 
-    def build(self, day=None):
+    def attachments_for(self, moments):
+        """Posters always, clips while they fit inside the budget.
+
+        Every moment's poster travels because they are tiny, about 30 KB, so the mail
+        always shows what the day looked like. Clips average 4 MB, so attaching them all
+        would exceed what Gmail accepts. The strongest moments get their video first and
+        the message says plainly how many were left behind, rather than silently
+        truncating and letting the reader wonder.
+        """
+        files, used, skipped = [], 0, 0
+        for moment in moments:
+            poster = (moment.get("media") or {}).get("thumbnailUrl", "")
+            path = self.library.path_for(poster.rsplit("/", 1)[-1]) if poster else None
+            if path is not None:
+                data = path.read_bytes()
+                used += len(data)
+                files.append({"filename": path.name, "content": data})
+        for moment in sorted(moments, key=lambda m: -float(m.get("confidence") or 0)):
+            clip = (moment.get("media") or {}).get("videoUrl", "")
+            path = self.library.path_for(clip.rsplit("/", 1)[-1]) if clip else None
+            if path is None:
+                continue
+            size = path.stat().st_size
+            if used + size > ATTACHMENT_BUDGET:
+                skipped += 1
+                continue
+            used += size
+            files.append({"filename": path.name, "content": path.read_bytes()})
+        return files, used, skipped
+
+    def build(self, day=None, days=1, moment_ids=None, attach=False):
         """Compose the digest. Raises rather than sending an empty or pointless email."""
         day = day or datetime.now(ZONE).strftime("%Y-%m-%d")
-        moments = self.moments_for(day)
+        if moment_ids:
+            wanted = [m for m in (dict(x) for x in self.library.moments)
+                      if m.get("id") in set(moment_ids) and m.get("status") != "deleted"]
+            wanted.sort(key=lambda item: item.get("timestamp", ""))
+            moments = wanted
+            if not moments:
+                raise DigestError("none of those moments exist")
+        else:
+            moments = self.moments_for(day, days)
         if not moments:
             raise DigestError(f"no moments were captured on {day}")
         unreviewed = [m for m in moments if not self._reviewed(m)]
         if not self.guard.configured:
             raise DigestError(f"{self.guard.label} is not configured, so no recap can be written")
-        recap = self.guard.day_recap(moments, day)
-        pretty = datetime.strptime(day, "%Y-%m-%d").strftime("%A %d %B")
+        label = day if days == 1 and not moment_ids else None
+        recap = self.guard.day_recap(moments, label or f"{len(moments)} chosen moments")
+        pretty = (datetime.strptime(day, "%Y-%m-%d").strftime("%A %d %B") if label
+                  else (f"The last {days} days" if not moment_ids
+                        else f"{len(moments)} moments you chose"))
         lines = [f"  {datetime.fromisoformat(m['timestamp'].replace('Z', '+00:00')).astimezone(ZONE):%H:%M}"
                  f"  {m.get('semanticTitle') or 'Captured moment'}" for m in moments]
         body = (
@@ -139,10 +187,21 @@ class DailyDigest:
             f"\nWritten by {recap['providerLabel']}. You are getting this because "
             f"{len(unreviewed)} of these went unreviewed today.\n"
         )
+        files, bytes_used, skipped = self.attachments_for(moments) if attach else ([], 0, 0)
+        if attach:
+            body += (f"\n{len(files)} file{'' if len(files) == 1 else 's'} attached"
+                     + (f", and {skipped} clip{'' if skipped == 1 else 's'} left out to "
+                        "keep the message deliverable" if skipped else "") + ".\n")
         return {
             "day": day,
-            "subject": f"Your {pretty}, in {len(moments)} moment"
-                       f"{'' if len(moments) == 1 else 's'}",
+            "attachments": files,
+            "attachedBytes": bytes_used,
+            "clipsSkipped": skipped,
+            # "Your Saturday 19 September" reads well; "Your The last 2 days" does not,
+            # so the possessive is only used when the label is a single named day.
+            "subject": (f"Your {pretty}" if label else pretty)
+                       + f", in {len(moments)} moment"
+                       + ("" if len(moments) == 1 else "s"),
             "body": body,
             "recap": recap["answer"],
             "moments": [{"id": m["id"], "title": m.get("semanticTitle"),
@@ -154,10 +213,15 @@ class DailyDigest:
         }
 
     # ---------------------------------------------------------------- delivery
-    def _send_https(self, to, subject, body):
+    def _send_https(self, to, subject, body, files=()):
         """Post the mail through an HTTPS API, for networks that block SMTP."""
         payload = {"from": f"MemoryPalace <{self.sender}>", "to": [to],
                    "subject": subject, "text": body}
+        if files:
+            payload["attachments"] = [
+                {"filename": f["filename"],
+                 "content": base64.b64encode(f["content"]).decode("ascii")}
+                for f in files]
         request = urllib.request.Request(
             self.api_url, data=json.dumps(payload).encode(), method="POST",
             headers={"Authorization": f"Bearer {self.api_key}",
@@ -176,10 +240,10 @@ class DailyDigest:
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             raise DigestError(f"mail API unreachable: {exc}") from exc
 
-    def send(self, day=None, force=False, to=None):
+    def send(self, day=None, force=False, to=None, days=1, moment_ids=None, attach=False):
         """Send the digest. `to` overrides the configured recipient for a one-off."""
         recipient = (to or self.recipient or "").strip()
-        digest = self.build(day)
+        digest = self.build(day, days=days, moment_ids=moment_ids, attach=attach)
         if not force and digest["unreviewed"] == 0:
             raise DigestError("every moment that day was already reviewed, so nothing was sent")
         if not recipient:
@@ -191,18 +255,26 @@ class DailyDigest:
                               "plus MEMORYPALACE_DIGEST_FROM")
 
         if self.transport == "https":
-            result = self._send_https(recipient, digest["subject"], digest["body"])
+            result = self._send_https(recipient, digest["subject"], digest["body"],
+                                      digest.get("attachments") or ())
             self.last_error = None
             self._record_sent(digest["day"])
             self.emit("digest_sent", {"day": digest["day"], "to": recipient,
                                       "transport": "https", "id": result.get("id")})
-            return {**digest, "transport": "https", "to": recipient}
+            return {**{k: v for k, v in digest.items() if k != "attachments"},
+                    "attachedFiles": len(digest.get("attachments") or []),
+                    "transport": "https", "to": recipient}
 
         message = EmailMessage()
         message["Subject"] = digest["subject"]
         message["From"] = formataddr(("MemoryPalace", self.sender))
         message["To"] = recipient
         message.set_content(digest["body"])
+        for item in digest.get("attachments") or []:
+            kind = "video" if item["filename"].endswith((".mp4", ".mov")) else "image"
+            sub = item["filename"].rsplit(".", 1)[-1].replace("jpg", "jpeg")
+            message.add_attachment(item["content"], maintype=kind, subtype=sub,
+                                   filename=item["filename"])
         try:
             # 465 is implicit TLS; 587 and 25 negotiate it, and a server that does not
             # offer STARTTLS (a local relay, a catcher during testing) still works rather
@@ -230,7 +302,9 @@ class DailyDigest:
         self.emit("digest_sent", {"day": digest["day"], "to": recipient,
                                   "transport": "smtp",
                                   "unreviewed": digest["unreviewed"]})
-        return {**digest, "transport": "smtp", "to": recipient}
+        return {**{k: v for k, v in digest.items() if k != "attachments"},
+                "attachedFiles": len(digest.get("attachments") or []),
+                "transport": "smtp", "to": recipient}
 
     # ---------------------------------------------------------------- schedule
     def start(self):
