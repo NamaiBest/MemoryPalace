@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { MomentsProvider } from "@/context/MomentsProvider";
 import { Navbar } from "@/components/layout/Navbar";
+import { MemoryGuard } from "@/components/home/MemoryGuard";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <MomentsProvider>
           <Navbar />
           {children}
+          <MemoryGuard />
         </MomentsProvider>
       </body>
     </html>

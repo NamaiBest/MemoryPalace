@@ -16,6 +16,8 @@ const EVENT_OPTIONS: { id: EventFilter; label: string }[] = [
   { id: "load", label: "Load" },
 ];
 
+export type SortMode = "time" | "intensity";
+
 export function FilterBar({
   event,
   onEventChange,
@@ -25,6 +27,11 @@ export function FilterBar({
   onModalityChange,
   date,
   onDateChange,
+  sort,
+  onSortChange,
+  session,
+  sessions,
+  onSessionChange,
 }: {
   event: EventFilter;
   onEventChange: (value: EventFilter) => void;
@@ -34,6 +41,11 @@ export function FilterBar({
   onModalityChange: (value: ModalityFilter) => void;
   date: DateFilter;
   onDateChange: (value: DateFilter) => void;
+  sort: SortMode;
+  onSortChange: (value: SortMode) => void;
+  session: string;
+  sessions: string[];
+  onSessionChange: (value: string) => void;
 }) {
   return (
     <div className="flex flex-col gap-4">
@@ -60,7 +72,7 @@ export function FilterBar({
       </div>
       <div className="flex flex-wrap gap-3">
         <label className="flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase text-fg-mute">
-          Confidence
+          Intensity
           <select
             value={confidence}
             onChange={(event) =>
@@ -69,9 +81,10 @@ export function FilterBar({
             className="border border-line-strong bg-bg px-2 py-1 text-[11px] tracking-normal text-fg outline-none"
           >
             <option value="all">Any</option>
-            <option value="high">High ≥ 80%</option>
-            <option value="medium">Medium 60–79%</option>
-            <option value="low">Low &lt; 60%</option>
+            <option value="critical">Critical · red · ≥ 85%</option>
+            <option value="high">High · orange · 70–84%</option>
+            <option value="moderate">Moderate · yellow · 55–69%</option>
+            <option value="weak">Weak · green · &lt; 55%</option>
           </select>
         </label>
         <label className="flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase text-fg-mute">
@@ -98,6 +111,25 @@ export function FilterBar({
             <option value="all">Any</option>
             <option value="today">Today</option>
             <option value="recent">Last 48 hours</option>
+          </select>
+        </label>
+        <label className="flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase text-fg-mute">
+          Session
+          <select value={session} onChange={(event) => onSessionChange(event.target.value)}
+            className="max-w-44 border border-line-strong bg-bg px-2 py-1 text-[11px] tracking-normal text-fg outline-none">
+            <option value="all">Any session</option>
+            {sessions.map((value) => <option key={value} value={value}>{value}</option>)}
+          </select>
+        </label>
+        <label className="flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase text-fg-mute">
+          Order
+          <select
+            value={sort}
+            onChange={(event) => onSortChange(event.target.value as SortMode)}
+            className="border border-line-strong bg-bg px-2 py-1 text-[11px] tracking-normal text-fg outline-none"
+          >
+            <option value="time">Time · session order</option>
+            <option value="intensity">Intensity · strongest first</option>
           </select>
         </label>
       </div>

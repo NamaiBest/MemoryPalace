@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { INITIAL_MOMENTS } from "@/data/moments";
+import { dateKey } from "@/lib/format";
 import { loadMoments, persistMoment } from "@/lib/integrations";
 import type { Moment } from "@/types/moment";
 
@@ -17,6 +18,9 @@ const CAPTURE_POLL_MS = 5000;
 interface MomentsContextValue {
   moments: Moment[];
   visibleMoments: Moment[];
+  availableDates: string[];
+  selectedDate: string | null;
+  setSelectedDate: (date: string | null) => void;
   lastCreatedId: string | null;
   getMoment: (id: string) => Moment | undefined;
   addMoment: (moment: Moment) => void;
@@ -45,6 +49,7 @@ function sortMoments(moments: Moment[]): Moment[] {
 export function MomentsProvider({ children }: { children: ReactNode }) {
   const [moments, setMoments] = useState<Moment[]>(() => sortMoments(INITIAL_MOMENTS));
   const [lastCreatedId, setLastCreatedId] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   // Real captures arrive from the backend after a recording is stopped and uploaded.
   // They are merged by id alongside the seed moments rather than replacing them, so
@@ -72,10 +77,19 @@ export function MomentsProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<MomentsContextValue>(() => {
     const getMoment = (id: string) => moments.find((moment) => moment.id === id);
+    const activeMoments = moments.filter((moment) => moment.status !== "deleted");
+    const availableDates = Array.from(new Set(
+      activeMoments.map((moment) => dateKey(moment.timestamp)),
+    )).sort().reverse();
 
     return {
       moments,
-      visibleMoments: moments.filter((moment) => moment.status !== "deleted"),
+      visibleMoments: activeMoments.filter((moment) =>
+        selectedDate ? dateKey(moment.timestamp) === selectedDate : true,
+      ),
+      availableDates,
+      selectedDate,
+      setSelectedDate,
       lastCreatedId,
       getMoment,
       addMoment: (moment) => {
@@ -109,7 +123,7 @@ export function MomentsProvider({ children }: { children: ReactNode }) {
       nextSequence: () =>
         moments.reduce((max, moment) => Math.max(max, moment.sequence), 0) + 1,
     };
-  }, [lastCreatedId, moments]);
+  }, [lastCreatedId, moments, selectedDate]);
 
   return (
     <MomentsContext.Provider value={value}>{children}</MomentsContext.Provider>

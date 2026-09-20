@@ -1,7 +1,14 @@
 # MemoryPalace — web interface
 
-The browsable half of the project. It shows moments the hardware actually captured: the
-detector stops a recording, the phone uploads it, and it appears here within a few seconds.
+The browsable half of the project. It shows captured moments in a cinematic hero and
+horizontal carousel, with larger cards, scroll arrows, keyboard navigation and a warm,
+blurred backdrop.
+
+On `/live`, **Demo surprise** and **Demo neural spike** request a 10- or 30-second moment.
+The phone camera opens for that capture only, then closes and uploads the MP4. The backend
+owns the timer, starting it after the phone acknowledges recording. No EEG calibration is
+required for these manual demo triggers. Simulated signal panels live in an expandable
+playground. The UI only says a moment is saved after its upload reaches the library.
 
 **Nothing is seeded.** There is no demo data. An empty gallery means no capture has
 happened, which is the honest state rather than a bug. `/debug` says which link of the
@@ -44,7 +51,7 @@ hydration first — load any page and check the browser console for that WebSock
 /                    Home — hero moment plus the carousel
 /moment/[id]         One moment: media, EEG trace, annotation
 /explore             Table of every moment, with filters
-/live                Live monitor (simulated signal)
+/live                Timed demo capture controls and optional simulated signal playground
 /debug               Diagnostics: is any of this actually connected?
 ```
 
@@ -59,9 +66,9 @@ The type is not cosmetic — it states what the system is claiming to have found
 | `insight` | Possible Insight | Simulation only | Reserved. The current pipeline cannot distinguish insight from load. |
 | `error` | Error-related Event | Simulation only | Reserved for error-related negativity. Not implemented. |
 
-**Only `load` is ever produced by real hardware.** The other three exist because the
-interface was designed around an eventual multi-class detector. Labelling a real capture as
-"insight" would claim a distinction the pipeline cannot make, so the backend never does.
+The EEG detector produces `load`. Manual demo buttons produce `surprise` or `load` with
+`demo: true` and a summary explicitly identifying the demo trigger. The footage is real
+when a physical phone is connected; the event label is chosen by the tester.
 
 If the cascade idea lands — using sustained load as a gate, then searching inside it for
 short bursts — a `burst` type slots in beside `load` without rework. Adding a type means
@@ -82,11 +89,37 @@ imbalance and any emitted probability would be badly miscalibrated.
 
 | Filter | Options | Notes |
 |---|---|---|
-| Event | all · surprise · insight · error · load | Real captures are always `load`. |
+| Event | all · surprise · insight · error · load | EEG events use `load`; demo triggers can also use `surprise`. |
 | Confidence | high ≥80% · medium 60–79% · low <60% | Bands over the rank score above. |
 | Modality | all · EEG · Video | `video` means media is attached; `eeg` means a trace is. |
 | Date | all · today · last 48h | Uses Boston time, like every other timestamp. |
 | Search | free text | Matches id, sequence, event label, annotation and summary. |
+
+Intensity is the normalized detector ranking score, not a medical severity diagnosis or a
+calibrated probability. The visual bands are **critical/red ≥85%**, **high/orange
+70–84%**, **moderate/yellow 55–69%**, and **weak/green <55%**. Weak moments remain in the
+collection intentionally: ranking lets the wearer decide what mattered without throwing
+away a possibly useful memory.
+
+Explore defaults to chronological session order and offers strongest-first ordering. Its
+session line shows every filtered moment at its real position in the session; each colored
+dot opens that moment. Larger rows include a still preview plus the same intensity color
+used on carousel cards, the home hero, and video playback.
+
+When Elastic is configured on the backend, that same search box becomes hybrid cognitive
+memory search: Jina v5 Omni embeds video and text in a shared vector space, and Elastic fuses BM25 with dense kNN
+using RRF. Event and intensity-band bounds are applied inside the Elastic query. The label
+below the box states which engine answered. If Elastic is absent or
+offline, the UI falls back to the local exact-text filter instead of breaking the collection.
+
+## Memory Guard
+
+Every page includes Memory Guard, a compact floating agent that answers over retrieved moments and
+shows its actual provider. Set `MEMORYPALACE_AGENT_PROVIDER=meta` for Muse Spark 1.3 or
+`grok` for Grok 4.6 before launch. Elastic remains the retrieval layer in either mode. The
+UI uses an explicitly labelled grounded-catalog fallback when no model key is configured
+instead of pretending an unconfigured sponsor service answered. The top-right date selector
+filters the collection and scopes Memory Guard to the same Boston calendar day.
 
 ## Time
 
@@ -99,12 +132,15 @@ The backend stores UTC; conversion happens only at display.
 ## Where the data comes from
 
 ```text
-phone ──upload──> backend ──/api/moments──> MomentsProvider ──> pages
-                          └─/api/media/… ──> <img> and <video>
+phone ──upload──> backend ──> durable catalog + media library
+                              ├─/api/moments──> MomentsProvider ──> pages
+                              └─/api/media/… ──> <img> and <video>
 ```
 
 `MomentsProvider` polls `/api/moments` every 5 s and merges by id, so a capture appears
 shortly after it is uploaded without a refresh. Real captures sort above anything else.
+The backend reloads the durable catalog on restart, keeps its previous generation as a
+backup, and imports older run media without deleting those originals.
 
 `/api/media/[name]` supports byte ranges (`206`), which `<video>` requires in order to seek
 or even determine duration.

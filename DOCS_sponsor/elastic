@@ -1,0 +1,48 @@
+n use
+
+Challenge Prompt: 
+
+Turn complex, messy data into insights, answers, or actions. Qualified projects must use Elasticsearch and are judged on: Depth and creativity of the Elasticsearch implementation; Use of Jina models for embeddings; Use of Elastic Agent Builder and Workflows; Use of Elastic Cloud Serverless.
+
+Our Approach: 
+Rather than using Elasticsearch as a passive document store or text-only RAG database, we position it as the central Multimodal Episodic Memory & Cognitive Inference Engine deployed entirely on Elastic Cloud Serverless.
+The system continuously streams unstructured, high-frequency, noisy data from two distinct physical sources: 8-channel EEG brainwave telemetry (band powers across Alpha, Beta, Theta, Gamma, and IMU motion) and synchronized POV video/audio.
+Signal Ingestion & Indexing: When a physiological spike occurs (e.g., surprise, sudden cognitive engagement, or error-related potential), the event window is bundled with surrounding context and ingested into a dedicated cognitive-moments index on Elastic Cloud Serverless.
+Jina Embedding Integration: Using the Elastic Inference API, each short video is embedded directly with Jina v5 Omni. Text queries use the same multimodal vector space, enabling cross-modal retrieval without requiring a transcript or a separately generated caption.
+Hybrid & Vector Search: We implement hybrid search combining BM25 keyword matching with dense kNN vector search via Reciprocal Rank Fusion (RRF). Queries like "When was I startled while reading?" execute a vector similarity search against Jina embeddings, combined with a numerical filter on EEG confidence and frequency bands.
+Elastic Workflows (Deterministic Signal Processing): We configure automated Elastic Workflows triggered on document ingest. The workflow normalizes real-time EEG band ratios against the user's historical rolling baseline, aggregates clustered events into continuous "Moments," and automatically classifies event severity.
+Elastic Agent Builder (Conversational Memory Recall): We build an agent equipped with specialized Elasticsearch tools (search_moments_by_biometrics, correlate_eeg_visuals). Users can converse naturally with their cognitive memory agent—asking what caused cognitive load spikes, and navigating straight to the synchronized POV video playback in the Netflix-style viewer.
+
+
+
+Our Approach: Rather than using Elasticsearch as a passive document store or text-only RAG database, we position it as the central Multimodal Episodic Memory & Cognitive Inference Engine deployed entirely on Elastic Cloud Serverless.
+The system continuously streams unstructured, high-frequency, noisy data from two distinct physical sources: 8-channel EEG brainwave telemetry (band powers across Alpha, Beta, Theta, Gamma, and IMU motion) and synchronized POV video/audio.
+Signal Ingestion & Indexing: When a physiological spike occurs (e.g., surprise, sudden cognitive engagement, or error-related potential), the event window is bundled with surrounding context and ingested into a dedicated cognitive-moments index on Elastic Cloud Serverless.
+Jina Embedding Integration: Using the Elastic Inference API, each short video is embedded directly with Jina v5 Omni. Text queries use the same multimodal vector space, enabling cross-modal retrieval without requiring a transcript or a separately generated caption.
+Hybrid & Vector Search: We implement hybrid search combining BM25 keyword matching with dense kNN vector search via Reciprocal Rank Fusion (RRF). Queries like "When was I startled while reading?" execute a vector similarity search against Jina embeddings, combined with a numerical filter on EEG confidence and frequency bands.
+Elastic Workflows (Deterministic Signal Processing): We configure automated Elastic Workflows triggered on document ingest. The workflow normalizes real-time EEG band ratios against the user's historical rolling baseline, aggregates clustered events into continuous "Episodes," and automatically classifies event severity.
+Elastic Agent Builder (Conversational Episodic Recall): We build an agent equipped with specialized Elasticsearch tools (search_moments_by_biometrics, correlate_eeg_visuals). Users can converse naturally with their cognitive memory bank—asking what caused cognitive load spikes, revisiting peak focus sessions, and navigating straight to the synchronized POV video playback in the Netflix-style viewer.
+
+
+IMPLEMENTED FIRST SLICE (2026-09-19)
+
+- `hardware-demo/eegdemo/elastic_store.py` is the single Elastic Cloud boundary.
+- Completed phone moments are embedded directly by Jina v5 Omni through Elastic Inference
+  Service and indexed in `memorypalace-multimodal-moments` with a 1024-dimensional cosine vector.
+- `GET /search?q=...` fuses BM25 and dense kNN with RRF and supports event/confidence filters.
+- Explore translates its red/orange/yellow/green intensity bands into lower and upper
+  `confidence` range filters inside both the BM25 and kNN branches. Time remains the default
+  ordering, with an optional strongest-first view and a clickable full-session timeline.
+- `/explore` uses the Elastic results and visibly identifies `ELASTIC · JINA V5 OMNI · HYBRID RRF`;
+  it falls back to local text search when the sponsor service is unavailable.
+- Only `ELASTICSEARCH_URL` and `ELASTIC_API_KEY` are required. The key remains server-side
+  and is never committed, returned by `/status`, sent to the phone, or exposed to the browser.
+- Local camera capture remains authoritative: an Elastic outage records an event but never
+  blocks or discards the uploaded moment.
+
+The live project endpoint is:
+`https://my-vectordb-project-bece59.es.us-east4.gcp.elastic.cloud`
+
+Still future work: Elastic Workflows and Agent Builder are pitch direction, not implemented
+claims. Jina text embeddings currently cover summaries/annotations/event labels; direct
+video/audio embedding is the next multimodal increment.

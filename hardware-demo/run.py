@@ -80,6 +80,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=["demo", "serve", "status", "start", "stop", "reset", "mark", "replay", "mock-phone"])
     parser.add_argument("--output", type=Path, default=ROOT / "runs" / datetime.datetime.now().strftime("%Y%m%d-%H%M%S-%f"))
+    parser.add_argument("--library", type=Path,
+                        default=Path(os.environ["MEMORYPALACE_LIBRARY_DIR"])
+                        if os.environ.get("MEMORYPALACE_LIBRARY_DIR") else None,
+                        help="durable moment/media directory (serve defaults to hardware-demo/library)")
     parser.add_argument("--source", choices=["synthetic", "crown", "playback"], default="crown")
     parser.add_argument("--recorder", choices=["test-video", "phone"], default="test-video")
     parser.add_argument("--host", default="127.0.0.1")
@@ -96,7 +100,9 @@ def main():
     if args.command == "demo":
         run_demo(args)
     elif args.command == "serve":
-        runtime = Runtime(args.output, args.source, args.recorder, args.token, args.notch)
+        runtime = Runtime(args.output, args.source, args.recorder, args.token, args.notch,
+                          library_dir=args.library or ROOT / "library",
+                          legacy_runs=ROOT / "runs")
         server = create_server(runtime, args.host, args.port)
         server.timeout = 0.5
         print(f"Backend: http://{args.host}:{server.server_port} (source={args.source}, recorder={args.recorder})")

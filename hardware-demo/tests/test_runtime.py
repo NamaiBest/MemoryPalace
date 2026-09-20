@@ -20,6 +20,28 @@ from eegdemo.recording import PhoneRecorder
 from eegdemo.server import Runtime, create_server
 
 
+class MemoryGuardRuntimeTests(unittest.TestCase):
+    def test_date_scope_uses_boston_day_boundaries(self):
+        start, end = Runtime._date_bounds("2026-09-19")
+        self.assertEqual(start, "2026-09-19T04:00:00Z")
+        self.assertEqual(end, "2026-09-20T03:59:59.999999Z")
+
+    def test_local_guard_answers_from_saved_moments(self):
+        runtime = object.__new__(Runtime)
+        events = []
+        runtime.emit = lambda kind, detail: events.append((kind, detail))
+        result = runtime._local_guard_answer("strongest moment", [{
+            "id": "capture-1", "sequence": 1,
+            "semanticTitle": "Reading a book", "summary": "Reading a book",
+            "spikeIntensity": 0.91, "timestamp": "2026-09-19T15:00:00Z",
+        }], "local-recent", "2026-09-19")
+        self.assertIn("Moment #001: Reading a book", result["answer"])
+        self.assertNotIn("capture-1", result["answer"])
+        self.assertEqual(result["provider"], "local")
+        self.assertEqual(result["momentIds"], ["capture-1"])
+        self.assertEqual(events[0][0], "memory_guard_answered")
+
+
 class PipelineTests(unittest.TestCase):
     def setUp(self):
         self.events, self.triggers = [], []
@@ -155,6 +177,52 @@ class PhoneTests(unittest.TestCase):
 
 
 class HTTPTests(unittest.TestCase):
+    def test_demo_capture_without_eeg_starts_timer_only_after_ack(self):
+        with tempfile.TemporaryDirectory() as temp, contextlib.redirect_stdout(io.StringIO()):
+            runtime = Runtime(Path(temp) / "session", recorder="phone", token="test-token")
+            server = create_server(runtime, port=0)
+            thread = threading.Thread(target=server.serve_forever); thread.start()
+            url = f"http://127.0.0.1:{server.server_port}"
+            def call(path, body=None): return request(url, path, body, "test-token")
+            try:
+                with self.assertRaisesRegex(RuntimeError, "401"):
+                    request(url, "/recording/capture", {"seconds": 10})
+                call("/commands")
+                for seconds in (0, 11, 300, True, "10"):
+                    with self.assertRaisesRegex(RuntimeError, "400"):
+                        call("/recording/capture", {"seconds": seconds})
+                with self.assertRaisesRegex(RuntimeError, "400"):
+                    call("/recording/capture", {"seconds": 10, "demo_event": "insight"})
+                for seconds, event in ((10, "surprise"), (30, "load")):
+                    call("/recording/capture", {"seconds": seconds, "demo_event": event})
+                    self.assertIsNone(runtime.capture_timer)
+                    self.assertNotEqual(runtime.pipeline.phase, "ready")
+                    cmd = call("/commands")["command"]
+                    ack = {"id": cmd["id"], "recording_id": cmd["recording_id"], "state": "recording"}
+                    with patch("eegdemo.server.threading.Timer") as timer:
+                        call("/commands/ack", ack)
+                        call("/commands/ack", ack)  # retries must not extend the clip
+                        timer.assert_called_once_with(seconds, runtime.finish_capture, args=(cmd["recording_id"],))
+                        timer.return_value.start.assert_called_once()
+                        # EEG cannot prematurely cut short an explicitly timed demo.
+                        with runtime.lock:
+                            runtime.trigger({"z_score": 20})
+                        self.assertEqual(runtime.recorder.state, "recording")
+                        runtime.finish_capture("old-recording-id")
+                        self.assertEqual(runtime.recorder.state, "recording")
+                        runtime.finish_capture(cmd["recording_id"])
+                    stop = call("/commands")["command"]
+                    self.assertEqual(stop["reason"], "demo_capture_complete")
+                    call("/commands/ack", {"id": stop["id"], "recording_id": stop["recording_id"], "state": "stopped"})
+                    with patch.object(runtime.library, "_poster", return_value=None):
+                        moment = runtime.library.store(b"demo-media", "video/mp4", cmd["recording_id"])
+                    self.assertTrue(moment["demo"])
+                    self.assertEqual(moment["eventType"], event)
+                    self.assertEqual(moment["recordingId"], cmd["recording_id"])
+                    self.assertIn(f"{seconds}-second", moment["summary"])
+            finally:
+                server.shutdown(); server.server_close(); thread.join(); runtime.close()
+
     def test_http_calibration_to_acknowledged_stop_and_auth(self):
         with tempfile.TemporaryDirectory() as temp, contextlib.redirect_stdout(io.StringIO()):
             runtime = Runtime(Path(temp) / "session", recorder="phone", token="test-token")
@@ -166,6 +234,11 @@ class HTTPTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "401"): request(url, "/status")
                 with self.assertRaisesRegex(RuntimeError, "400"): call("/recording/start", {})
                 with self.assertRaisesRegex(RuntimeError, "400"): call("/eeg", {})
+                self.assertEqual(call("/settings/detection-threshold", {"value": 2.7}),
+                                 {"z_threshold": 2.7})
+                self.assertEqual(call("/status")["eeg"]["detection_threshold"], 2.7)
+                with self.assertRaisesRegex(RuntimeError, "400"):
+                    call("/settings/detection-threshold", {"value": 8})
                 for i in range(30): call("/eeg", packet(synthetic_window(i), i * 4000))
                 call("/commands")
                 call("/recording/start", {})

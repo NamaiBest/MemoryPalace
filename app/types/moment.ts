@@ -31,14 +31,36 @@ export interface MomentMedia {
 
 export interface Moment {
   id: string;
+  recordingId?: string;
+  sessionId?: string;
+  userId?: string;
+  demo?: boolean;
   sequence: number;
   timestamp: string;
   eventType: EventType;
   confidence: number;
+  spikeIntensity?: number;
+  spikeConfidence?: number;
   media: MomentMedia;
   eeg?: EEGInfo;
   contextWindow: ContextWindow;
   annotation: string;
   status: MomentStatus;
   summary: string;
+  semanticTitle?: string;
+  aiDescription?: string;
+  keywords?: string[];
+  topics?: string[];
+  transcript?: string;
+  processing?: {
+    extraction: "pending" | "complete" | "failed" | "not_configured";
+    analysis?: "pending" | "complete" | "failed" | "not_configured";
+    indexing: "pending" | "complete" | "failed" | "not_configured";
+  };
+  vision?: {
+    provider: "meta";
+    model: string;
+    status: "complete" | "failed";
+    error?: string;
+  };
 }

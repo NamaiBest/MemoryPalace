@@ -35,6 +35,13 @@ const DATE = new Intl.DateTimeFormat("en-US", {
   timeZone: TIME_ZONE,
 });
 
+const DATE_KEY = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: TIME_ZONE,
+});
+
 const FULL = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
@@ -59,6 +66,19 @@ export function formatDateTime(iso: string): string {
 
 export function formatDate(iso: string): string {
   return DATE.format(new Date(iso));
+}
+
+/** Stable YYYY-MM-DD key in Boston time for navigation and filtering. */
+export function dateKey(iso: string): string {
+  const parts = DATE_KEY.formatToParts(new Date(iso));
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+  return `${value("year")}-${value("month")}-${value("day")}`;
+}
+
+export function formatDateKey(key: string): string {
+  // Noon UTC stays on the requested calendar date in Boston in every season.
+  return DATE.format(new Date(`${key}T12:00:00Z`));
 }
 
 /** Date + time to the second, in Boston. Used where exactness matters more than brevity. */
@@ -91,12 +111,7 @@ export function formatContextWindow(start: string, end: string): string {
 }
 
 export function isSameDay(iso: string, comparedTo: Date = new Date()): boolean {
-  const date = new Date(iso);
-  return (
-    date.getFullYear() === comparedTo.getFullYear() &&
-    date.getMonth() === comparedTo.getMonth() &&
-    date.getDate() === comparedTo.getDate()
-  );
+  return dateKey(iso) === dateKey(comparedTo.toISOString());
 }
 
 export function hoursAgo(iso: string, now: Date = new Date()): number {

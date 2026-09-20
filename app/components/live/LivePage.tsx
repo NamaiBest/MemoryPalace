@@ -1,22 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CameraFeed } from "@/components/live/CameraFeed";
 import { DetectionStatus } from "@/components/live/DetectionStatus";
 import { EEGMonitor } from "@/components/live/EEGMonitor";
-import { EventProbability } from "@/components/live/EventProbability";
 import { RecordingControl } from "@/components/live/RecordingControl";
-import type { EventProbabilities } from "@/lib/integrations";
-
-const BASE: EventProbabilities = {
-  surprise: 0.22,
-  insight: 0.18,
-  error: 0.14,
-};
 
 export function LivePage() {
-  const [probabilities, setProbabilities] = useState<EventProbabilities>(BASE);
   const [phoneReady, setPhoneReady] = useState(false);
+  const [glassesConnected, setGlassesConnected] = useState(false);
+  const [burstId, setBurstId] = useState(0);
+  const [sessionSeconds, setSessionSeconds] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setSessionSeconds((value) => value + 1), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const poll = async () => {
@@ -35,75 +33,72 @@ export function LivePage() {
     };
   }, []);
 
-  // Drifting numbers for the simulated panels below the rule. Nothing here is measured.
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setProbabilities((current) => ({
-        surprise: clamp(current.surprise + jitter()),
-        insight: clamp(current.insight + jitter()),
-        error: clamp(current.error + jitter()),
-      }));
-    }, 1400);
-    return () => window.clearInterval(timer);
-  }, []);
+  const elapsed = `${String(Math.floor(sessionSeconds / 60)).padStart(2, "0")}:${String(sessionSeconds % 60).padStart(2, "0")}`;
 
   return (
-    <main className="mx-auto max-w-[1500px] px-5 pb-20 pt-24 md:px-8">
-      <header className="flex flex-wrap items-end justify-between gap-4">
+    <main className="mx-auto max-w-[1500px] px-6 pb-24 pt-32 md:px-12 md:pt-36">
+      <header className="flex flex-wrap items-end justify-between gap-8">
         <div>
-          <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-accent">
-            MemoryPalace / Live
-          </p>
-          <h1 className="mt-3 font-serif text-4xl">Monitoring</h1>
-          <p className="mt-3 max-w-lg text-sm leading-6 text-fg-dim">
-            The two panels below drive the real phone. Everything under the rule is a
-            simulation of what a session looks like — those traces and probabilities are
-            generated in the browser, not measured.
+          <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-accent">MemoryPalace / Live demo</p>
+          <h1 className="mt-4 font-serif text-5xl md:text-6xl">Watch a moment form.</h1>
+          <p className="mt-5 max-w-2xl text-base leading-8 text-fg-dim">
+            Eight simulated EEG channels drive a real phone-camera capture, followed by
+            durable moment extraction and Elastic indexing.
           </p>
         </div>
-        <p
-          className={
-            phoneReady
-              ? "inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase text-ok"
-              : "inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase text-fg-mute"
-          }
-        >
-          <span
-            className={
-              phoneReady
-                ? "pulse-dot h-2 w-2 rounded-full bg-ok"
-                : "h-2 w-2 rounded-full bg-fg-mute"
-            }
-          />
-          {phoneReady ? "Phone connected" : "Phone silent"}
-        </p>
+        <div className="rounded-2xl border border-line bg-bg-panel/65 px-5 py-3 text-right backdrop-blur-xl">
+          <p className="text-[10px] tracking-[0.16em] uppercase text-fg-mute">Session duration</p>
+          <p className="mt-1 font-mono text-2xl text-fg">{elapsed}</p>
+        </div>
       </header>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
+      <section className="mt-8 grid gap-3 sm:grid-cols-3">
+        <ConnectionCard label="EEG headset" value="Connected" detail="Simulated 8-channel Crown" ready />
+        <ConnectionCard label="Phone camera" value={phoneReady ? "Connected" : "Offline"}
+          detail={phoneReady ? "Rear camera · camera currently off" : "Open the Android demo app"} ready={phoneReady} />
+        <div className="rounded-2xl border border-line bg-bg-panel/55 px-5 py-4 backdrop-blur-xl">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[10px] tracking-[0.16em] uppercase text-fg-mute">Smart glasses</p>
+              <p className={glassesConnected ? "mt-1 text-sm text-ok" : "mt-1 text-sm text-fg"}>
+                {glassesConnected ? "Glasses Connected" : "Not connected"}
+              </p>
+              <p className="mt-1 text-xs text-fg-mute">Simulated integration · demo mode</p>
+            </div>
+            <button type="button" onClick={() => setGlassesConnected(true)} disabled={glassesConnected}
+              className="rounded-full border border-accent/30 px-3 py-1.5 text-[10px] uppercase tracking-[0.12em] text-accent disabled:border-ok/25 disabled:text-ok">
+              {glassesConnected ? "Connected" : "Connect Glasses"}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div className="mt-6 grid items-stretch gap-6 xl:grid-cols-[1.45fr_.8fr]">
+        <EEGMonitor burstId={burstId} />
+        <DetectionStatus phoneReady={phoneReady} onTrigger={() => setBurstId(Date.now())} />
+      </div>
+
+      <div className="mt-6">
         <RecordingControl />
-        <DetectionStatus phoneReady={phoneReady} />
-      </div>
-
-      <p className="mt-12 border-t border-line pt-6 text-[11px] tracking-[0.2em] uppercase text-fg-mute">
-        Simulated below this line
-      </p>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-[1.35fr_1fr]">
-        <EEGMonitor burst={0} />
-        <CameraFeed capturing={false} />
-      </div>
-
-      <div className="mt-4">
-        <EventProbability probabilities={probabilities} />
       </div>
     </main>
   );
 }
 
-function clamp(value: number): number {
-  return Math.min(0.94, Math.max(0.08, value));
-}
-
-function jitter(): number {
-  return (Math.random() - 0.5) * 0.08;
+function ConnectionCard({ label, value, detail, ready }: {
+  label: string;
+  value: string;
+  detail: string;
+  ready: boolean;
+}) {
+  return (
+    <div className="rounded-2xl border border-line bg-bg-panel/55 px-5 py-4 backdrop-blur-xl">
+      <p className="text-[10px] tracking-[0.16em] uppercase text-fg-mute">{label}</p>
+      <p className={`mt-1 flex items-center gap-2 text-sm ${ready ? "text-ok" : "text-fg"}`}>
+        <span className={`h-2 w-2 rounded-full ${ready ? "bg-ok" : "bg-fg-mute"}`} />
+        {value}
+      </p>
+      <p className="mt-1 text-xs text-fg-mute">{detail}</p>
+    </div>
+  );
 }

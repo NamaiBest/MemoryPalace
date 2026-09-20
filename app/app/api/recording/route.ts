@@ -3,7 +3,7 @@ import { backendFetch } from "@/lib/backend";
 
 export const dynamic = "force-dynamic";
 
-const ACTIONS = { start: "/recording/start", stop: "/recording/stop" } as const;
+const ACTIONS = { start: "/recording/start", stop: "/recording/stop", capture: "/recording/capture" } as const;
 
 /**
  * Start or stop a recording on the phone, from the browser.
@@ -14,21 +14,24 @@ const ACTIONS = { start: "/recording/start", stop: "/recording/stop" } as const;
  */
 export async function POST(request: Request) {
   let action: string;
+  let body: { action?: string; seconds?: number; demo_event?: string };
   try {
-    action = (await request.json())?.action;
+    body = await request.json();
+    action = body?.action ?? "";
   } catch {
     return NextResponse.json({ error: "expected a JSON body" }, { status: 400 });
   }
 
-  if (action !== "start" && action !== "stop") {
-    return NextResponse.json({ error: "action must be start or stop" }, { status: 400 });
+  if (action !== "start" && action !== "stop" && action !== "capture") {
+    return NextResponse.json({ error: "action must be start, stop or capture" }, { status: 400 });
   }
 
   try {
     const response = await backendFetch(ACTIONS[action], {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: "{}",
+      body: action === "capture"
+        ? JSON.stringify({ seconds: body.seconds, demo_event: body.demo_event }) : "{}",
     });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {

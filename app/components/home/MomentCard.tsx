@@ -1,8 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { IntensityDot } from "@/components/ui/IntensityDot";
 import { formatMomentNumber, formatTime } from "@/lib/format";
-import { eventLabel } from "@/lib/labels";
+import { momentTitle } from "@/lib/labels";
 import type { Moment } from "@/types/moment";
 
 export function MomentCard({
@@ -20,27 +21,29 @@ export function MomentCard({
       onClick={() => onSelect(moment.id)}
       aria-pressed={selected}
       className={cn(
-        "group relative h-[8rem] w-[14rem] shrink-0 overflow-hidden text-left transition-all duration-300 md:h-[9.5rem] md:w-[17rem]",
+        "group relative aspect-video w-[min(80vw,320px)] shrink-0 snap-start overflow-hidden rounded-xl border border-white/10 bg-bg-panel text-left transition-all duration-300 hover:-translate-y-1 md:w-[360px]",
         selected
-          ? "ring-1 ring-accent brightness-100"
-          : "brightness-[0.72] hover:brightness-95",
+          ? "ring-2 ring-accent ring-offset-4 ring-offset-bg brightness-100"
+          : "brightness-[0.85] hover:brightness-100",
       )}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      {moment.media.thumbnailUrl && <img
         src={moment.media.thumbnailUrl}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />}
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 p-2.5">
-        <p className="font-mono text-[10px] tracking-[0.14em] text-accent">
-          {formatMomentNumber(moment.sequence).replace("Moment ", "")}
+      <IntensityDot value={moment.confidence} showLabel className="absolute left-4 top-4" />
+      <span aria-hidden className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/25 text-xs backdrop-blur-md">▶</span>
+      <div className="absolute inset-x-0 bottom-0 p-5">
+        <p className="text-xs tracking-[0.1em] text-accent">
+          {formatMomentNumber(moment.sequence)}{moment.demo ? " · Demo" : ""}
         </p>
-        <p className="mt-0.5 truncate text-[11px] text-fg">
-          {eventLabel(moment.eventType)}
+        <p className="mt-2 truncate text-lg leading-7 text-fg">
+          {momentTitle(moment)}
         </p>
-        <p className="text-[10px] text-fg-dim">{formatTime(moment.timestamp)}</p>
+        <p className="mt-1 text-xs text-fg/70">{formatTime(moment.timestamp)}</p>
       </div>
     </button>
   );

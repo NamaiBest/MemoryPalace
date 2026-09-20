@@ -37,6 +37,15 @@ class Pipeline:
         self.last_measurement = None
         self.emit("calibration_started", {"config": asdict(self.cfg), "source": self.source})
 
+    def set_threshold(self, value):
+        value = float(value)
+        if not 0.5 <= value <= 6.0:
+            raise ValueError("detection threshold must be between 0.5 and 6.0 z")
+        self.cfg.detector.z_threshold = value
+        self.detector.run = 0
+        self.emit("detection_threshold_changed", {"z_threshold": value})
+        return {"z_threshold": value}
+
     def break_continuity(self, reason):
         self.buffer = np.empty((2, 0))
         self.detector.run = 0
@@ -138,4 +147,5 @@ class Pipeline:
                 "clean_calibration_windows": self.calibrator.n(),
                 "baseline": self.calibrator.to_dict(), "windows": self.windows,
                 "signal_connected": self.last_arrival is not None,
-                "signal_gaps": self.gaps, "last_window": self.last_measurement}
+                "signal_gaps": self.gaps, "last_window": self.last_measurement,
+                "detection_threshold": self.cfg.detector.z_threshold}

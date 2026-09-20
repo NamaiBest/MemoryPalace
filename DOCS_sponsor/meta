@@ -1,0 +1,117 @@
+what we had in mind:
+Meta Challenge
+Similar to the Tinder idea: Matches brain signatures/thoughts between people (on community platform)
+Add friends, share moments with loved ones (on connect platform)
+Add partner (live monitoring)
+
+
+
+
+Namai’s AI Summary:
+for the meta channel, what are we doing? Could we summarize that? We'll create a new tab in our project for maybe Connect, and then we can add friends and send moments to them, sharing moments. I put it as a comment because we have two other tracks worth doing:
+The semantic one
+The audio challenge one
+Are we doing the one where you use one or more public datasets that they provide? That's iffy. For the meta channel, we're doing three verticals:
+Of course, we're using everything they mentioned in their docs. We're also doing the Tinder idea, which means you can check if your thoughts align with someone else's thoughts and your neural signature is kind of the same. That would, in simple words, semantically transform into "if you guys share the same excitement," quite literally, right?
+Can have a community platform too.
+You can decide to share your highlights of the day, which is very personal to the people you really care about.
+You would be able to select your partner, or if there's someone you would want uninterrupted access to your moments, you can choose to do that as well, maybe with 
+
+ 
+
+
+At Meta and Facebook, we believe technology can bring people closer together and deepen real human connections. Build the AI-powered social product you wish existed, or one that helps strengthen connections you care about in new ways.
+
+AI should play a meaningful role in the experience. It might synthesize a group discussion into plans everyone would enjoy, organize scattered family updates into a shared story, or identify common interests that could spark a new connection.
+
+Projects will be judged on how meaningfully they strengthen human connection, how essential and well-integrated AI is, originality, and the strength of the working demo.
+
+Prize
+The top three teams, selected by Meta judges, will receive:
+Invitation to advance to the Round 2 Hackathon hosted at Meta's Menlo Park campus. Travel and accommodations provided. Advancement to Round 2 is subject to eligibility verification and compliance with Meta's Round 2 Official Rules.
+Meta swag bag
+
+What you can use
+You are free to use any technology stack for your hack.
+Each HackMIT 2026 participant is eligible to redeem $50 in free Muse API Credits (see terms and conditions and redemption instructions in the Intake Form)
+**Meta/Facebook: Bringing People Closer
+2 Messages ›
+Danielle Kleshinski (Meta)
+1h ago
+We encourage you to explore Meta’s AI tools and APIs to power your hacks:
+Muse Spark: Meta’s text model for chat, reasoning, and agentic experiences
+Muse Image: Meta’s image-generation model.
+Muse Voice Transcribe: Meta’s real-time audio perception model
+Muse: Meta's first personal AI agent, powered by Muse Spark. You can explore writing connectors, exposing your project's data or actions as a tool Muse can call.
+Facebook Graph API: Access public and user-consented data through a developer app.
+
+What to submit
+A working prototype and a 2- to 3-minute demo video showing the project in action.
+A public code repository.
+
+Meta [Hackathon Name] — Meta-Sponsored Track Round 1 Official Rules
+HackMIT — Meta-Sponsored Track Round 1 Official Rules
+No purchase necessary to participate in this Hackathon. A purchase will not increase your chances of winning. Participation does not constitute an offer to buy Meta products or services. Void where prohibited by law.
+Important: Please read these Official Rules, which are a contract, carefully. Without limitation, this contract includes indemnities to the Sponsor from you and a limitation of your rights and remedies. By participating, you agree to be bound by these Official Rules and represent that you satisfy all of the eligibility requirements.
+OVERVIEW
+The HackMIT hackathon (the “Event”) is hosted and operated by Massachusetts Institute of Technology (the “Host”). Within the Event, Meta Platforms, Inc. (“Meta” or “Sponsor”) sponsors a dedicated track (the “Meta-Sponsored Track” or “Hackathon”). These Official Rules govern participation in the Meta-Sponsored Track only. Participation in the broader [Hackathon Name] Event is governed by the Host’s own terms and conditions.
+The Meta-Sponsored Track is a skill-based competition. Winners are determined by the qualitative assessment of judges based on the judging criteria set forth herein, and not by chance. This is Round 1 (“R1”) of a multi-round hackathon series. The prize for winning R1 is an invitation to advance to Round 2 (“R2”), the Meta Final Hackathon, held at Meta’s Menlo Park campus, subject to the eligibility requirements described in the Prizes and Advancement to Round 2 Section below.
+The Sponsor entity for US entrants is: Meta Platforms, Inc., 1 Meta Way, Menlo Park, California 94025. For all other entrants: Meta Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Ireland.
+The Meta-Sponsored Track submissions open on September 19, 2026 at 8:00 am EST and close on September 20, 2026 at 11:00 am EST (the “Submission Period”).
+HOST RELATIONSHIP: HackMIT is hosted and operated by Massachusetts Institute of Technology (“Host”). Meta is a track sponsor only. Meta is not a co-host, co-organizer, or operator of the Event. The Host is solely responsible for all event planning, venue operations, participant safety, and compliance with applicable laws and university policies. Nothing in these Official Rules creates a joint venture, partnership, or agency relationship between Meta and the Host.
+Participants should direct any questions or concerns regarding Event logistics, venue, safety, or general event operations to the Host. Questions regarding the Meta-Sponsored Track, including these Official Rules, judging, and prizes, should be directed to Meta at universityrecruitingpartnerships@meta.com.
+ELIGIBILITY: To be eligible to participate in the Meta-Sponsored Track, an individual must meet all of the following requirements at the time of entry:
+Be at least eighteen (18) years of age and the age of majority in their jurisdiction of residence at the time of entry; Be a registered participant in the HackMIT Event through the Host's registration process; Comply with these Official Rules and any additional terms or conditions posted by the Host for the Event.
+Individuals who reside in, and Organizations that are located in: (i) any country or jurisdiction where United States or local law prohibits participating in or receiving a prize in the Hackathon; or (ii) a country or jurisdiction that is the target of U.S., EU, United Nations, or UK comprehensive trade sanctions (e.g., Crimea, Donetsk, and Luhansk regions of Ukraine, Cuba, North Korea, Iran, and Syria, as such list may be amended) or any trade sanctions administered or enforced by the U.S., EU, United Nations, or UK (each a, “Restricted Jurisdiction”) are not eligible to participate in this Hackathon Individuals and Organizations are not eligible to participate if they are the target of any trade sanctions administered or enforced by the U.S., EU, United Nations, or UK or are acting on behalf of anyone who is the target of such trade sanctions.
+Participation in the Meta-Sponsored Track constitutes the participant's full and unconditional agreement to these Official Rules. Sponsor reserves the right to verify eligibility at any time, and winning is contingent on fulfilling all requirements set forth herein.
+Note: Eligibility to advance to Round 2 is subject to additional requirements described in Section 5 (Prizes & Advancement). Meeting the R1 eligibility requirements does not guarantee eligibility for R2.
+HOW TO ENTER
+
+Form a team or participate individually. Teams may consist of up to 4 members. All team members must individually meet the eligibility requirements in the Eligibility Section above. Each participant may be a member of only one team.
+Build a project. Participants must build a project responsive to the Hackathon Challenge described in the Hackathon Challenge & Winner Selection Section below during the Submission Period.
+Submit the project. By the close of the Submission Period (September 20, 2026 at 11:00 am EST), participants must submit their project to the Meta-Sponsored Track via the designated submission platform at https://plume.hackmit.org/. Participants must submit all of the following: 
+A working demo video (2–3 minutes) showing the project in action;
+A link to a publicly accessible code repository (e.g., GitHub);
+A short written description explaining what was built and the role AI plays in the project.
+Each team or individual may submit only one (1) project to the Meta-Sponsored Track. Multiple submissions by the same participant or team will be disqualified. 
+Late, incomplete, or non-conforming submissions will not be considered. Sponsor is not responsible for any technical failures, delays, or problems that may affect participation, including but not limited to internet connectivity, platform outages, or submission portal issues. The Host is responsible for the Event's technical infrastructure.
+No purchase or payment of any kind is necessary to enter or win. A purchase will not increase a participant's chances of winning.
+HACKATHON CHALLENGE & WINNER SELECTION
+Hackathon Challenge: “Bringing People Closer Together with AI”
+Challenge Description
+This is an open-ended challenge to use AI to bring people closer together and deepen real human connection. Participants should leverage AI to power a meaningful feature of their project. Build the social feature you wish existed, or a fresh way to strengthen a connection you care about.
+What You Can Use:
+You are free to use any technology stack for your hack.
+Each HackMIT 2026 participant is eligible to redeem $50 in free Muse API Credits. Distribution of Muse API credits will be governed by the Meta Model API - Campus Recruiting Events Program Terms, and use of Muse API credits will be governed by the Meta Model API Terms of Service.
+We encourage you to try out and explore Meta’s AI tools and APIs to power your hacks:
+Muse Spark: Meta’s text model for chat, reasoning, and agentic experiences
+Muse Image: Meta’s image-generation model.
+Muse Voice Transcribe: Meta’s real-time audio perception model 
+Muse: Meta's first personal AI agent, powered by Muse Spark. You can explore writing connectors, exposing your project's data or actions as a tool Muse can call.
+Facebook Graph API: Access public and user-consented data through a developer app.
+Winner Selection / Judging Criteria
+All eligible submissions received during the Submission Period will be evaluated by a panel of judges selected by Meta (the “Judges”). The Judges will evaluate each submission based on the following criteria:
+AI Centrality (25%) — How central AI is to the project’s core functionality;
+Human Connection (30%) — How meaningfully the project strengthens real human connection;
+Originality (20%) — Creativity and novelty of the idea;
+Execution & Demo Quality (25%) — How complete and convincing the demo is.
+The Judges’ decisions are final and binding on all matters relating to the Meta-Sponsored Track. The top three (3) teams, as determined by the Judges, will be selected as winners (“Winners”). Sponsor reserves the right to select fewer than three (3) Winners if an insufficient number of eligible, qualifying submissions are received.
+PRIZES & ADVANCEMENT TO ROUND 2
+Round 1 Prizes
+The top three (3) teams in the Meta-Sponsored Track will be selected by the Judges to receive the following:
+Meta Swag Bag: Each member of a winning team will receive a Meta-branded swag bag. Approximate Retail Value ("ARV"): $75 per person. 
+Invitation to Advance to Round 2 (conditional): Each member of a winning team will receive an invitation to advance to the Meta Round 2 Final Hackathon at Meta's Menlo Park campus. Participants who meet the R2 Eligibility Requirements (noted below) will be provided travel (round-trip economy airfare or equivalent ground transportation from participant's departure city) and accommodations (hotel for the duration of the R2 event, plus meals during the event). ARV of the trip: $2,000 per person, depending on departure city.
+Important: Selection as a top-three team in R1 constitutes an invitation to advance to Round 2, not a guarantee. Advancement to R2 is subject to each individual participant meeting ALL of the R2 Eligibility Requirements described below.
+Round 2 Eligibility Requirements
+To be eligible to advance to Round 2, each individual member of a winning R1 team must satisfy all of the following conditions:
+Be eighteen (18) years of age or older at the time of the R2 event;
+Be active in Meta's recruiting pipeline AND pass Meta's online coding assessment;
+Meet Meta's immigration requirements for recruiting. Eligibility for R2 is tied to Meta's standard recruiting immigration review. If a participant does not clear immigration review during the recruiting process, they will be dispositioned from the recruiting process, making them ineligible to participate in R2.
+Meta reserves the right to verify R2 eligibility at any time and to disqualify any participant who does not meet the R2 Eligibility Requirements. If any member of a winning team does not meet the R2 Eligibility Requirements, that individual will not be permitted to advance to R2; however, the remaining eligible team members may still advance, at Meta's discretion. No substitutions or transfers of the R2 invitation are permitted.
+If a winning team member is disqualified or otherwise unable to advance to R2, the R2 trip prize associated with that individual will not be awarded, and no cash equivalent or alternative prize will be provided. The Meta swag bag, once awarded at R1, will not be affected.
+General Prize Conditions
+One (1) prize maximum per person. Released Parties are not responsible for, and Winner will not receive, the difference between the actual value of the prize at the time of award and the stated ARV in these Official Rules or in any Hackathon-related correspondence or materials. The "Released Parties" means Meta Platforms, Inc. and Meta Ireland Limited (collectively, "Sponsor"), together with their respective parent, subsidiary, and affiliated companies, and each of their officers, directors, employees, agents, representatives, consultants, contractors, legal counsel, prize providers, administrators, and advertising, promotional, and marketing agencies.  Sponsor is not responsible for a Winner’s inability to accept or use the prize for any reason. Prize details will be decided at Sponsor's sole discretion.  Prizes will be distributed after the Hackathon ends. Any taxes and other costs and expenses associated with prize acceptance or use and not specified in these Official Rules as being part of the prize will be the sole responsibility of the Winner. Winner(s) may be issued a tax form for the actual value of the prize. No more than the stated prize will be awarded. Sponsor will not replace any lost, mutilated, or stolen prize or prize elements or any prize that are undeliverable or do not reach a Winner because of an incorrect or changed contact information. If Winner does not accept or use the entire prize, the unaccepted or unused part of the prize will be forfeited, and Sponsor will have no further obligation with respect to that prize or portion of the prize. No transfers, prize substitutions, or cash redemptions will be made, except at Sponsor’s sole discretion. Winner is strictly prohibited from selling, auctioning, trading, or otherwise transferring any part of the prize, except with Sponsor’s permission, which may be granted or withheld for any reason in its sole discretion. Sponsor reserves the right to substitute any prize or portion thereof with another prize or portion thereof of equal or greater value for any reason, including unavailability of the stated prize. Each Participant waives the right to assert as a cost of winning any prize any and all costs of verification and redemption or and any liability and publicity which might arise from claiming or seeking to claim said prize.
+
+
+
+

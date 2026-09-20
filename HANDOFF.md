@@ -10,8 +10,9 @@ why. Most entries here cost hours to find and minutes to fix once known.
 > and date anything time-sensitive. A stale handoff is worse than none, because it is
 > trusted. Commit it alongside the code it describes, never separately.
 
-Links into `hardware-demo/meta-android/vendor/CameraAccess/` 404 on a fresh clone: that
-tree is generated. Run `python3 hardware-demo/meta-android/prepare.py` first.
+The active capture app is now `hardware-demo/phone-android/` and uses the phone camera
+directly. `hardware-demo/meta-android/` is retained only as the previous Meta glasses
+experiment; its generated `vendor/` tree is not needed for the current demo.
 
 ---
 
@@ -22,12 +23,29 @@ tree is generated. Run `python3 hardware-demo/meta-android/prepare.py` first.
 | Detector | **Working.** Calibrates, fires at z ≈ +13 against a +0.6 baseline after 4 consecutive windows. |
 | Backend ↔ phone | **Working.** Commands round-trip; the phone acknowledges. |
 | EEG → stop → upload → carousel | **Working end to end.** Four clips captured this way. |
-| Audio in clips | **Working** since 2026-09-19. AAC 44.1 kHz mono alongside HEVC video. |
+| Audio in clips | **Verified on the S23.** The uploaded 10.02s MP4 reports H.264 video plus MPEG-4 AAC audio (128 kbps). |
+| Standalone phone-camera app | **Working on a physical Samsung S23.** Pair, camera-off idle, open/record, close, and upload were observed end to end. |
 | Web app | **Working**, but only as a production build. See *next dev does not hydrate*. |
-| Capture from the browser | **Working.** `/live` records a fixed 10s clip on demand. |
+| Capture from the browser | `/live` has Demo surprise / Demo neural spike with 10s or 30s capture. The server-owned timer and 10s physical-phone path are verified. |
 | Calibration learning curve | **Measured.** 108 subjects, Crown's exact electrodes. |
 | Real Crown EEG | **Never connected.** All EEG so far is synthetic. |
-| Real Ray-Ban Meta glasses | **Never connected.** Mock Device Kit only. |
+| Meta glasses | **Removed from the active path.** Old client retained for reference only. |
+| Meta Muse / MongoDB | **Planned, not implemented.** See the sponsor table in the root README. |
+
+### On-demand capture update (2026-09-19)
+
+- Pairing starts only backend polling; Android opens its camera on a recording command
+  and releases it after finalization. Verified over wireless ADB on an SM-S911W / S23.
+- 23 backend tests pass, including timed captures without EEG, start-ack timing,
+  duplicate acknowledgements and stale timers. Frontend lint and production build pass.
+- An isolated HTTP smoke test recorded an actual FFmpeg test-pattern MP4, issued stop
+  after 10.11 seconds and uploaded it into the moment library with a matching recording
+  ID. This tested the timer/upload plumbing, not the physical phone camera.
+- A subsequent physical-phone run paired with the camera off, connected Camera2 only for
+  a 10-second surprise moment, disconnected it on stop, and uploaded a 10.02-second,
+  7.5 MB H.264/AAC MP4 with the matching recording ID.
+- Live-page rendering and the 10s/30s selector were checked in Safari. The home hero and
+  carousel were inspected with temporary test moments, separate from the real gallery.
 
 ---
 
@@ -41,8 +59,8 @@ export DEMO_TOKEN="<token>"
 confusion-detector/.venv/bin/python hardware-demo/run.py serve \
   --source synthetic --recorder phone --host 0.0.0.0 --port 8771
 
-# 2. Continuous EEG. Without this, every capture is refused with
-#    "complete calibration with a connected EEG source first".
+# 2. Optional EEG stream for the legacy EEG-stop experiment.
+#    The website's timed demo captures work without it.
 confusion-detector/.venv/bin/python hardware-demo/feed_synthetic.py stream
 
 # 3. Web app — BUILD, do not use next dev
@@ -53,43 +71,40 @@ BACKEND_URL=http://127.0.0.1:8771 DEMO_TOKEN="<token>" npx next start -H 0.0.0.0
 cd <apk dir> && python3 -m http.server 8000 --bind 0.0.0.0
 ```
 
-Then on the phone, **in this order** — each step gates the next:
+Then open **MemoryPalace Camera** and tap **Pair Meta glasses**. The short pairing sequence
+is deliberately simulated; it connects to the backend while leaving the camera off.
+Grant Camera and Microphone when Android asks and wait for
+`Session connected · camera off · ready for a moment`.
 
-1. Open the app. If on Home, tap **Register**. *Nothing polls from the Home screen.*
-2. Debug menu → Mock Device Kit → pair → **Power, Donned, Unfolded** all on → camera
-   source (grant CAMERA when asked).
-3. Close the sheet → **Start session**. Until a session exists the Preview and Record
-   controls are **invisible**, not greyed out.
-4. **Preview** → wait for live video. Record becomes tappable; that flag is exactly what
-   the backend needs.
+On `/live`, choose **10s** or **30s**, then **Demo surprise** or **Demo neural spike**.
+`POST /recording/capture` accepts `seconds` and `demo_event` (`surprise` or `load`) and
+does not require EEG calibration. Its timer begins after the phone's start acknowledgement
+and stops the clip even if the browser closes. The phone releases its camera on stop.
+The UI reports success only when the uploaded moment's `recordingId` matches the capture.
 
-Then either press **Capture the next 10 seconds** on `/live`, or run
-`feed_synthetic.py trigger` for the EEG-triggered path.
+The older `feed_synthetic.py trigger` path still uses calibrated EEG to stop an open clip.
 
 ### Driving a capture from the terminal
 
 ```bash
 feed_synthetic.py calibrate   # backend only, never touches the phone
-# start Preview on the phone HERE — not before
+# confirm the phone app says Ready
 feed_synthetic.py trigger     # start, raise theta/alpha, stop, verify
 ```
 
-The order is not arbitrary: the phone's stop handler calls `stopStreaming()`
-unconditionally, so **every completed clip kills the preview**. It must be restarted
-before each run.
-
 ---
 
-## Rebuilding the APK
+## Building the phone-camera APK
 
 ```bash
-cd hardware-demo/meta-android/vendor/CameraAccess
 export JAVA_HOME=/opt/homebrew/opt/openjdk@17
 export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
-export GITHUB_TOKEN="$(gh auth token)"
 export DEMO_BACKEND_URL="http://<LAPTOP_LAN_IP>:8771"
 export DEMO_TOKEN="<same token the backend uses>"
-./gradlew assembleDebug --no-daemon      # ~87 MB, ~6 min cold
+cd hardware-demo/phone-android
+./gradlew assembleDebug --no-daemon
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb shell am start -n org.hackmit.memorypalace.phone/.MainActivity
 ```
 
 **`DEMO_BACKEND_URL` and `DEMO_TOKEN` are compiled in.** Changing network or token means
@@ -98,7 +113,7 @@ working". Verify what landed:
 
 ```bash
 grep -E "DEMO_BACKEND_URL|DEMO_TOKEN" \
-  app/build/generated/source/buildConfig/debug/com/meta/wearable/dat/externalsampleapps/cameraaccess/BuildConfig.java
+  app/build/generated/source/buildConfig/debug/org/hackmit/memorypalace/phone/BuildConfig.java
 ```
 
 Environment that had to be installed (none of it existed):
@@ -107,7 +122,6 @@ Environment that had to be installed (none of it existed):
 |---|---|---|
 | JDK 17+ | `brew install openjdk@17` | Machine had Java 11. Keg-only, so set `JAVA_HOME`; `/usr/libexec/java_home` still reports only 11 and that is fine. |
 | Android SDK | `brew install --cask android-commandlinetools` | Then `sdkmanager --install "platform-tools" "platforms;android-36" "build-tools;36.0.0"`. |
-| `read:packages` | `gh auth refresh -h github.com -s read:packages` | Meta's SDK is on GitHub Packages, which needs auth **even for public artifacts**. |
 | pyriemann | `eeg-neural-signal-processing/.venv/bin/python -m pip install pyriemann` | For the learning curve. Note that venv's `pip` shim has a stale shebang — use `python -m pip`. |
 
 ---
@@ -123,9 +137,10 @@ adb connect <phone-ip>:<connect-port>  # different port, on the main wireless-de
 
 adb -s <device> install -r app-debug.apk
 adb -s <device> exec-out screencap -p > screen.png   # read the screen directly
-adb -s <device> shell input tap <x> <y>              # Preview sits at ~(215, 1988) on an S23
-adb -s <device> shell pm grant <pkg> android.permission.CAMERA
-adb -s <device> logcat -s "CameraAccess:CameraViewModel" "HackMIT"
+adb -s <device> shell pm grant org.hackmit.memorypalace.phone android.permission.CAMERA
+adb -s <device> shell pm grant org.hackmit.memorypalace.phone android.permission.RECORD_AUDIO
+adb -s <device> shell am start -n org.hackmit.memorypalace.phone/.MainActivity
+adb -s <device> logcat -s MemoryPalacePhone
 ```
 
 **Android assigns a new connect port every time wireless debugging is toggled**, so a
@@ -230,6 +245,10 @@ meant nothing merged at all.
 
 ### 5. Phone never reached the backend — the long one
 
+The remainder of this section through error 10 describes the now-archived Meta sample
+client. Keep it as historical debugging context, but do not use its UI steps for the
+standalone phone-camera app.
+
 Four hypotheses, three wrong, recorded because the wrong ones cost the most:
 
 | Hypothesis | Verdict |
@@ -295,18 +314,19 @@ before `init`.
 
 1. **No real EEG.** Every run used synthetic signal. This is the biggest gap between
    "the plumbing works" and "the system works".
-2. **No real glasses.** Mock Device Kit only. Bluetooth pairing, real latency and real
-   battery behaviour are all unexercised.
-3. **Each clip kills the preview**, so it must be restarted between captures. Automating a
-   preview restart after stop would make repeated capture hands-free.
-4. **Recordings land in `cacheDir`**, which Android may delete under storage pressure.
-   Upload-on-stop mitigates this but does not remove it.
-5. **Build config is machine- and network-specific** — the laptop IP is compiled into the
+2. **Repeat/open-close soak testing is still outstanding.** One physical S23 capture passed;
+   longer runs and repeated 10s/30s cycles still need measurement.
+3. **Build config is machine- and network-specific** — the laptop IP is compiled into the
    APK. Any network change invalidates the installed build.
-6. **Nothing is pushed.** All work is local commits on `main`. A teammate pulling now gets
-   a version where the web app does not even start.
-7. **Audio is the phone's mic** in mock mode. With real glasses it would be theirs;
-   transcription has not been attempted on either.
+4. **Recordings live in the app's external files directory** until uploaded. There is no
+   retention cleanup yet.
+5. **Audio remains inside the uploaded MP4.** The active build intentionally has no
+   speech-to-text provider. Existing catalog text is preserved, and future visual description
+   can enrich moments without changing or deleting the source videos.
+6. **Elastic is implemented but not credentialled in the live project yet.** When Elastic is
+   absent, moments remain available from `hardware-demo/library/moments.json` and its stable media
+   directory. Writes are atomic, the previous catalog generation is retained as `.bak`, and older
+   run media is imported idempotently without deleting its source. MongoDB and Muse remain planned.
 
 ## Secrets
 

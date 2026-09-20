@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EventLabel } from "@/components/ui/EventLabel";
+import { IntensityDot } from "@/components/ui/IntensityDot";
 import { formatConfidence, formatTimeWithSeconds } from "@/lib/format";
 import type { Moment } from "@/types/moment";
 
@@ -11,6 +12,7 @@ export function MomentMedia({ moment }: { moment: Moment }) {
 
   return (
     <section className="relative aspect-[16/9] w-full overflow-hidden bg-black lg:aspect-[21/9]">
+      <IntensityDot value={moment.confidence} showLabel className="absolute left-5 top-5 z-20 md:left-8 md:top-8" />
       {!imageFailed ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -41,7 +43,7 @@ export function MomentMedia({ moment }: { moment: Moment }) {
         />
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[12px] text-fg-dim">
           <span>{formatTimeWithSeconds(moment.timestamp)}</span>
-          <span>{formatConfidence(moment.confidence)} Event Confidence</span>
+          <span>{formatConfidence(moment.confidence)} Spike Intensity</span>
         </div>
       </div>
     </section>

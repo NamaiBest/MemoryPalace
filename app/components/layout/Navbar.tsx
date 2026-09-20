@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
+import { DateSwitcher } from "@/components/layout/DateSwitcher";
 
 const LINKS = [
   { href: "/", label: "Home" },
@@ -18,21 +19,22 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 h-16",
+        "fixed inset-x-0 top-0 z-50 min-h-20",
         isHome
-          ? "bg-gradient-to-b from-black/55 to-transparent"
+          ? "border-b border-white/5 bg-bg/35 backdrop-blur-xl"
           : "border-b border-line bg-bg/80 backdrop-blur-md",
       )}
     >
-      <nav className="mx-auto flex h-full max-w-[1500px] items-center justify-between px-5 md:px-8">
+      <nav className="mx-auto flex min-h-20 max-w-[1500px] flex-wrap items-center justify-between gap-x-8 gap-y-4 px-6 py-5 md:px-12">
         <Link
           href="/"
-          className="font-serif text-[1.35rem] tracking-[0.14em] text-fg"
+          className="font-serif text-2xl tracking-[0.04em] text-fg"
         >
-          MEMORYPALACE
+          MemoryPalace
         </Link>
-        <ul className="flex items-center gap-7 md:gap-10">
-          {LINKS.map((link) => {
+        <div className="flex flex-wrap items-center justify-end gap-4 md:gap-7">
+          <ul className="flex items-center gap-5 sm:gap-8 md:gap-10">
+            {LINKS.map((link) => {
             const active =
               link.href === "/"
                 ? pathname === "/"
@@ -43,7 +45,7 @@ export function Navbar() {
                   href={link.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "relative text-[11px] tracking-[0.16em] uppercase transition-colors",
+                    "relative py-2 text-sm transition-colors",
                     active ? "text-fg" : "text-fg-dim hover:text-fg",
                   )}
                 >
@@ -54,8 +56,10 @@ export function Navbar() {
                 </Link>
               </li>
             );
-          })}
-        </ul>
+            })}
+          </ul>
+          <DateSwitcher />
+        </div>
       </nav>
     </header>
   );

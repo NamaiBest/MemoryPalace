@@ -15,8 +15,23 @@ data/
 *.edf
 
 # Local hardware sessions and credentials
+.env
+.env.local
+*.env.local
 hardware-demo/runs/
+hardware-demo/library/
 hardware-demo/crown/node_modules/
 hardware-demo/crown/.env
 hardware-demo/meta-android/vendor/
 hardware-demo/meta-android/local.properties
+hardware-demo/phone-android/local.properties
+hardware-demo/phone-android/.gradle/
+hardware-demo/phone-android/app/build/
+
+# Video production assets: Blender sources and ~1000 rendered frames, 1.4 GB. Not
+# referenced by any code, and one file exceeds GitHub's 100 MB hard limit. Kept on
+# disk, never in git. Use Git LFS or external storage if these must be shared.
+video/
+
+# Android build output
+hardware-demo/phone-android/build/

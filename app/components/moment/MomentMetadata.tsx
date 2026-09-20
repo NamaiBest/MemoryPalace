@@ -1,4 +1,5 @@
 import { ModalityPills } from "@/components/ui/ModalityPills";
+import { IntensityDot } from "@/components/ui/IntensityDot";
 import {
   formatConfidence,
   formatContextWindow,
@@ -6,7 +7,7 @@ import {
   formatMomentNumber,
   formatTimeWithSeconds,
 } from "@/lib/format";
-import { eventLabel, STATUS_LABELS } from "@/lib/labels";
+import { momentTitle, STATUS_LABELS } from "@/lib/labels";
 import type { Moment } from "@/types/moment";
 
 export function MomentMetadata({ moment }: { moment: Moment }) {
@@ -17,10 +18,10 @@ export function MomentMetadata({ moment }: { moment: Moment }) {
           {formatMomentNumber(moment.sequence)}
         </p>
         <h1 className="mt-3 font-serif text-3xl md:text-4xl">
-          {eventLabel(moment.eventType)}
+          {momentTitle(moment)}
         </h1>
         <p className="mt-4 max-w-2xl text-base leading-7 text-fg-dim">
-          {moment.summary}
+          {moment.aiDescription ?? moment.summary}
         </p>
       </div>
       <dl className="grid grid-cols-2 gap-x-6 gap-y-5 text-sm md:grid-cols-1">
@@ -35,9 +36,10 @@ export function MomentMetadata({ moment }: { moment: Moment }) {
         </div>
         <div>
           <dt className="text-[10px] tracking-[0.18em] uppercase text-fg-mute">
-            Event Confidence
+            Spike Intensity
           </dt>
-          <dd className="mt-1 font-mono text-fg">
+          <dd className="mt-1 flex items-center gap-2 font-mono text-fg">
+            <IntensityDot value={moment.confidence} />
             {formatConfidence(moment.confidence)}
           </dd>
         </div>

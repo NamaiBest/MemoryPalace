@@ -1,14 +1,14 @@
 import type { EEGInfo } from "@/types/moment";
 
 export const EEG_CHANNEL_NAMES = [
-  "Fp1",
-  "Fp2",
+  "CP3",
   "C3",
+  "F5",
+  "PO3",
+  "PO4",
+  "F6",
   "C4",
-  "P7",
-  "P8",
-  "O1",
-  "O2",
+  "CP4",
 ] as const;
 
 function mulberry32(seed: number): () => number {

@@ -29,6 +29,15 @@ export function eventLabel(type: EventType): string {
   return EVENT_LABELS[type];
 }
 
+export function momentTitle(moment: Moment): string {
+  const semantic = moment.semanticTitle?.trim();
+  if (semantic) return semantic;
+  if (moment.demo) {
+    return moment.eventType === "surprise" ? "Unexpected moment" : "Neural spike moment";
+  }
+  return EVENT_SHORT_LABELS[moment.eventType] + " moment";
+}
+
 export function getModalities(moment: Moment): Modality[] {
   const modalities: Modality[] = [];
   if (moment.eeg) modalities.push("eeg");

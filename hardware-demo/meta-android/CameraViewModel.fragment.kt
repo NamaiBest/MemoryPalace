@@ -41,8 +41,8 @@
         check(!videoRecorder.isRecording.value) { "A recording is already running" }
         demoRecordingId = id
         demoSavedUri = null
-        // Audio on: the captured clip is intended for transcription later, and a
-        // video-only file cannot be transcribed after the fact. Needs RECORD_AUDIO
+        // Audio stays embedded in the captured MP4 for future playback or enrichment.
+        // Needs RECORD_AUDIO
         // granted, otherwise the recorder falls back to video-only on its own.
         _uiState.update { it.copy(activePreview = null, includeAudioInStream = true) }
         videoRecorder.setIncludeAudio(true)
@@ -95,4 +95,3 @@
       else -> error("Unsupported command")
     }
   }
-
