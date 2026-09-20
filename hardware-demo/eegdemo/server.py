@@ -373,9 +373,16 @@ def create_server(runtime, host="127.0.0.1", port=8771):
                         result = runtime.acknowledge(body)
                     elif self.path == "/markers":
                         label = body.get("label")
-                        if label not in ("easy_start", "hard_start", "task_end", "blink", "jaw_clench", "head_movement"):
+                        if label not in ("easy_start", "hard_start", "task_end", "blink", "jaw_clench", "head_movement",
+                                         # Oddball calibration: stimulus onsets and session bounds, so
+                                         # each EEG window can be labelled standard vs target afterwards.
+                                         "calibration_start", "calibration_end",
+                                         "oddball_standard", "oddball_target"):
                             raise ValueError("unsupported task/artifact marker")
                         result = {"label": label, "last_sample_end_ms": runtime.pipeline.expected_ms}
+                        detail = body.get("detail")
+                        if isinstance(detail, dict):
+                            result["detail"] = detail
                         runtime.emit("task_marker", result)
                     else:
                         return self.send(404, {"error": "not found"})

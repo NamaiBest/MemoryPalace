@@ -310,6 +310,33 @@ before `init`.
 
 ---
 
+## Calibration: visual oddball on /debug (2026-09-19)
+
+A block on the diagnostics page for measuring a wearer's response floor and ceiling.
+A count runs up (the standard); on 30% of trials a letter replaces it (the target) and
+the wearer presses space. Targets evoke a P300, standards do not, so EEG recorded
+through a block gives the two amplitudes a detection threshold must sit between — for
+this wearer, today.
+
+Parameters follow PMC12907112 (*Decoding P300 as a shared neural mechanism for oddball
+target detection and working memory updating*): 30% targets, 500 ms stimulus then
+1500 ms fixation, button press on targets, P300 at Pz in 250–650 ms. That paper used
+X/O; numbers versus letters keeps the same standard/deviant structure with a more
+legible standard. Blocks of 30, 60 (default) or the paper's 180.
+
+**Every onset is posted to the backend as a marker** (`oddball_standard` /
+`oddball_target`, with `calibration_start` / `calibration_end` bounding the block) and
+lands in the session's `events.jsonl` with trial index, stimulus and onset time, so EEG
+windows can be labelled afterwards. Measured cadence holds within ~7 ms of 2000 ms.
+The trial log is also exportable as JSON from the page, in case the backend is off.
+
+To read the result: compare the detector's z-scores in the 250–650 ms window after
+targets against those after standards. That spread is the wearer's dynamic range.
+
+Implementation is additive: a new component, a new `/api/markers` proxy, two lines in
+`DebugPage.tsx`, and four labels added to the backend's marker allowlist plus an
+optional `detail` payload. Nothing else was touched.
+
 ## Open issues
 
 1. **No real EEG.** Every run used synthetic signal. This is the biggest gap between

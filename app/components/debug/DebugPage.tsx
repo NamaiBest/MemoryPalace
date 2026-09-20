@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { formatFull, formatRelative, TIME_ZONE_LABEL } from "@/lib/format";
+import { OddballCalibration } from "@/components/debug/OddballCalibration";
 import type { Moment } from "@/types/moment";
 
 const POLL_MS = 2000;
@@ -197,6 +198,8 @@ export function DebugPage() {
           hint="Clips uploaded from the phone and turned into moments."
         />
       </section>
+
+      <OddballCalibration />
 
       {eeg?.last_window ? (
         <section className="mb-10 border border-line bg-bg-panel px-5 py-2">
