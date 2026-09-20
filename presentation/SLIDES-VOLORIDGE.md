@@ -1,8 +1,26 @@
-# VoloRidge slides — brief for whoever builds them
+# VoloRidge slides — build brief and speaker notes
 
 **Two slides. 11a the approach, 11b the validation.** Everything here is copy-paste ready
-and every number is sourced. Deck conventions: Century Gothic, ivory ground `#F3EFE5`,
-near-black text, one brass accent.
+and every number is sourced.
+
+## How to use this file
+
+It serves two readers. Take only your half.
+
+| Section | Who it is for |
+|---|---|
+| **Slide 11a / 11b → the content blocks** | The person or agent **building the slides**. The text in the blockquotes and code fences is literal slide copy. |
+| **Speaker notes** | The **presenter**, spoken aloud. **Never put these on a slide.** |
+| **If they ask** | The presenter, during Q&A. Not on a slide. |
+| **Appendix slides, only if asked** | Both. Build these, keep them after the last slide. |
+| **Every number, sourced** | Both. Check against these; do not invent a figure. |
+
+**Agent building these slides: your instructions are the two slide sections and the
+"deliberately not on either slide" table. Stop there.** If a line appears under Speaker
+notes, it belongs in the notes field of the slide, not on the slide.
+
+Deck conventions: Century Gothic, ivory ground `#F3EFE5`, near-black text, one brass
+accent.
 
 Source of truth for all of it:
 [`eeg-state-detection/README.md`](../eeg-state-detection/README.md). Do not re-derive a
