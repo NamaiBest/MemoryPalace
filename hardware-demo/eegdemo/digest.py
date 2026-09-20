@@ -56,8 +56,26 @@ class DailyDigest:
         # does: Gmail on 587 and 465 are both unreachable while HTTPS is fine. An HTTPS
         # mail API therefore works where smtplib cannot, and takes precedence when a key
         # is present.
-        self.api_key = os.environ.get("RESEND_API_KEY", "").strip()
-        self.api_url = os.environ.get("RESEND_URL", "https://api.resend.com/emails")
+        # Two providers, because their free tiers differ in the one way that matters
+        # here. Resend will not send to anyone but the account owner until a whole
+        # domain is verified, which needs a domain and DNS access. Brevo verifies a
+        # single sender address instead, so an ordinary Gmail address is enough to mail
+        # other people. Whichever key is present wins, Brevo first.
+        self.brevo_key = os.environ.get("BREVO_API_KEY", "").strip()
+        self.resend_key = os.environ.get("RESEND_API_KEY", "").strip()
+        self.api_key = self.brevo_key or self.resend_key
+        self.provider = "brevo" if self.brevo_key else ("resend" if self.resend_key else None)
+        self.api_url = (os.environ.get("BREVO_URL", "https://api.brevo.com/v3/smtp/email")
+                        if self.brevo_key
+                        else os.environ.get("RESEND_URL", "https://api.resend.com/emails"))
+        # Favourite recipients come from the environment rather than the source, so no
+        # personal address is committed. Format: "Mom=a@b.com,Sam=c@d.com".
+        self.contacts = []
+        for entry in os.environ.get("MEMORYPALACE_CONTACTS", "").split(","):
+            label, _, address = entry.partition("=")
+            label, address = label.strip(), address.strip()
+            if label and "@" in address:
+                self.contacts.append({"label": label[:24], "address": address[:254]})
         self.state = Path(state_dir or ".") / "digest-state.json"
         self.last_error = None
 
@@ -78,6 +96,7 @@ class DailyDigest:
     def status(self):
         return {"enabled": self.enabled, "hour": self.hour,
                 "deliverable": self.deliverable, "transport": self.transport,
+                "provider": self.provider, "contacts": self.contacts,
                 "recipientConfigured": bool(self.recipient),
                 "smtpConfigured": bool(self.host),
                 "lastSent": self._last_sent(), "error": self.last_error}
@@ -216,20 +235,31 @@ class DailyDigest:
     # ---------------------------------------------------------------- delivery
     def _send_https(self, to, subject, body, files=()):
         """Post the mail through an HTTPS API, for networks that block SMTP."""
-        payload = {"from": f"MemoryPalace <{self.sender}>", "to": [to],
-                   "subject": subject, "text": body}
-        if files:
-            payload["attachments"] = [
-                {"filename": f["filename"],
-                 "content": base64.b64encode(f["content"]).decode("ascii")}
-                for f in files]
+        if self.provider == "brevo":
+            payload = {"sender": {"email": self.sender, "name": "MemoryPalace"},
+                       "to": [{"email": to}], "subject": subject, "textContent": body}
+            if files:
+                payload["attachment"] = [
+                    {"name": f["filename"],
+                     "content": base64.b64encode(f["content"]).decode("ascii")}
+                    for f in files]
+            auth = {"api-key": self.api_key}
+        else:
+            payload = {"from": f"MemoryPalace <{self.sender}>", "to": [to],
+                       "subject": subject, "text": body}
+            if files:
+                payload["attachments"] = [
+                    {"filename": f["filename"],
+                     "content": base64.b64encode(f["content"]).decode("ascii")}
+                    for f in files]
+            auth = {"Authorization": f"Bearer {self.api_key}"}
         request = urllib.request.Request(
             self.api_url, data=json.dumps(payload).encode(), method="POST",
-            headers={"Authorization": f"Bearer {self.api_key}",
+            headers={**auth,
                      "Content-Type": "application/json",
                      # Without an explicit agent, urllib sends "Python-urllib/3.x",
-                     # which the API's edge blocks with a Cloudflare 1010 before the
-                     # request ever reaches Resend. The key was never the problem.
+                     # which a provider edge blocks with a Cloudflare 1010 before the
+                     # request ever reaches it. The key is never the problem.
                      "User-Agent": "MemoryPalace/1.0",
                      "Accept": "application/json"})
         try:

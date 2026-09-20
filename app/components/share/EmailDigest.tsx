@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Mail a stretch of days, or the moments you picked, written by Meta Muse Spark.
@@ -12,11 +12,6 @@ import { useState } from "react";
  * Clips are opt in and only ever the ones picked by hand. A day of video is roughly
  * 80 MB and a mailbox rejects anything past 25 MB, so "everything" was never on offer.
  */
-
-const CONTACTS = [
-  { id: "me", label: "Me", address: null },
-  { id: "mom", label: "Mom", address: "namaichannel123@gmail.com" },
-] as const;
 
 const RANGES = [
   { days: 1, label: "1d" },
@@ -33,6 +28,7 @@ export function EmailDigest({
   selectedIds?: string[];
 }) {
   const [contact, setContact] = useState<string>("me");
+  const [saved, setSaved] = useState<{ label: string; address: string }[]>([]);
   const [custom, setCustom] = useState("");
   const [days, setDays] = useState(1);
   const [withClips, setWithClips] = useState(false);
@@ -41,12 +37,22 @@ export function EmailDigest({
   const [note, setNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Favourites are configured on the backend, so no address is baked into this file.
+  useEffect(() => {
+    let live = true;
+    fetch("/api/digest")
+      .then((response) => response.json())
+      .then((body) => { if (live) setSaved(body.contacts ?? []); })
+      .catch(() => undefined);
+    return () => { live = false; };
+  }, []);
+
   const hasSelection = selectedIds.length > 0;
   const picking = withClips && hasSelection;
-  const preset = CONTACTS.find((c) => c.id === contact);
+  const preset = saved.find((c) => c.label === contact);
 
   async function send() {
-    const address = contact === "custom" ? custom.trim() : preset?.address ?? undefined;
+    const address = contact === "custom" ? custom.trim() : preset?.address;
     if (contact === "custom" && !address) {
       setError("Who should it go to?");
       return;
@@ -101,9 +107,13 @@ export function EmailDigest({
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {CONTACTS.map((option) => (
-          <button key={option.id} type="button" onClick={() => setContact(option.id)}
-            aria-pressed={contact === option.id} className={chip(contact === option.id)}>
+        <button type="button" onClick={() => setContact("me")}
+          aria-pressed={contact === "me"} className={chip(contact === "me")}>
+          Me
+        </button>
+        {saved.map((option) => (
+          <button key={option.label} type="button" onClick={() => setContact(option.label)}
+            aria-pressed={contact === option.label} className={chip(contact === option.label)}>
             {option.label}
           </button>
         ))}
@@ -157,7 +167,7 @@ export function EmailDigest({
         {busy ? (
           <><span className="processing-ring h-4 w-4" aria-hidden />Writing and sending…</>
         ) : (
-          `Send recap${preset?.label && contact !== "custom" ? ` to ${preset.label}` : ""}`
+          `Send recap${contact !== "me" && contact !== "custom" ? ` to ${contact}` : ""}`
         )}
       </button>
 
