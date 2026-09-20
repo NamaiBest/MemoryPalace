@@ -28,7 +28,7 @@ export function Navbar() {
       <nav className="mx-auto flex min-h-20 max-w-[1500px] flex-wrap items-center justify-between gap-x-8 gap-y-4 px-6 py-5 md:px-12">
         <Link
           href="/"
-          className="font-serif text-2xl tracking-[0.04em] text-fg"
+          className="font-serif text-[1.6rem] tracking-[0.12em] text-fg"
         >
           MemoryPalace
         </Link>

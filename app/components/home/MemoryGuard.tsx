@@ -34,7 +34,8 @@ const SUGGESTIONS = [
 
 export function MemoryGuard() {
   const { selectedDate } = useMoments();
-  const [open, setOpen] = useState(true);
+  // Starts minimized so the hero and gallery get the space; one tap opens it.
+  const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<GuardStatus>({});
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState<GuardAnswer | null>(null);

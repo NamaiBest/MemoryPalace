@@ -6,6 +6,7 @@ import { HeroMoment } from "@/components/home/HeroMoment";
 import { MomentCarousel } from "@/components/home/MomentCarousel";
 import { MediaBackdrop } from "@/components/media/MediaBackdrop";
 import { useMoments } from "@/context/MomentsProvider";
+import { useCaptureActivity } from "@/lib/useCaptureActivity";
 import { formatDateKey } from "@/lib/format";
 
 export function HomePage() {
@@ -14,6 +15,9 @@ export function HomePage() {
     lastCreatedId ?? visibleMoments[0]?.id ?? "",
   );
   const [seenCreatedId, setSeenCreatedId] = useState(lastCreatedId);
+  // Called here, above the empty-state return, so a first-ever capture is visible even
+  // when there is nothing else to show.
+  const activity = useCaptureActivity(useMemo(() => new Set<string>(), []));
 
   if (lastCreatedId && lastCreatedId !== seenCreatedId) {
     setSeenCreatedId(lastCreatedId);
@@ -62,6 +66,15 @@ export function HomePage() {
               ? "Choose another day or return to the complete collection. Your saved memories have not been removed."
               : "Capture a little of your day. Your moments will be waiting here, ready to watch, remember, and make your own."}
           </p>
+          {activity && !selectedDate ? (
+            <div role="status" aria-live="polite" className="mt-8 inline-flex items-center gap-3 rounded-full border border-accent/40 bg-accent/10 px-5 py-3 text-sm text-fg">
+              <span className="processing-ring h-4 w-4" aria-hidden />
+              {activity.phase === "recording"
+                ? `Recording${activity.remaining !== null ? ` · ${activity.remaining}s left` : ""}`
+                : activity.phase === "stopping" ? "Saving the clip…" : "Uploading from the phone…"}
+              <span className="text-fg-mute">— your first moment is on its way.</span>
+            </div>
+          ) : null}
           <div className="mt-9 flex flex-wrap gap-4">
             {selectedDate ? (
               <button type="button" onClick={() => setSelectedDate(null)}

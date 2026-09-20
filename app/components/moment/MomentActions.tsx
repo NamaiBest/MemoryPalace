@@ -22,7 +22,7 @@ export function MomentActions({ moment }: { moment: Moment }) {
         type="button"
         onClick={() => {
           deleteMoment(moment.id);
-          router.push("/explore");
+          router.push("/");
         }}
         className="border border-error/40 px-4 py-2 text-[11px] tracking-[0.18em] uppercase text-error transition-colors hover:bg-error hover:text-bg"
       >

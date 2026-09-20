@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { MomentCard } from "@/components/home/MomentCard";
+import { ProcessingCard } from "@/components/home/ProcessingCard";
+import { useCaptureActivity } from "@/lib/useCaptureActivity";
 import type { Moment } from "@/types/moment";
 
 export function MomentCarousel({
@@ -15,8 +17,17 @@ export function MomentCarousel({
   onSelect: (id: string) => void;
 }) {
   const rowRef = useRef<HTMLDivElement>(null);
+  // Recording ids already in the gallery. A capture whose id is not here yet is still
+  // on its way from the phone, and gets a placeholder card until it lands.
+  const knownIds = useMemo(
+    () => new Set(moments.map((m) => m.recordingId).filter((id): id is string => !!id)),
+    [moments],
+  );
+  const activity = useCaptureActivity(knownIds);
   const [canPrevious, setCanPrevious] = useState(false);
   const [canNext, setCanNext] = useState(false);
+  const splitAt = Math.ceil(moments.length / 2);
+  const rows = [moments.slice(0, splitAt), moments.slice(splitAt)];
 
   useEffect(() => {
     const row = rowRef.current;
@@ -70,16 +81,27 @@ export function MomentCarousel({
       <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-bg to-transparent" />
       <div
         ref={rowRef}
-        className="scrollbar-none flex snap-x snap-mandatory scroll-px-6 gap-5 overflow-x-auto px-6 py-4 md:scroll-px-12 md:gap-6 md:px-12"
+        className="scrollbar-none snap-x snap-mandatory scroll-px-6 overflow-x-auto px-6 py-4 md:scroll-px-12 md:px-12"
       >
-        {moments.map((moment) => (
-          <MomentCard
-            key={moment.id}
-            moment={moment}
-            selected={moment.id === selectedId}
-            onSelect={onSelect}
-          />
-        ))}
+        <div className="w-max space-y-5 md:space-y-6">
+          {rows.map((row, rowIndex) => (row.length > 0 || (rowIndex === 0 && activity)) && (
+            <div
+              key={rowIndex}
+              className="flex gap-5 md:gap-6"
+              aria-label={rowIndex === 0 ? "Newest moments" : "Earlier moments"}
+            >
+              {rowIndex === 0 && activity ? <ProcessingCard activity={activity} /> : null}
+              {row.map((moment) => (
+                <MomentCard
+                  key={moment.id}
+                  moment={moment}
+                  selected={moment.id === selectedId}
+                  onSelect={onSelect}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

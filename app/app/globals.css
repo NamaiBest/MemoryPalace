@@ -111,3 +111,46 @@ body {
     animation: none;
   }
 }
+
+/* Processing shimmer: a band of light sweeping across a placeholder. */
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, var(--accent) 18%, transparent) 50%,
+    transparent 70%
+  );
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.processing-ring {
+  border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-top-color: var(--accent);
+  border-radius: 9999px;
+  animation: ring-spin 0.9s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer::before,
+  .processing-ring {
+    animation: none;
+  }
+}
