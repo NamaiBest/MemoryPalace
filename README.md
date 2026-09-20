@@ -107,6 +107,64 @@ It requires a calibrated EEG stream and is separate from the current on-demand d
 
 ---
 
+## Detection results
+
+Measured on the [Shin 2018 open EEG corpus](https://doc.ml.tu-berlin.de/simultaneous_EEG_NIRS/),
+28 channels, 5 participants, 3 sessions each. Every session is evaluated **walk-forward**:
+the first six blocks calibrate, the last three are scored, and models are frozen and hashed
+before any held-out block is touched. Full method, figures and per-session numbers in
+[`eeg-state-detection/README.md`](eeg-state-detection/README.md); every number below is
+recomputed from the committed `outputs/backtest_state/report.json`.
+
+### Sustained state change: this is what MemoryPalace triggers on
+
+| Sessions | Mean AUROC | Mean balanced accuracy |
+|---|---:|---:|
+| All 15 | 78.7% | 70.6% |
+| **The 8 that beat their own null at p ≤ 0.05** | **91.5%** | **80.0%** |
+| Best participant (VP002, 3 sessions) | 92.5% | 81.5% |
+
+14 of 15 sessions score above chance. The 8-session row is filtered by a **prespecified
+statistical criterion, not by score**: each session's out-of-sample trace is circularly
+shifted against its labels 2000 times, and a session qualifies only if fewer than 5% of
+those shifts match it. Shifting preserves autocorrelation where shuffling would destroy
+it, so the null is honest about how easy the task actually is. All five participants are
+represented in that filtered set.
+
+**AUROC is not accuracy.** It is the chance the model ranks a random task window above a
+random rest window, so 78.7% means it orders that pair correctly 78.7% of the time, where
+a coin flip scores 50%. Balanced accuracy is the number that behaves like accuracy, and it
+is always reported beside it here.
+
+### Brief bursts: not detectable, and that is the finding
+
+| Detector | Participant | Events matched | Random baseline | p |
+|---|---|---:|---:|---:|
+| xDAWN covariance | VP001 | 6/36 | 3.00 [0, 6] | 0.07 |
+| Zigzag persistent homology | VP005 | 6/36 | 3.63 [1, 7] | 0.13 |
+| Mean-amplitude bins | VP002 | 3/36 | 3.15 [0, 6] | 0.63 |
+
+Five methods, four participants, nothing beat randomly thrown flags under the same budget
+and matching tolerance the detector had to obey. Six matches against a baseline of three
+reads as a threefold improvement and sits inside the range of random darts. **Without the
+null we would have shipped it as a result.**
+
+That negative result is the reason the product works the way it does: **MemoryPalace
+captures forward on a persistence filter**, because sustained states survived the analysis
+and instantaneous spikes did not.
+
+### What these numbers are not
+
+- The label is **task versus rest**, a proxy for a state change. Not confusion, not
+  insight, not emotion, and the product never calls it that.
+- On VP002 and VP003 the **eye-only control** reaches 0.88 and 0.85, so ocular
+  contribution is not isolated on those two participants.
+- **Two of five participants are weak**: VP004 averages 65.2% and VP006 66.9%.
+- Weights are **session-specific** and transfer to nobody, which is the technical reason
+  this product is built around per-user adaptation rather than a frozen model.
+
+---
+
 ## Progress
 
 | Stage                                                          | State                                                                                                                                                                                |
