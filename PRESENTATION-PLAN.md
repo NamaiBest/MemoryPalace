@@ -50,7 +50,8 @@ explainers only if asked.
 | 8 | The data, animated | on request | What is frozen before any model is fit. |
 | 9 | Elastic | 0:30 | Built and not built, side by side. |
 | 10 | Meta | 0:30 | Same. |
-| 11 | VoloRidge | 0:30 | Same. |
+| 11a | VoloRidge, the approach | 0:30 | 84 numbers and a logistic regression. Everything more complex lost. |
+| 11b | VoloRidge, the backtest | 0:30 | Grey is chance. The same test killed our best-looking result. |
 | 12 | What we do not claim | 0:15 | "Every end to end run used synthetic EEG." |
 | 13 | What is next | 0:10 | Per user adaptation is the product, not a setup step. |
 | 14 | Appendix, what runs | on request | The phone never talks to the browser. |
@@ -170,11 +171,14 @@ Current status, in one line each:
   understates it. VoloRidge said in person that they judge four things: how you handle the
   data, how you extract signal from noise, **how elegant the result is rather than how
   complex**, and how you validate. The slide should answer those four, in that order.
-  **A complete slide brief, copy-paste ready, is at
-  [`presentation/SLIDE-11-VOLORIDGE.md`](presentation/SLIDE-11-VOLORIDGE.md)**: exact slide content,
-  30-second speaker notes, what to leave off, four likely questions with answers, and the
-  source of every number. The line to land: "We tried the complicated things. They lost.
-  Then we built a test that killed our own best-looking result." 
+  **VoloRidge is now two slides, 11a and 11b**, because one was too crowded for the
+  material. 11a is the approach and the elegance argument; 11b is the backtest and the
+  nulls. A copy-paste brief is at
+  [`presentation/SLIDES-VOLORIDGE.md`](presentation/SLIDES-VOLORIDGE.md): exact content for
+  both, speaker notes, what to leave off, appendix assets, four likely questions with
+  answers, and the source of every number. Call them 11a and 11b rather than renumbering 12
+  to 15. The lines to land: "84 numbers and a logistic regression, and everything more
+  complex lost," then "the same test that validated it killed our best-looking result." 
 
 **Logos.** The slides use a typographic treatment: each sponsor's name set large in its own
 brand colour. If you want real logo art, drop official files into
