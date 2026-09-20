@@ -1,0 +1,13 @@
+{
+ "gate": "16-channel within-subject AUC >= 0.60",
+ "included": 45,
+ "excluded": 6,
+ "excluded_recordings": {
+  "sub-20/SiD": 0.3444,
+  "sub-24/SiB": 0.5833,
+  "sub-25/SiB": 0.4859,
+  "sub-25/SiD": 0.4289,
+  "sub-29/SiB": 0.5496,
+  "sub-33/SiB": 0.5816
+ }
+}
