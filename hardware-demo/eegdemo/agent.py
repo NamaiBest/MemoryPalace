@@ -85,6 +85,114 @@ class MemoryGuard:
                 messages.append("\n".join(parts))
         return messages[-1].strip() if messages else ""
 
+    def day_recap(self, moments, date_label=None):
+        """Read a whole day of moments as one arc, rather than answering a question.
+
+        This is the interpretive end of Memory Guard. answer() is deliberately literal
+        because it is retrieving facts; a recap is useless if it just lists clips back.
+        So this one is allowed to read meaning into what recurs, into where the day was
+        spent, and into how often and how hard the signal fired.
+
+        The line it must not cross is stating an emotion as measured. Intensity ranks
+        attention, it does not diagnose a feeling, so everything inferred has to stay
+        hedged ("suggests", "presumably", "reads like") and everything asserted has to be
+        visible in a clip. That keeps the warmth without inventing a claim the hardware
+        cannot support.
+        """
+        if not self.configured:
+            key = PROVIDERS[self.provider]["key_env"]
+            raise AgentError(f"{self.label} is selected but {key} is not set")
+        if not moments:
+            raise AgentError("there are no moments to recap")
+        context = []
+        for moment in moments[:40]:
+            context.append({
+                "time": moment.get("timestamp"),
+                "title": moment.get("semanticTitle"),
+                "sees": moment.get("aiDescription") or moment.get("summary"),
+                "keywords": moment.get("keywords", []),
+                "topics": moment.get("topics", []),
+                "trigger": moment.get("eventType"),
+                "intensity": moment.get("confidence"),
+                "note": moment.get("annotation", ""),
+            })
+        payload = {
+            "model": self.model,
+            "instructions": (
+                "You are Memory Guard, writing the recap someone reads at the end of the "
+                "day while they are winding down. You are given every moment their "
+                "headset flagged, in order, with what the camera actually saw.\n\n"
+                "Do not list the clips back. Read the day as one arc and interpret it. "
+                "Notice what recurs, where the day was spent, how the settings change, "
+                "and how the triggers cluster in time. Be figurative where it earns its "
+                "place: an object that keeps reappearing, a bottle or a screen or an "
+                "empty chair, is worth reading as something, not just naming.\n\n"
+                "Open with one sentence that characterises the whole day, in the spirit "
+                "of 'the day consisted of varying emotions triggered across several "
+                "venues'. Then two or three short paragraphs walking the arc. Close with "
+                "one reflective line, something worth carrying into tomorrow.\n\n"
+                "Ground rules. Every concrete detail must come from a moment; never "
+                "invent a place, person or object. Spike intensity ranks how much "
+                "something stood out, it is not a measurement of emotion, so you may "
+                "infer mood only as inference and only with hedging like 'suggests', "
+                "'presumably' or 'reads like'. Never diagnose a medical or emotional "
+                "condition. You may reason from the pattern, for example that a dense "
+                "run of strong triggers in one setting presumably reflects a demanding "
+                "stretch. Never mention EEG, electrodes, sensors, capture IDs, indexes "
+                "or this software; the person does not want a system report. Write in "
+                "second person, warm and unhurried, about 180 to 240 words. Do not use "
+                "em dashes or en dashes."
+            ),
+            "input": (
+                f"Day: {date_label or 'the moments below'}\n"
+                f"Total moments flagged: {len(moments)}\n"
+                f"Moments in order: {json.dumps(context, allow_nan=False)}"
+            ),
+            "reasoning": {"effort": self.effort},
+            "max_output_tokens": 2000,
+        }
+        request = urllib.request.Request(
+            self.url,
+            data=json.dumps(payload, allow_nan=False).encode(),
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                result = json.loads(response.read())
+            text = self._output_text(result)
+            if not text:
+                reason = (result.get("incomplete_details") or {}).get("reason")
+                raise AgentError(
+                    f"{self.label} response contained no text"
+                    + (f" ({reason})" if reason else ""))
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode(errors="replace")[:500]
+            self.last_error = f"{self.label} returned HTTP {exc.code}: {detail}"
+            raise AgentError(self.last_error) from exc
+        except (urllib.error.URLError, TimeoutError) as exc:
+            self.last_error = f"{self.label} connection failed: {exc}"
+            raise AgentError(self.last_error) from exc
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            self.last_error = f"{self.label} response failed: {exc}"
+            raise AgentError(self.last_error) from exc
+        self.last_error = None
+        self.emit("day_recap_written", {
+            "provider": self.provider, "model": self.model, "moments": len(context),
+        })
+        return {
+            "answer": text.replace("\u2014", "-").replace("\u2013", "-").strip(),
+            "provider": self.provider,
+            "providerLabel": self.label,
+            "model": self.model,
+            "retrievalEngine": "day-recap",
+            "momentIds": [moment.get("id") for moment in moments[:40]],
+        }
+
     def share_note(self, moments, recipient=None, sender=None):
         """Write a short personal note about the chosen moments, for someone else to read.
 

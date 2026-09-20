@@ -207,6 +207,34 @@ class Runtime:
             return self._local_guard_answer(
                 question, moments, retrieval_engine, date_scope)
 
+    def recap_day(self, body):
+        """Every moment for a day, in order, read as one arc.
+
+        Deliberately not routed through Elastic. Search returns the best few matches for
+        a question, which is the wrong shape here: a recap needs the whole day in the
+        order it happened, including the quiet stretches, or the arc it describes is not
+        the arc the person lived.
+        """
+        date_scope = body.get("date")
+        date_from, date_to = self._date_bounds(date_scope)
+        with self.lock:
+            moments = [dict(moment) for moment in self.library.moments
+                       if moment.get("status") != "deleted"]
+        if date_from:
+            moments = [moment for moment in moments
+                       if date_from <= moment.get("timestamp", "") <= date_to]
+        moments.sort(key=lambda item: item.get("timestamp", ""))
+        if not moments:
+            raise ValueError("there are no moments to recap"
+                             + (f" on {date_scope}" if date_scope else ""))
+        if not self.guard.configured:
+            raise ValueError(
+                f"{self.guard.label} is not configured, so a recap cannot be written")
+        result = self.guard.day_recap(moments, date_scope)
+        result["date"] = date_scope
+        result["momentCount"] = len(moments)
+        return result
+
     def compose_share(self, body):
         """Turn a hand-picked set of moments into a note meant for another person.
 
@@ -437,6 +465,13 @@ def create_server(runtime, host="127.0.0.1", port=8771):
                 body = json.loads(self.rfile.read(length))
                 if not isinstance(body, dict):
                     raise ValueError("JSON body must be an object")
+                if route == "/agent/recap":
+                    # Reads the whole day, so it can take longer than a chat turn and
+                    # must not hold the capture lock while it does.
+                    try:
+                        return self.send(200, runtime.recap_day(body))
+                    except AgentError as exc:
+                        return self.send(503, {"error": str(exc)})
                 if route == "/share/compose":
                     # Meta composition can take seconds; never hold the capture lock.
                     try:

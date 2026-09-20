@@ -48,7 +48,10 @@ type GuardAnswer = {
 type ConversationTurn = { role: "user" | "assistant"; content: string };
 type VoiceState = "idle" | "listening" | "thinking" | "speaking" | "error";
 
+const DAY_RECAP_PROMPT = "Give me the day recap.";
+
 const SUGGESTIONS = [
+  DAY_RECAP_PROMPT,
   "What were my strongest moments?",
   "What was being discussed?",
   "Find something worth revisiting.",
@@ -180,6 +183,7 @@ export function MemoryGuard() {
   const [question, setQuestion] = useState("");
   const [submittedQuestion, setSubmittedQuestion] = useState("");
   const [result, setResult] = useState<GuardAnswer | null>(null);
+  const [recapping, setRecapping] = useState(false);
   const [busy, setBusy] = useState(false);
   const [history, setHistory] = useState<ConversationTurn[]>([]);
   const [voiceState, setVoiceState] = useState<VoiceState>("idle");
@@ -248,11 +252,21 @@ export function MemoryGuard() {
     setSubmittedQuestion(prompt);
     setBusy(true);
     setResult(null);
+    // A recap is a different job from a question. Search ranks the best few matches,
+    // which is the wrong shape for reading a day: the arc needs every moment in the
+    // order it happened, so this one goes to its own endpoint.
+    const wantsRecap = /\b(recap|summar(y|ise|ize)|how was my day|day summary)\b/i
+      .test(prompt);
+    setRecapping(wantsRecap);
     try {
-      const response = await fetch("/api/agent", {
+      const response = await fetch(wantsRecap ? "/api/agent/recap" : "/api/agent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: prompt, date: selectedDate, history }),
+        body: JSON.stringify(
+          wantsRecap
+            ? { date: selectedDate }
+            : { question: prompt, date: selectedDate, history },
+        ),
       });
       const body = (await response.json()) as GuardAnswer;
       if (!response.ok) throw new Error(body.error || "Memory Guard could not answer");
@@ -442,17 +456,20 @@ export function MemoryGuard() {
             </button>
           </div>
         </div>
-        <div className="mt-4 flex flex-wrap gap-2 text-[10px] tracking-[0.12em] uppercase">
-          <span className={`rounded-full border px-2.5 py-1 ${providerReady ? "border-ok/30 bg-ok/10 text-ok" : "border-white/10 text-fg-mute"}`}>
-            {providerReady ? (usingModel ? "Agent ready" : "Grounded local") : "Agent offline"}
-          </span>
-          <span className="rounded-full border border-white/10 px-2.5 py-1 text-fg-dim">
-            {status.elastic?.configured ? "Pre-indexed Elastic" : "Local retrieval"}
-          </span>
-          <span className="rounded-full border border-white/10 px-2.5 py-1 text-fg-dim">
-            {status.voice?.configured ? "Meta voice ready" : "Voice unavailable"}
-          </span>
-        </div>
+        {/* Three permanent pills announcing that everything is fine is furniture, not
+            information, and this panel is small. Only the degraded case is worth the
+            room, because that is the one a person needs to act on. */}
+        {!providerReady || !usingModel || !status.elastic?.configured ? (
+          <div className="mt-3 flex flex-wrap gap-2 text-[10px] tracking-[0.12em] uppercase">
+            <span className="rounded-full border border-white/10 px-2.5 py-1 text-fg-mute">
+              {!providerReady
+                ? "Agent offline"
+                : !usingModel
+                  ? "Grounded local"
+                  : "Local retrieval"}
+            </span>
+          </div>
+        ) : null}
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col gap-4 px-5 py-5">
@@ -509,7 +526,9 @@ export function MemoryGuard() {
                 <span className="pulse-dot h-2 w-2 rounded-full bg-accent" />
                 {voiceState === "thinking"
                   ? "Meta heard you. Searching your memories and preparing a reply…"
-                  : "Searching pre-indexed memories, then writing your answer…"}
+                  : recapping
+                    ? "Reading back your whole day, moment by moment…"
+                    : "Searching your memories, then writing your answer…"}
               </div>
             </div>
           ) : null}
