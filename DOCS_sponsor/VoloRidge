@@ -2,56 +2,87 @@ VoloRidge: Build something interesting using one or more public datasets. We’l
 
 ---
 
-# Our answer: signal, and proof of where there is none
+# Our answer
 
-Full write-up: [`FULFILLMENT_SPONSORS.md` → VoloRidge](../FULFILLMENT_SPONSORS.md#voloridge--public-data-challenge-finding-signal-and-proving-where-there-is-none)
-Code, figures and data: [`eeg-state-detection/`](../eeg-state-detection/README.md)
+Full write-up: [`FULFILLMENT_SPONSORS.md` → VoloRidge](../FULFILLMENT_SPONSORS.md#voloridge--public-data-challenge-a-simple-signal-and-the-nulls-that-test-it)
+Code, figures, data: [`eeg-state-detection/`](../eeg-state-detection/README.md)
+
+**The final model is 84 numbers and a logistic regression. Everything we added on top of it
+lost, except one parameter. We know the signal is real because we built two null
+distributions that could have said otherwise, and on the second problem they did.**
 
 ## The dataset
 
 [Shin et al. 2018, dataset A](https://doc.ml.tu-berlin.de/simultaneous_EEG_NIRS/)
-([Scientific Data](https://doi.org/10.1038/sdata.2018.3)). Open EEG/NIRS corpus, 28 EEG
-channels plus 2 eye channels at 1000 Hz, n-back working-memory task. We use participants
-VP002 to VP006, three sessions each, unmodified, with the experimenters' own markers as
-ground truth. Not committed; `scripts/fetch_shin.py` downloads and CRC-verifies it.
+([Scientific Data](https://doi.org/10.1038/sdata.2018.3)). 28 EEG channels plus 2 eye
+channels at 1000 Hz, n-back working memory. Participants VP002 to VP006, three sessions
+each, unmodified, experimenters' own markers as ground truth. Not committed;
+`scripts/fetch_shin.py` downloads and CRC-verifies it.
 
-## The question
+## Extracting the signal
 
-MemoryPalace triggers a camera from a physiological signal. Can scalp EEG mark a cognitive
-state change well enough to be that trigger, and how would you know you were not fooling
-yourself?
+```text
+28 channels, 200 Hz
+  → regress out the two eye channels          (fitted on a pre-task segment, then frozen)
+  → log power in theta / alpha / beta          (2 s windows, every 0.25 s → 84 numbers)
+  → logistic regression, task vs rest          (regularization chosen on whole blocks)
+  → exponential moving average of the margin   (one parameter: the half-life)
+  → margin ≥ 0 for 3 s becomes an interval
+```
 
-## What we found
+## Elegance: everything more complex lost
 
-**Sustained states: yes.** A session-calibrated task-versus-rest detector reaches mean
-out-of-sample AUROC 0.65 to 0.93 across five participants, with models frozen and hashed
-before any held-out block is scored. **8 of 15 sessions beat a circular time-shift null at
-p ≤ 0.05**, and 14 of 15 are above chance.
+Seven alternatives, each a paired comparison on the same recordings, same windows, same
+folds. Rows are different participants, so this is deliberately not a leaderboard; each row
+is only valid against its own baseline.
 
-**Brief evoked events: no, and the null is how we know.** Five detectors across four
-participants all landed inside the range of randomly placed flags. The sharpest case: a
-zigzag persistent-homology detector matched 6 of 36 targets against a 2 of 36 baseline,
-which reads as a threefold improvement, and the random-placement null puts it at p = 0.13.
-Without the null we would have shipped noise as a result.
+| Added on top of band power | Complexity | Paired result | Kept |
+|---|---|---|:--:|
+| Riemannian covariance + tangent space | 1218 features vs 84 | 22.2 s of rest flagged against 2.0 s | ✗ |
+| EWMA volatility features | 3× features | Better ranking, worse balanced accuracy | ✗ |
+| Broad-band Fourier power | different estimator | A tie, for more machinery | ✗ |
+| 26 one-Hz Fourier bins | 728 features vs 84 | 0.541 vs 0.635 balanced accuracy | ✗ |
+| Bayesian DLM, AR(1) noise | latent state | 0.739 vs 0.791 for a plain moving average | ✗ |
+| Adaptive IMM switching DLM | two regimes | 0.781 vs 0.791 for a plain moving average | ✗ |
+| Zigzag persistent homology | 108 descriptors | p = 0.13 against randomly placed flags | ✗ |
+| **Exponential moving average** | **one parameter** | **7 of 9 whole tasks vs 3 of 9, same weights** | **✓** |
 
-We then froze a protocol, ran it once on a participant no analysis had touched, and the
-rescue attempt failed its own prespecified adoption rule. The protocol, the run and the
-refusal are all committed.
+## Validation
 
-## Why the method is the point
+**Circular time-shift null.** The intact score trace shifted against the labels 2000 times
+per session. Shifting preserves autocorrelation; shuffling destroys it, and overlapping EEG
+windows are not independent samples. The null intervals reach 0.8 AUROC and we report that
+rather than using a test that would have flattered us.
 
-- **Nulls matched to the evaluation rules**, not to textbook assumptions. The time-shift
-  null preserves autocorrelation because overlapping EEG windows are not independent; the
-  random-flag null respects the same budget, separation and matching tolerance the detector
-  had to obey.
-- **Adversarial self-controls.** The identical pipeline run on eye channels alone reaches
-  0.88 on one participant and 0.56 on another. We publish both, so the reader can see where
-  the signal might be ocular and where it is not.
-- **Frozen before scoring.** Protocols written in advance, fitted state hashed before and
-  after inference, held-out data checked against every model's training hashes.
-- **The negative result changed the product.** Because sustained states survived and brief
-  events did not, MemoryPalace captures forward on a persistence filter rather than
-  buffering backward for an instantaneous spike.
+**Random-flag null.** Flags thrown at random on the same grid, same budget, same separation,
+same matching tolerance. Chance is not zero: five random flags match about 3 of 36 events.
+
+**Eye-channel control**, the same pipeline on channels with no cortical signal:
+
+| | VP002 | VP003 | VP004 | VP005 |
+|---|---:|---:|---:|---:|
+| EEG detector | 0.925 | 0.800 | 0.652 | 0.888 |
+| Eyes only | 0.883 | 0.848 | 0.522 | 0.559 |
+
+Two participants where the eyes come close, one where the detector clears them by 0.33. Both
+columns published.
+
+**Frozen before scoring.** Protocols written in advance, models hashed before any held-out
+block is touched, fitted state verified unchanged afterwards, holdout participant consumed
+exactly once.
+
+## The result
+
+**8 of 15 sessions beat the time-shift null at p ≤ 0.05**, 14 of 15 above chance, mean
+out-of-sample AUROC 0.65 to 0.93 across five participants.
+
+And the half we find more useful: brief evoked events are undetectable by five methods on
+four participants. A zigzag persistent-homology detector matched 6 of 36 events against a
+2 of 36 baseline, which reads as a threefold improvement, and sits at p = 0.13 against
+randomly thrown darts. Without the null we would have shipped it.
+
+That decided the product. MemoryPalace captures forward on a persistence filter because
+sustained states survived the analysis and instantaneous spikes did not.
 
 ## Reproduce
 
@@ -68,5 +99,4 @@ python -m venv .venv && .venv/bin/pip install -e '.[test,real]'
 The label is task versus rest, a proxy for a state change, not confusion or insight. Ocular
 contribution is not isolated on two participants. Two of five participants are weak. 72
 seconds of labeled rest per participant cannot support a false-alarm rate per hour. Weights
-are session-specific and transfer to nobody. These are public participants, unrelated to
-anyone filmed in the demo.
+are session-specific. These are public participants, unrelated to anyone filmed in the demo.

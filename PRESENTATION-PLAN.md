@@ -167,11 +167,14 @@ Current status, in one line each:
 - **VoloRidge.** The submission framing now exists, written 2026-09-20:
   `DOCS_sponsor/VoloRidge` and the VoloRidge section of `FULFILLMENT_SPONSORS.md`, backed by
   `eeg-state-detection/`. **Slide 11 still needs updating to match** and currently
-  understates it. The line to land: "We found the signal, and we built the null that proved
-  our best looking result was noise." Numbers for the slide: out-of-sample AUROC 0.65 to
-  0.93 across five participants, 8 of 15 sessions beating a circular time-shift null, and a
-  brief-event detector that looked 3x better than baseline sitting at p = 0.13 against
-  random placement.
+  understates it. VoloRidge said in person that they judge four things: how you handle the
+  data, how you extract signal from noise, **how elegant the result is rather than how
+  complex**, and how you validate. The slide should answer those four, in that order.
+  The line to land: "Our final model is 84 numbers and a logistic regression. Seven more
+  complex things we tried all lost. And the null we built proved our best looking result was
+  noise." Numbers: out-of-sample AUROC 0.65 to 0.93 across five participants, 8 of 15
+  sessions beating a circular time-shift null, and a brief-event detector that looked three
+  times better than baseline sitting at p = 0.13 against randomly thrown darts.
 
 **Logos.** The slides use a typographic treatment: each sponsor's name set large in its own
 brand colour. If you want real logo art, drop official files into

@@ -197,117 +197,138 @@ Official references:
 
 ---
 
-## VoloRidge — Public-data challenge: finding signal, and proving where there is none
+## VoloRidge — Public-data challenge: a simple signal, and the nulls that test it
 
-### Sponsor narrative we are fulfilling
+### What VoloRidge told us they are judging
 
-> "Build something interesting using one or more public datasets."
+> How you handle data analysis. How you extract the signal from the noise. How elegant the
+> result is, not how complex. How you validate your results.
 
-MemoryPalace decides when a moment is worth capturing from a physiological signal. The
-question underneath the product is empirical and answerable on public data: **can scalp EEG
-mark cognitive state changes well enough to trigger a camera, and how would you know you
-were not fooling yourself?**
+This section answers those four in order. The work is in
+[`eeg-state-detection/`](eeg-state-detection/README.md), on
+[Shin et al. 2018 dataset A](https://doc.ml.tu-berlin.de/simultaneous_EEG_NIRS/)
+([Scientific Data](https://doi.org/10.1038/sdata.2018.3)): 28 EEG channels plus 2 eye
+channels at 1000 Hz, n-back working memory, participants VP002 to VP006, three sessions
+each, unmodified, with the experimenters' own markers as ground truth.
 
-Our answer is in [`eeg-state-detection/`](eeg-state-detection/README.md). It is one dataset,
-five participants, fifteen sessions, evaluated walk-forward with every model frozen before
-scoring, and benchmarked against two purpose-built null distributions. The interesting part
-is not only that we found signal. It is that **the same method proved that our most
-promising-looking result was noise**, and we kept the record.
+The short version: **the final model is 84 numbers and a logistic regression. Everything we
+added on top of it lost, except one parameter. We know it is real because we built two null
+distributions that could have said otherwise, and on the brief-event problem they did.**
 
-### The dataset
+### 1. Extracting the signal from the noise
 
-[Shin et al. 2018, dataset A](https://doc.ml.tu-berlin.de/simultaneous_EEG_NIRS/)
-([Scientific Data](https://doi.org/10.1038/sdata.2018.3)), an open EEG/NIRS corpus.
+Scalp EEG is microvolts of cortical activity under eye movement, muscle and drift. The
+entire extraction is four steps:
 
-| | |
+```text
+28 channels, 200 Hz
+  → regress out the two eye channels          (fitted on a pre-task segment, then frozen)
+  → log power in theta / alpha / beta          (2 s windows, every 0.25 s → 84 numbers)
+  → logistic regression, task vs rest          (regularization chosen on whole blocks)
+  → exponential moving average of the margin   (one parameter: the half-life)
+  → margin ≥ 0 for 3 s becomes an interval
+```
+
+No deep learning, no spatial filter bank, no hand-tuned thresholds. Band power works because
+the thing we are detecting is a *sustained state*, and sustained states are exactly what
+second-scale band power measures.
+
+### 2. Elegance over complexity: everything more complex lost
+
+We did not start simple and stop. We tested seven more complex alternatives, each as a
+**paired comparison on the same recordings, the same windows and the same calibration
+folds**, and each one lost or tied.
+
+| What we added on top of band power | Extra complexity | Paired result, same recordings | Kept |
+|---|---|---|:--:|
+| Riemannian covariance + tangent space | 1218 features vs 84 | Balanced accuracy 55–76% vs 81–84%. Recovered more whole tasks but flagged 22.2 s of rest against 2.0 s. | ✗ |
+| EWMA volatility features | 3× the feature count | AUROC 0.856 vs 0.800, but balanced accuracy 0.672 vs 0.685 and no more whole tasks recovered | ✗ |
+| Broad-band Fourier power | different estimator | Balanced accuracy 0.629 vs 0.635. A tie, for more machinery. | ✗ |
+| 26 one-Hz Fourier bins | 728 features vs 84 | Balanced accuracy 0.541 vs 0.635 | ✗ |
+| Bayesian dynamic linear model, AR(1) noise | latent state + noise model | Balanced accuracy 0.739 vs 0.791 for a plain moving average | ✗ |
+| Adaptive IMM switching DLM | two regimes + mixing | 0.781 vs 0.791 for a plain moving average | ✗ |
+| Zigzag persistent homology | 108 topological descriptors | 6 of 36 events, p = 0.13 against randomly placed flags | ✗ |
+| **Exponential moving average** | **one parameter** | **7 of 9 whole tasks recovered vs 3 of 9, with the classifier weights held byte-identical** | **✓** |
+
+Rows are different participants, so this is deliberately **not** a leaderboard. Comparing a
+score from one participant against another would not isolate an algorithm. Each row is only
+valid against its own baseline, and that is how we read it.
+
+The one thing that survived is a single smoothing parameter, and even that is a tradeoff we
+state rather than hide: it recovers more complete intervals and rejects rest slightly worse.
+
+### 3. How we validate
+
+**A null for each question, matched to the evaluation rules.**
+
+*Circular time-shift null, for sustained detection.* The intact out-of-sample score trace is
+shifted against the labels 2000 times per session. Shifting preserves autocorrelation;
+shuffling destroys it. Overlapping EEG windows are not independent samples, so a
+shuffle-based p-value would be fiction. The resulting null intervals reach 0.8 AUROC because
+a task period covers most of an excerpt. We report that width rather than quietly using a
+test that would have flattered us.
+
+*Random-flag null, for brief events.* Flags thrown at random on the same valid grid, under
+the same budget of five per block, the same 1.5 s separation and the same ±0.5 s matching
+tolerance the detector had to obey. Chance is not zero here: five random flags match about
+3 of 36 targets.
+
+**A control we ran against ourselves.** The identical pipeline, run on the two eye channels
+alone, which carry no cortical signal:
+
+| | VP002 | VP003 | VP004 | VP005 |
+|---|---:|---:|---:|---:|
+| EEG detector | 0.925 | 0.800 | 0.652 | 0.888 |
+| Eye channels only | 0.883 | 0.848 | 0.522 | 0.559 |
+
+On VP002 and VP003 the eyes alone come close, so part of that signal may be ocular even
+after eye regression. On VP005 the detector clears the control by 0.33. We publish both
+columns. A reader can see exactly where our result is and is not safe.
+
+**Frozen before scoring.** Protocols written in advance and committed; models saved and
+SHA-256 hashed before any held-out block is touched; fitted state verified unchanged after
+inference; held-out blocks checked against every model's training hashes; no-future-leakage
+tests on the temporal recursion.
+
+**A holdout consumed exactly once.** When we suspected the brief-event detector was failing
+because it never saw background windows in training, we wrote the fix and its adoption rule
+into a protocol, froze it, and ran it once on VP006, a participant no analysis had touched.
+It moved 0 of 36 to 2 of 36, p = 0.83 against the null. The prespecified rule failed, so
+**nothing was adopted**. The protocol, the run and the refusal are all committed.
+
+### 4. How we handle the data
+
+| Risk | What we did |
 |---|---|
-| Signal | 28 EEG channels + 2 EOG, 1000 Hz, analysed at 200 Hz |
-| Task | n-back working memory, 0-/2-/3-back, nine blocks per session |
-| Used here | VP002 to VP006, three sessions each = 15 sessions |
-| Ground truth | The experiment's own block and stimulus markers, never recoded |
-| Licence | Public, citable, redistributed by the authors |
+| Leakage through neighbouring windows | Regularization chosen over **whole calibration blocks**, never shuffled windows |
+| Leakage through time | Per session, the first six blocks calibrate and the last three are scored. Nothing fitted after seeing a test score. |
+| Silent model drift | Model files and in-memory state hashed before and after every inference pass |
+| Quiet data loss | Artifact-rejected windows stay missing and break intervals, rather than being bridged |
+| Cross-contamination | Weights never cross a session or a person |
+| Moving the goalposts | Adoption rules written into the protocol before the run |
 
-Recordings are not committed (about 120 MB per participant). `scripts/fetch_shin.py`
-downloads a participant and verifies every file against the archive's CRC.
+### The result
 
-### What we did
+Out-of-sample AUROC, task versus rest, against the time-shift null:
 
-| Step | Decision |
-|---|---|
-| Preprocess | Eye regression fitted on a separate pre-task segment, then frozen. Fixed amplitude and step limits reject artifact windows. |
-| Features | Log band power in theta, alpha and beta across 28 channels, 2 s windows, every 0.25 s |
-| Model | Standardized, class-balanced logistic regression, task versus rest. Regularization chosen over **whole calibration blocks**, never over shuffled neighbouring windows. |
-| Temporal | Causal exponential moving average of the margin, half-life selected on calibration data only |
-| Split | Per session: first six blocks calibrate, last three are scored. Models saved and SHA-256 hashed **before** any held-out block is touched. |
-| Transfer | None. Weights never cross a session or a person. |
+| Participant | Mean | Per session | Sessions at p ≤ 0.05 |
+|---|---:|---|---:|
+| VP002 | 0.925 | 0.904 / 0.898 / 0.972 | 3/3 |
+| VP003 | 0.800 | 0.716 / 0.930 / 0.754 | 1/3 |
+| VP004 | 0.652 | 0.809 / 0.605 / 0.543 | 1/3 |
+| VP005 | 0.888 | 0.726 / 1.000 / 0.938 | 2/3 |
+| VP006 | 0.669 | 0.658 / 0.480 / 0.871 | 1/3 |
 
-### Two nulls, because a good-looking score is not a result
+**8 of 15 sessions beat the null at p ≤ 0.05**, 14 of 15 are above chance.
 
-**Circular time-shift null (state detection).** The intact out-of-sample score trace is
-shifted against the labels 2000 times per session. Shifting preserves autocorrelation, which
-shuffling destroys; overlapping EEG windows are not independent samples, so a shuffle-based
-p-value would be fiction. The null intervals reach 0.8 AUROC because a task period covers
-most of an excerpt. We report that width rather than hiding it.
+And the negative result, which we consider the more useful half: brief evoked events are not
+detectable by any of five methods on four participants. The sharpest case is the zigzag
+detector matching 6 of 36 targets against a 2 of 36 baseline. That reads as a threefold
+improvement and it sits at p = 0.13 against randomly thrown darts. **Without the null we
+would have shipped it as a result.**
 
-**Random-flag null (brief events).** Flags placed at random on the same valid grid, under the
-same budget of five per block, the same 1.5 s separation and the same ±0.5 s matching
-tolerance. Chance here is not zero: five random flags match about 3 of 36 targets.
-
-### Results
-
-**Sustained state detection works, and varies by person.** Out-of-sample AUROC, task versus
-rest, against the shift null:
-
-| Participant | Mean AUROC | Per session | Sessions with p ≤ 0.05 | Eye-only control |
-|---|---:|---|---:|---:|
-| VP002 | 0.925 | 0.904 / 0.898 / 0.972 | 3/3 | 0.883 |
-| VP003 | 0.800 | 0.716 / 0.930 / 0.754 | 1/3 | 0.848 |
-| VP004 | 0.652 | 0.809 / 0.605 / 0.543 | 1/3 | 0.522 |
-| VP005 | 0.888 | 0.726 / 1.000 / 0.938 | 2/3 | 0.559 |
-| VP006 | 0.669 | 0.658 / 0.480 / 0.871 | 1/3 | not run |
-
-**8 of 15 sessions beat the null at p ≤ 0.05**, and 14 of 15 sit above chance.
-
-**Brief evoked events do not work, and the null is what proved it.** Five detectors, four
-participants, all scored against random placement:
-
-| Detector | Participant | Targets matched | Random mean [95%] | p(random ≥ observed) |
-|---|---|---:|---:|---:|
-| Mean-amplitude bins | VP001 | 4/36 | 3.00 [0, 6] | 0.35 |
-| xDAWN covariance | VP001 | 6/36 | 3.00 [0, 6] | 0.07 |
-| Mean-amplitude bins | VP002 | 3/36 | 3.15 [0, 6] | 0.63 |
-| Mean-amplitude bins | VP005 | 2/36 | 3.63 [1, 7] | 0.90 |
-| **Zigzag persistent homology** | VP005 | **6/36** | 3.63 [1, 7] | **0.13** |
-| Combined | VP005 | 3/36 | 3.63 [1, 7] | 0.72 |
-
-The zigzag row is the point. Six matches against a two-match baseline reads as a threefold
-improvement, and it is inside the range of randomly thrown darts. Without the null we would
-have shipped it.
-
-We then pre-registered a rescue attempt in
-[`background_negatives_protocol.md`](eeg-state-detection/background_negatives_protocol.md),
-froze it, and ran it once on VP006, a participant no analysis had touched. Adding
-calibration-only background negatives moved matches from 0/36 to 2/36 with p = 0.83 against
-the null. The prespecified adoption rule failed on its chance condition, so **nothing was
-adopted**, and the protocol, the run and the refusal are all in the repository.
-
-### Why this is meaningfully a public-data result
-
-The dataset is unmodified and the labels are the experimenters', not ours. Every claim is
-reproducible from the committed models with one command. The methodology is the deliverable
-as much as the numbers: frozen protocols written before each fresh participant, a holdout
-participant consumed exactly once, nulls matched to the evaluation rules rather than to
-textbook assumptions, and adversarial controls we ran against ourselves.
-
-The eye-only control is the clearest example. We ran the identical pipeline on the two EOG
-channels, which carry no cortical signal. On VP002 and VP003 the eyes alone reach 0.88 and
-0.85, close to the EEG detector, so part of that signal may be ocular even after eye
-regression. On VP005 the EEG detector reaches 0.89 while the eyes reach 0.56. We publish
-both rather than only the flattering one.
-
-This also decided the product. The detector that survived is a **sustained-state** detector,
-which is why MemoryPalace captures forward on a persistence filter instead of buffering
-backward for an instantaneous spike.
+That finding decided the product: MemoryPalace captures forward on a persistence filter,
+because sustained states are what survived the analysis and instantaneous spikes are not.
 
 ### Verification
 
@@ -321,27 +342,18 @@ python -m venv .venv && .venv/bin/pip install -e '.[test,real]'
 
 | Artifact | Path |
 |---|---|
-| Walk-forward figures, null, interpretation | `eeg-state-detection/outputs/backtest_state/` |
+| Walk-forward figures, time-shift null, interpretation | `eeg-state-detection/outputs/backtest_state/` |
 | Random-flag null for brief events | `eeg-state-detection/outputs/burst_diagnostic_dev/` |
-| Frozen VP006 comparison and its refusal | `eeg-state-detection/outputs/background_vp006/` |
-| Protocols written before each run | `eeg-state-detection/*_protocol.md` |
-| Full chronological research log | `eeg-state-detection/RESEARCH_LOG.md` |
-
-Verification built into the code, not just asserted: fitted-state and file hashes checked
-before and after inference, held-out blocks tested against every model's training hashes,
-no-future-leakage tests on the temporal recursion, and byte-for-byte reproduction of earlier
-event exports.
+| Frozen VP006 protocol, run, and its refusal | `eeg-state-detection/outputs/background_vp006/` |
+| Every rejected alternative, with its numbers | `eeg-state-detection/RESEARCH_LOG.md` |
 
 ### Honest remaining boundary
 
-- **The label is task versus rest**, a proxy for a cognitive state change. It is not
-  confusion, insight, or focus, and we never call it that.
-- **Ocular contribution is not isolated** on VP002 and VP003, as the eye-only control shows.
-- **Two participants are weak.** VP004 averages 0.652 and VP006 0.669; on VP006 the detector
-  flags 28 of 72 seconds of labeled rest, so its intervals are not usable as-is.
-- **72 seconds of labeled rest per participant** is too little to estimate a false-alarm rate
-  per hour. The trigger's operating-point evidence is in `confusion-detector/` instead.
-- **Session-specific weights.** Each session is calibrated on its own first six blocks;
-  nothing here shows a model that transfers between people.
-- **These are public participants**, unrelated to anyone filmed by the phone in the demo. A
-  shared playback clock is a presentation convention, never physiological synchronisation.
+- **The label is task versus rest**, a proxy for a cognitive state change. Not confusion,
+  not insight, not focus, and we never call it that.
+- **Ocular contribution is not isolated** on VP002 and VP003, as the eye control shows.
+- **Two of five participants are weak.** VP004 averages 0.652 and VP006 0.669; on VP006 the
+  detector flags 28 of 72 seconds of labeled rest, so those intervals are not usable as-is.
+- **72 seconds of labeled rest per participant** cannot support a false-alarm rate per hour.
+- **Weights are session-specific** and transfer to nobody.
+- **These are public participants**, unrelated to anyone filmed by the phone in the demo.
