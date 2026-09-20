@@ -23,40 +23,46 @@ so it leads.
 
 ## Slide content, exactly
 
-**Headline**
+**Three elements. About 45 words total.** At 30 seconds the audience reads or listens, not
+both, so anything past three elements costs you the speaker notes.
 
-> We tried the complicated things. They lost.
+Build it in two reveals so the slide is never fully loaded while you are still talking.
 
-**Left column — the ladder.** Set the four rejected rows in muted grey, the final row in
-near-black with the brass accent. The visual point is that the winner is the shortest row.
+### Reveal 1 — the headline and the ladder
+
+> # We tried the complicated things. They lost.
+
+Rejected rows in muted grey, winner in near-black with the brass accent. The visual argument
+is that the winning row is the shortest one.
 
 ```
 Riemannian tangent space     1218 features    ✗
 26-bin Fourier spectrum       728 features    ✗
-Zigzag persistent homology    108 features    ✗
-Bayesian state-space model    latent state    ✗
-                          + 3 more            ✗
+Zigzag topology               108 features    ✗
+Bayesian state-space          latent state    ✗
+                            + 3 more          ✗
 
-Log band power + logistic       84 features   ✓
+Band power + logistic          84 features    ✓
 ```
 
-**Right column — the validation.** Three lines, nothing more:
+### Reveal 2 — the validation block
 
-```
-Walk-forward, 5 participants, 15 sessions
-Models frozen and hashed before scoring
+Two lines, bottom of the slide, brass rule above them. This block carries the backtest and
+the kicker together, because they are the same test:
 
-8 of 15 sessions beat a time-shift null   (p ≤ 0.05)
-Out-of-sample AUROC 0.65 – 0.93
-```
+> **8 of 15 sessions beat a time-shift null.**
+> The same test killed our best brief-event detector. 3× baseline, **p = 0.13.**
 
-**Footer strip — the kicker.** Give this its own band across the bottom; it is the line
-that wins the track.
+That is the whole slide. Everything else lives in the speaker notes.
 
-> Our best-looking brief-event detector matched 6 of 36 events against a 2 of 36 baseline.
-> Against randomly thrown darts: **p = 0.13.** We killed it.
+### What moved to the notes and why
 
-That is the whole slide. Resist adding a fifth element.
+| Cut from the slide | Why |
+|---|---|
+| Five participants, fifteen sessions | Spoken in the first line of the notes; on screen it is just more digits |
+| AUROC range 0.65 to 0.93 | Invites a number-by-number reading during your 30 seconds |
+| "Models frozen and hashed before scoring" | Strong, but it is a sentence you say, not a thing you show |
+| The per-participant table | Appendix. Only appears if a judge asks. |
 
 ---
 
@@ -93,8 +99,9 @@ Keep one in the appendix in case a judge asks how the walk-forward looks:
 | Out-of-sample AUROC per session against the null and the eye-only control | `eeg-state-detection/outputs/backtest_state/summary.png` |
 | A single session, calibration then out-of-sample, with ground truth shaded | `eeg-state-detection/outputs/backtest_state/walkforward_VP002.png` |
 
-If the deck must have an image on slide 11, use `summary.png` and cut the right column,
-since the figure already shows the nulls.
+If the deck must have an image on slide 11, use `summary.png` and drop the ladder, since the
+figure already carries the nulls. You would then be making the validation argument instead
+of the elegance argument, which is the weaker of the two for this audience.
 
 ---
 
