@@ -153,24 +153,27 @@ class AttachmentTests(DigestTests):
         d.library = self.Lib(moments, sizes)
         return d
 
-    def test_clips_beyond_the_budget_are_reported_not_hidden(self):
+    def test_only_clips_travel_and_only_what_fits(self):
         moments = [
             {"id": "a", "confidence": 0.9, "timestamp": "2026-09-19T18:00:00Z",
              "media": {"thumbnailUrl": "/m/a.jpg", "videoUrl": "/m/a.mp4"}},
             {"id": "b", "confidence": 0.5, "timestamp": "2026-09-19T18:01:00Z",
              "media": {"thumbnailUrl": "/m/b.jpg", "videoUrl": "/m/b.mp4"}},
         ]
-        # One clip fits inside the budget, the second cannot.
         sizes = {"a.jpg": 1000, "b.jpg": 1000,
                  "a.mp4": 10 * 1024 * 1024, "b.mp4": 10 * 1024 * 1024}
         files, used, skipped = self._digest(sizes, moments).attachments_for(moments)
         names = [f["filename"] for f in files]
-        self.assertIn("a.jpg", names)
-        self.assertIn("b.jpg", names)          # every poster travels
-        self.assertIn("a.mp4", names)          # the stronger moment's clip wins
-        self.assertNotIn("b.mp4", names)
-        self.assertEqual(skipped, 1)
+        self.assertEqual(names, ["a.mp4"])          # clips only, no stills
+        self.assertEqual(skipped, 1)                # the one over budget is counted
         self.assertLess(used, 18 * 1024 * 1024)
+
+    def test_a_whole_day_never_attaches_clips_by_accident(self):
+        """attach only means something alongside an explicit selection."""
+        digest = self.build()
+        built = digest.build("2026-09-19", attach=True)
+        self.assertEqual(built["attachments"], [])
+        self.assertEqual(built["clipsSkipped"], 0)
 
     def test_a_window_spans_several_local_days(self):
         digest = self.build()

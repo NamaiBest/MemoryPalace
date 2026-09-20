@@ -3,19 +3,26 @@
 import { useState } from "react";
 
 /**
- * Mail a stretch of days to an inbox, written by Meta Muse Spark.
+ * Mail a stretch of days, or the moments you picked, written by Meta Muse Spark.
  *
- * Two intents share this card because they are one act pointed in two directions:
- * "I should not have missed this" and "you should see this". Sending to yourself needs
- * no typing, since the address is already configured; sending to someone else opens the
- * range controls, because what you send a person is rarely exactly one day.
+ * Kept deliberately short. It sits beside the page heading, and anything taller pushes
+ * the moment grid down the page and leaves a dead band of empty space next to the text.
+ * So the controls are one row each rather than stacked cards.
+ *
+ * Clips are opt in and only ever the ones picked by hand. A day of video is roughly
+ * 80 MB and a mailbox rejects anything past 25 MB, so "everything" was never on offer.
  */
 
+const CONTACTS = [
+  { id: "me", label: "Me", address: null },
+  { id: "mom", label: "Mom", address: "namaichannel123@gmail.com" },
+] as const;
+
 const RANGES = [
-  { days: 1, label: "Today" },
-  { days: 2, label: "Last 2 days" },
-  { days: 3, label: "Last 3 days" },
-  { days: 7, label: "Last week" },
+  { days: 1, label: "1d" },
+  { days: 2, label: "2d" },
+  { days: 3, label: "3d" },
+  { days: 7, label: "1w" },
 ] as const;
 
 export function EmailDigest({
@@ -23,23 +30,24 @@ export function EmailDigest({
   selectedIds = [],
 }: {
   date: string | null;
-  /** Moments hand-picked above. When present they beat the range entirely. */
   selectedIds?: string[];
 }) {
-  const [mode, setMode] = useState<"me" | "other">("me");
-  const [to, setTo] = useState("");
-  const [days, setDays] = useState<number>(1);
-  const [useSelection, setUseSelection] = useState(false);
-  const [attach, setAttach] = useState(true);
+  const [contact, setContact] = useState<string>("me");
+  const [custom, setCustom] = useState("");
+  const [days, setDays] = useState(1);
+  const [withClips, setWithClips] = useState(false);
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const picking = useSelection && selectedIds.length > 0;
+  const hasSelection = selectedIds.length > 0;
+  const picking = withClips && hasSelection;
+  const preset = CONTACTS.find((c) => c.id === contact);
 
   async function send() {
-    if (mode === "other" && !to.trim()) {
+    const address = contact === "custom" ? custom.trim() : preset?.address ?? undefined;
+    if (contact === "custom" && !address) {
       setError("Who should it go to?");
       return;
     }
@@ -52,13 +60,12 @@ export function EmailDigest({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // Omitting `to` falls back to the configured address, so sending to
-          // yourself never requires typing it.
-          to: mode === "other" ? to.trim() : undefined,
+          // No address means the configured one, so sending to yourself needs no typing.
+          to: address,
           date,
           days: picking ? 1 : days,
           momentIds: picking ? selectedIds : undefined,
-          attach,
+          attach: picking,
           send: true,
         }),
       });
@@ -67,10 +74,8 @@ export function EmailDigest({
       setSent(result.subject ?? "Your day");
       if (result.attachedFiles) {
         setNote(
-          `${result.attachedFiles} file${result.attachedFiles === 1 ? "" : "s"} attached` +
-            (result.clipsSkipped
-              ? `, ${result.clipsSkipped} clip${result.clipsSkipped === 1 ? "" : "s"} left out to stay deliverable`
-              : ""),
+          `${result.attachedFiles} clip${result.attachedFiles === 1 ? "" : "s"} attached` +
+            (result.clipsSkipped ? `, ${result.clipsSkipped} too large to send` : ""),
         );
       }
     } catch (cause) {
@@ -80,123 +85,91 @@ export function EmailDigest({
     }
   }
 
-  return (
-    <aside className="w-full max-w-sm rounded-2xl border border-line bg-bg-raised/60 px-6 py-6">
-      <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-accent">
-        Or mail it
-      </p>
-      <h2 className="mt-3 font-serif text-2xl leading-snug">
-        The whole day, in an inbox
-      </h2>
+  const chip = (active: boolean) =>
+    `rounded-lg border px-3 py-1.5 text-xs transition-colors disabled:cursor-default disabled:opacity-35 ${
+      active ? "border-accent bg-accent/10 text-fg"
+             : "border-line-strong text-fg-dim hover:enabled:text-fg"
+    }`;
 
-      <div className="mt-5 flex rounded-xl border border-line-strong p-1">
-        {(["me", "other"] as const).map((option) => (
-          <button
-            key={option}
-            type="button"
-            onClick={() => { setMode(option); setSent(null); setError(null); }}
-            aria-pressed={mode === option}
-            className={`flex-1 rounded-lg px-3 py-2 text-xs transition-colors ${
-              mode === option ? "bg-accent text-bg" : "text-fg-dim hover:text-fg"
-            }`}
-          >
-            {option === "me" ? "Send to me" : "Someone else"}
-          </button>
-        ))}
+  return (
+    <aside className="w-full max-w-sm rounded-2xl border border-line bg-bg-raised/60 px-5 py-5">
+      <div className="flex items-baseline justify-between gap-3">
+        <h2 className="font-serif text-xl leading-snug">Mail it instead</h2>
+        <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-fg-mute">
+          Muse Spark
+        </span>
       </div>
 
-      {mode === "other" ? (
-        <label className="mt-3 block">
-          <span className="sr-only">Their email address</span>
-          <input
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            value={to}
-            onChange={(event) => { setTo(event.target.value); setError(null); }}
-            onKeyDown={(event) => { if (event.key === "Enter" && !busy) void send(); }}
-            placeholder="them@example.com"
-            className="w-full rounded-xl border border-line-strong bg-bg/60 px-4 py-3 text-sm text-fg outline-none placeholder:text-fg-mute focus:border-accent"
-          />
-        </label>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {CONTACTS.map((option) => (
+          <button key={option.id} type="button" onClick={() => setContact(option.id)}
+            aria-pressed={contact === option.id} className={chip(contact === option.id)}>
+            {option.label}
+          </button>
+        ))}
+        <button type="button" onClick={() => setContact("custom")}
+          aria-pressed={contact === "custom"} className={chip(contact === "custom")}>
+          Someone else
+        </button>
+      </div>
+
+      {contact === "custom" ? (
+        <input
+          type="email" inputMode="email" autoComplete="email" value={custom}
+          onChange={(event) => { setCustom(event.target.value); setError(null); }}
+          onKeyDown={(event) => { if (event.key === "Enter" && !busy) void send(); }}
+          placeholder="them@example.com"
+          className="mt-2 w-full rounded-lg border border-line-strong bg-bg/60 px-3 py-2 text-xs text-fg outline-none placeholder:text-fg-mute focus:border-accent"
+        />
       ) : null}
 
-      <fieldset className="mt-4" disabled={picking}>
-        <legend className="font-mono text-[10px] tracking-[0.16em] uppercase text-fg-mute">
+      <div className="mt-4 flex items-center gap-2">
+        <span className="font-mono text-[9px] tracking-[0.14em] uppercase text-fg-mute">
           How much
-        </legend>
-        <div className={`mt-2 grid grid-cols-2 gap-2 ${picking ? "opacity-35" : ""}`}>
+        </span>
+        <div className={`flex gap-1.5 ${picking ? "opacity-35" : ""}`}>
           {RANGES.map((range) => (
-            <button
-              key={range.days}
-              type="button"
+            <button key={range.days} type="button" disabled={picking}
               onClick={() => setDays(range.days)}
               aria-pressed={!picking && days === range.days}
-              className={`rounded-lg border px-3 py-2 text-xs transition-colors ${
-                !picking && days === range.days
-                  ? "border-accent bg-accent/10 text-fg"
-                  : "border-line-strong text-fg-dim hover:text-fg"
-              }`}
-            >
+              className={chip(!picking && days === range.days)}>
               {range.label}
             </button>
           ))}
         </div>
-      </fieldset>
+      </div>
 
-      {selectedIds.length > 0 ? (
-        <label className="mt-3 flex cursor-pointer items-center gap-3 text-xs text-fg-dim">
-          <input
-            type="checkbox"
-            checked={useSelection}
-            onChange={(event) => setUseSelection(event.target.checked)}
-            className="h-4 w-4 accent-[var(--color-accent)]"
-          />
-          Just the {selectedIds.length} moment{selectedIds.length === 1 ? "" : "s"} I picked above
-        </label>
-      ) : null}
+      <div className="mt-3 flex gap-2">
+        <button type="button" onClick={() => setWithClips(false)}
+          aria-pressed={!withClips} className={`flex-1 ${chip(!withClips)}`}>
+          Summary only
+        </button>
+        <button type="button" onClick={() => hasSelection && setWithClips(true)}
+          aria-pressed={withClips} disabled={!hasSelection}
+          title={hasSelection ? undefined : "Pick moments below to send their clips"}
+          className={`flex-1 ${chip(withClips)}`}>
+          + {hasSelection ? selectedIds.length : ""} clip{selectedIds.length === 1 ? "" : "s"}
+        </button>
+      </div>
 
-      <label className="mt-3 flex cursor-pointer items-center gap-3 text-xs text-fg-dim">
-        <input
-          type="checkbox"
-          checked={attach}
-          onChange={(event) => setAttach(event.target.checked)}
-          className="h-4 w-4 accent-[var(--color-accent)]"
-        />
-        Attach the stills, and the clips that fit
-      </label>
-
-      <button
-        type="button"
-        onClick={send}
-        disabled={busy}
-        className="mt-4 inline-flex w-full items-center justify-center gap-3 rounded-xl bg-accent px-5 py-3 text-sm font-medium text-bg transition-colors hover:bg-fg disabled:cursor-default disabled:opacity-40"
-      >
+      <button type="button" onClick={send} disabled={busy}
+        className="mt-4 inline-flex w-full items-center justify-center gap-3 rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:bg-fg disabled:cursor-default disabled:opacity-40">
         {busy ? (
-          <>
-            <span className="processing-ring h-4 w-4" aria-hidden />
-            Writing and sending…
-          </>
-        ) : mode === "me" ? (
-          "Send recap now"
+          <><span className="processing-ring h-4 w-4" aria-hidden />Writing and sending…</>
         ) : (
-          "Send it to them"
+          `Send recap${preset?.label && contact !== "custom" ? ` to ${preset.label}` : ""}`
         )}
       </button>
 
       {sent ? (
-        <p role="status" className="mt-4 text-sm leading-6 text-ok">
+        <p role="status" className="mt-3 text-xs leading-5 text-ok">
           Sent. Look for “{sent}”.
-          {note ? <span className="mt-1 block text-fg-mute">{note}</span> : null}
+          {note ? <span className="mt-0.5 block text-fg-mute">{note}</span> : null}
         </p>
       ) : null}
       {error ? (
-        <p role="alert" className="mt-4 text-sm leading-6 text-error">{error}</p>
+        <p role="alert" className="mt-3 text-xs leading-5 text-error">{error}</p>
       ) : null}
-
-      <p className="mt-5 border-t border-line pt-4 font-mono text-[10px] tracking-[0.14em] uppercase text-fg-mute">
-        Written by Meta Muse Spark
-      </p>
     </aside>
   );
 }

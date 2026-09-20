@@ -126,23 +126,16 @@ class DailyDigest:
         return out
 
     def attachments_for(self, moments):
-        """Posters always, clips while they fit inside the budget.
+        """The clips for these moments, and nothing else.
 
-        Every moment's poster travels because they are tiny, about 30 KB, so the mail
-        always shows what the day looked like. Clips average 4 MB, so attaching them all
-        would exceed what Gmail accepts. The strongest moments get their video first and
-        the message says plainly how many were left behind, rather than silently
-        truncating and letting the reader wonder.
+        Clips only ever travel when someone has picked them by hand, so this attaches
+        exactly what was chosen rather than deciding on the reader's behalf. It is still
+        bounded: Gmail rejects a message over 25 MB and clips run about 4 MB each, so a
+        large selection would bounce silently. Anything that does not fit is named in the
+        message instead of being dropped without a word.
         """
         files, used, skipped = [], 0, 0
         for moment in moments:
-            poster = (moment.get("media") or {}).get("thumbnailUrl", "")
-            path = self.library.path_for(poster.rsplit("/", 1)[-1]) if poster else None
-            if path is not None:
-                data = path.read_bytes()
-                used += len(data)
-                files.append({"filename": path.name, "content": data})
-        for moment in sorted(moments, key=lambda m: -float(m.get("confidence") or 0)):
             clip = (moment.get("media") or {}).get("videoUrl", "")
             path = self.library.path_for(clip.rsplit("/", 1)[-1]) if clip else None
             if path is None:
@@ -176,7 +169,7 @@ class DailyDigest:
         recap = self.guard.day_recap(moments, label or f"{len(moments)} chosen moments")
         pretty = (datetime.strptime(day, "%Y-%m-%d").strftime("%A %d %B") if label
                   else (f"The last {days} days" if not moment_ids
-                        else f"{len(moments)} moments you chose"))
+                        else "The moments you chose"))
         lines = [f"  {datetime.fromisoformat(m['timestamp'].replace('Z', '+00:00')).astimezone(ZONE):%H:%M}"
                  f"  {m.get('semanticTitle') or 'Captured moment'}" for m in moments]
         body = (
@@ -187,11 +180,15 @@ class DailyDigest:
             f"\nWritten by {recap['providerLabel']}. You are getting this because "
             f"{len(unreviewed)} of these went unreviewed today.\n"
         )
-        files, bytes_used, skipped = self.attachments_for(moments) if attach else ([], 0, 0)
-        if attach:
-            body += (f"\n{len(files)} file{'' if len(files) == 1 else 's'} attached"
-                     + (f", and {skipped} clip{'' if skipped == 1 else 's'} left out to "
-                        "keep the message deliverable" if skipped else "") + ".\n")
+        # Clips are opt in and only for a hand-picked set. A whole day of video is far
+        # past what a mailbox accepts, and nobody asked for it.
+        send_clips = bool(attach and moment_ids)
+        files, bytes_used, skipped = (self.attachments_for(moments) if send_clips
+                                      else ([], 0, 0))
+        if send_clips:
+            body += (f"\n{len(files)} clip{'' if len(files) == 1 else 's'} attached"
+                     + (f", and {skipped} left out to keep the message deliverable"
+                        if skipped else "") + ".\n")
         return {
             "day": day,
             "attachments": files,
@@ -199,9 +196,13 @@ class DailyDigest:
             "clipsSkipped": skipped,
             # "Your Saturday 19 September" reads well; "Your The last 2 days" does not,
             # so the possessive is only used when the label is a single named day.
-            "subject": (f"Your {pretty}" if label else pretty)
-                       + f", in {len(moments)} moment"
-                       + ("" if len(moments) == 1 else "s"),
+            # Name the count once. "The moments you chose, in 2 moments" says it twice.
+            "subject": (f"Your {pretty}, in {len(moments)} moment"
+                        + ("" if len(moments) == 1 else "s")) if label
+                       else (f"{len(moments)} moment"
+                             + ("" if len(moments) == 1 else "s")
+                             + (" you chose" if moment_ids
+                                else f" from the last {days} days")),
             "body": body,
             "recap": recap["answer"],
             "moments": [{"id": m["id"], "title": m.get("semanticTitle"),
@@ -235,7 +236,16 @@ class DailyDigest:
             with urllib.request.urlopen(request, timeout=30) as response:
                 return json.loads(response.read() or b"{}")
         except urllib.error.HTTPError as exc:
-            detail = exc.read().decode(errors="replace")[:300]
+            detail = exc.read().decode(errors="replace")[:400]
+            # An unverified mail account only delivers to its own owner. That is a
+            # standing account limit rather than a fault, so it is worth saying in words
+            # instead of handing back the provider's JSON.
+            if exc.code == 403 and "your own email" in detail:
+                raise DigestError(
+                    f"{to} cannot receive this yet. The mail account only delivers to "
+                    "its owner until a sending domain is verified. Sending to yourself "
+                    "works now; anyone else needs a verified domain."
+                ) from exc
             raise DigestError(f"mail API returned HTTP {exc.code}: {detail}") from exc
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             raise DigestError(f"mail API unreachable: {exc}") from exc

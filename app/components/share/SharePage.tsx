@@ -93,7 +93,7 @@ export function SharePage() {
       {/* The heading left a wide empty column on desktop. Mailing yourself the day is
           the same instinct as sharing it with someone, one hour later, so it belongs
           beside the title rather than buried in settings. */}
-      <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 flex-1">
           <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-accent">
             MemoryPalace / Share
@@ -117,7 +117,7 @@ export function SharePage() {
         </p>
       ) : (
         <>
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-4">
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
             <h2 className="font-serif text-2xl">Choose your key moments</h2>
             <span className="font-mono text-xs text-fg-mute">
               {picked.length} of {MAX_SHARED} selected
