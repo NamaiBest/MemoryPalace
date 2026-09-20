@@ -1,0 +1,107 @@
+{
+  "kind": "eog_bins",
+  "source": "replayed_eeg",
+  "session_id": "VP005-nback2",
+  "processing_id": "eog-regression-v1-5d9e042e25ff9446f5457740876fac62fc4fd4b4ba614871f4b88c90cce92938",
+  "training_recordings": [
+    "VP005-nback2-block01",
+    "VP005-nback2-block02",
+    "VP005-nback2-block03",
+    "VP005-nback2-block04",
+    "VP005-nback2-block05",
+    "VP005-nback2-block06"
+  ],
+  "training_sample_sha256": [
+    "bfda272a8bd4997569d23f779529b9022cdb28ca7e55e13a64362392aaf45d6c",
+    "96883a2d1dc2f6f84cc5af33a72ee89625d1abf85887608328a65d6e6ed9cf8f",
+    "1e0e0647d2d1cc754bbd6486d36a77c73875517f9b2486a55161e1b92765c56f",
+    "c42953284b5e0fdb690644160c9bd14bcdf8522dc06e566e03fa38fd635865d6",
+    "3c9a73ee5b0181e2e683d3dafa7d4888af8c5043f4a3d6d0d58a9f2e9298311a",
+    "ae30a3b7baec88339e6f2d6ac8f22d3791c80ec5a0bf51bf07d47e3dd303d522"
+  ],
+  "training_hashes": [
+    "bfda272a8bd4997569d23f779529b9022cdb28ca7e55e13a64362392aaf45d6c",
+    "96883a2d1dc2f6f84cc5af33a72ee89625d1abf85887608328a65d6e6ed9cf8f",
+    "1e0e0647d2d1cc754bbd6486d36a77c73875517f9b2486a55161e1b92765c56f",
+    "c42953284b5e0fdb690644160c9bd14bcdf8522dc06e566e03fa38fd635865d6",
+    "3c9a73ee5b0181e2e683d3dafa7d4888af8c5043f4a3d6d0d58a9f2e9298311a",
+    "ae30a3b7baec88339e6f2d6ac8f22d3791c80ec5a0bf51bf07d47e3dd303d522"
+  ],
+  "selected_C": 10.0,
+  "C_grid": [
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "calibration_cv_average_precision": 0.49132692770192765,
+  "quality": [
+    {
+      "recording_id": "VP005-nback2-block01",
+      "accepted": 18,
+      "targets": 6,
+      "total": 20
+    },
+    {
+      "recording_id": "VP005-nback2-block03",
+      "accepted": 18,
+      "targets": 6,
+      "total": 20
+    },
+    {
+      "recording_id": "VP005-nback2-block05",
+      "accepted": 14,
+      "targets": 4,
+      "total": 20
+    },
+    {
+      "recording_id": "VP005-nback2-block06",
+      "accepted": 16,
+      "targets": 5,
+      "total": 20
+    }
+  ],
+  "training_trials": 66,
+  "training_targets": 21,
+  "features": 10,
+  "folds": [
+    {
+      "train_blocks": [
+        2,
+        4
+      ],
+      "validation_blocks": [
+        0,
+        5
+      ]
+    },
+    {
+      "train_blocks": [
+        0,
+        5
+      ],
+      "validation_blocks": [
+        2,
+        4
+      ]
+    }
+  ],
+  "zigzag": {
+    "radii": [
+      0.75,
+      1.0,
+      1.25
+    ],
+    "coefficient_field": 2,
+    "dimensions": [
+      0,
+      1
+    ],
+    "trajectory_sample_rate": 25,
+    "cloud_size": 8,
+    "stages": 9,
+    "features": "Betti counts + stage-lifetime histograms; per-epoch median-distance normalization"
+  },
+  "interpretation": "Target/non-target proxy, not spontaneous cognitive events or measured single-trial P300 truth."
+}

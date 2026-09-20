@@ -1,0 +1,194 @@
+{
+  "kind": "eog_power_ewma",
+  "target": "high_low",
+  "source": "replayed_eeg",
+  "session_id": "VP003-nback2",
+  "processing_id": "eog-regression-v1-55055d33c775b9106f1ed019baa72c28209907ef820d97bef48f9877de20d978",
+  "training_recordings": [
+    "VP003-nback2-block01",
+    "VP003-nback2-block02",
+    "VP003-nback2-block03",
+    "VP003-nback2-block04",
+    "VP003-nback2-block05",
+    "VP003-nback2-block06"
+  ],
+  "training_sample_sha256": [
+    "73737e92d619994ccd94ae6f4195ce465e50cea4f5d9c8b9e07e5e7b6fe6a0b7",
+    "80f690ff2b7220a8315def9f424cb7802fdde72c92c8a80a0cd03139cad56452",
+    "fb87e8505a4c1d52a15266864e0bbc0742689f0aef77c030c5c1d8cbbd7d3f6d",
+    "2681e9678c75c361cc24aa7b02ed63cce624bf6278434aa7ffd4bb57d3f91076",
+    "a9897de88e986624840853d4de5fe05f66835db3f00ee19dbd46694bfbf4ee01",
+    "38719c0d7400905aa23585e8b4ee97114abe88928cfd2a4844787ff7952e734b"
+  ],
+  "training_windows": 114,
+  "positives": 76,
+  "quality": [
+    {
+      "recording_id": "VP003-nback2-block01",
+      "condition": 2,
+      "labeled_windows": 19,
+      "raw_valid_windows": 19,
+      "history_ready_windows": 19,
+      "by_label": {
+        "0": {
+          "labeled": 0,
+          "raw_valid": 0,
+          "history_ready": 0
+        },
+        "1": {
+          "labeled": 19,
+          "raw_valid": 19,
+          "history_ready": 19
+        }
+      }
+    },
+    {
+      "recording_id": "VP003-nback2-block02",
+      "condition": 0,
+      "labeled_windows": 19,
+      "raw_valid_windows": 19,
+      "history_ready_windows": 19,
+      "by_label": {
+        "0": {
+          "labeled": 19,
+          "raw_valid": 19,
+          "history_ready": 19
+        },
+        "1": {
+          "labeled": 0,
+          "raw_valid": 0,
+          "history_ready": 0
+        }
+      }
+    },
+    {
+      "recording_id": "VP003-nback2-block03",
+      "condition": 3,
+      "labeled_windows": 19,
+      "raw_valid_windows": 19,
+      "history_ready_windows": 19,
+      "by_label": {
+        "0": {
+          "labeled": 0,
+          "raw_valid": 0,
+          "history_ready": 0
+        },
+        "1": {
+          "labeled": 19,
+          "raw_valid": 19,
+          "history_ready": 19
+        }
+      }
+    },
+    {
+      "recording_id": "VP003-nback2-block04",
+      "condition": 0,
+      "labeled_windows": 19,
+      "raw_valid_windows": 19,
+      "history_ready_windows": 19,
+      "by_label": {
+        "0": {
+          "labeled": 19,
+          "raw_valid": 19,
+          "history_ready": 19
+        },
+        "1": {
+          "labeled": 0,
+          "raw_valid": 0,
+          "history_ready": 0
+        }
+      }
+    },
+    {
+      "recording_id": "VP003-nback2-block05",
+      "condition": 3,
+      "labeled_windows": 19,
+      "raw_valid_windows": 19,
+      "history_ready_windows": 19,
+      "by_label": {
+        "0": {
+          "labeled": 0,
+          "raw_valid": 0,
+          "history_ready": 0
+        },
+        "1": {
+          "labeled": 19,
+          "raw_valid": 19,
+          "history_ready": 19
+        }
+      }
+    },
+    {
+      "recording_id": "VP003-nback2-block06",
+      "condition": 2,
+      "labeled_windows": 19,
+      "raw_valid_windows": 19,
+      "history_ready_windows": 19,
+      "by_label": {
+        "0": {
+          "labeled": 0,
+          "raw_valid": 0,
+          "history_ready": 0
+        },
+        "1": {
+          "labeled": 19,
+          "raw_valid": 19,
+          "history_ready": 19
+        }
+      }
+    }
+  ],
+  "feature_count": 24,
+  "selected_C": 0.1,
+  "C_grid": [
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "selection_cv_auroc": 0.6641274238227146,
+  "cv_is_model_selection_only": true,
+  "cv_auroc_by_C": [
+    0.6385041551246537,
+    0.6641274238227146,
+    0.6523545706371191,
+    0.6398891966759004
+  ],
+  "folds": [
+    {
+      "train_blocks": [
+        3,
+        4,
+        5
+      ],
+      "validation_blocks": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "train_blocks": [
+        0,
+        1,
+        2
+      ],
+      "validation_blocks": [
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "temporal_features": {
+    "step_s": 0.25,
+    "halflife_s": 2.0,
+    "sigma_floor": 0.01,
+    "warmup_steps": 8,
+    "forecast_before_current_update": true,
+    "reset_at_invalid_center": true
+  },
+  "common_history_mask_for_all_models": true,
+  "score": "Uncalibrated margin; same three-second interval rule as the previous experiment.",
+  "limitations": "Task-label proxy; offline filtering; short rest; ocular/sensory/motor confounds."
+}

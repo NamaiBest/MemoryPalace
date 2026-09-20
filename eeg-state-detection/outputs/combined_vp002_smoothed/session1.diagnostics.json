@@ -1,0 +1,65 @@
+[
+  {
+    "source": "replayed_eeg",
+    "recording_id": "VP002-nback1-block07",
+    "session_id": "VP002-nback1",
+    "offset_s": 450.427,
+    "search_scope": "all valid centers in this excerpt; no onset gating",
+    "combination": "union; overlap links only; no score fusion or confidence boost",
+    "rank_scope": "each detector within this recording excerpt",
+    "stretch_model_kind": "power_ema",
+    "stretch_half_life_s": 2.0,
+    "burst_budget": 5,
+    "event_counts": {
+      "stretch": 1,
+      "burst": 5
+    },
+    "bursts_overlapping_stretches": 0,
+    "workload_windows": 251,
+    "workload_rejected_windows": 16,
+    "burst_windows": 634,
+    "burst_rejected_windows": 39
+  },
+  {
+    "source": "replayed_eeg",
+    "recording_id": "VP002-nback1-block08",
+    "session_id": "VP002-nback1",
+    "offset_s": 519.993,
+    "search_scope": "all valid centers in this excerpt; no onset gating",
+    "combination": "union; overlap links only; no score fusion or confidence boost",
+    "rank_scope": "each detector within this recording excerpt",
+    "stretch_model_kind": "power_ema",
+    "stretch_half_life_s": 2.0,
+    "burst_budget": 5,
+    "event_counts": {
+      "stretch": 1,
+      "burst": 5
+    },
+    "bursts_overlapping_stretches": 3,
+    "workload_windows": 251,
+    "workload_rejected_windows": 16,
+    "burst_windows": 636,
+    "burst_rejected_windows": 40
+  },
+  {
+    "source": "replayed_eeg",
+    "recording_id": "VP002-nback1-block09",
+    "session_id": "VP002-nback1",
+    "offset_s": 589.671,
+    "search_scope": "all valid centers in this excerpt; no onset gating",
+    "combination": "union; overlap links only; no score fusion or confidence boost",
+    "rank_scope": "each detector within this recording excerpt",
+    "stretch_model_kind": "power_ema",
+    "stretch_half_life_s": 2.0,
+    "burst_budget": 5,
+    "event_counts": {
+      "stretch": 1,
+      "burst": 5
+    },
+    "bursts_overlapping_stretches": 3,
+    "workload_windows": 250,
+    "workload_rejected_windows": 16,
+    "burst_windows": 634,
+    "burst_rejected_windows": 40
+  }
+]

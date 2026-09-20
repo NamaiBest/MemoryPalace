@@ -1,0 +1,13 @@
+{
+  "frozen_utc": "2026-09-20T00:24:22.991656+00:00",
+  "input_models": {
+    "/home/albert/hackmit/outputs/workload_vp002/session1.task_rest.power.joblib": "43c4b7b3a810d8a18bce17d1dfa4071dccf5aa31ce9b086265f918aa71e63159",
+    "/home/albert/hackmit/outputs/workload_vp002/session2.task_rest.power.joblib": "3791c47c95f95ecf4c52363f6e0f1ae17532da7eac524deee29e83e3604b2ef1",
+    "/home/albert/hackmit/outputs/workload_vp002/session3.task_rest.power.joblib": "5b6f2790069aaeb4f6657130768c17a7b136cdc406ada68bff53bb9d4dd0ad5a"
+  },
+  "erp_models": {
+    "session1.mean_bins.joblib": "168a46f6dd8d126e51a9335de02c68220dbc7ba0eb236234159076836624d681",
+    "session2.mean_bins.joblib": "ce945de06664bdd5c16e962388351f0c4c328a5ba25c1452b60827e5f08b8601",
+    "session3.mean_bins.joblib": "484ae3244917d1a177976d84f5036ae7ba76e62712884c26d77544374e5c7c6e"
+  }
+}

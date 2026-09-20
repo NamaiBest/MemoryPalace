@@ -1,0 +1,144 @@
+{
+  "kind": "mean_bins",
+  "source": "replayed_eeg",
+  "session_id": "VP002-nback3",
+  "processing_id": "eog-regression-v1-81ec33e38a40095b6d9c53c954333707306c5f68dd89318d3184a77608ca085c",
+  "signal_type": "evoked_response",
+  "selected_C": 0.01,
+  "cv_average_precision": 0.4484244203750252,
+  "cv_is_model_selection_only": true,
+  "training_trials": 80,
+  "training_targets": 24,
+  "quality": [
+    {
+      "recording_id": "VP002-nback3-block02",
+      "total_trials": 20,
+      "accepted_trials": 20,
+      "accepted_targets": 6,
+      "rejected_targets": 0,
+      "rejected_non_targets": 0,
+      "bad_or_edge_fraction": 0.062063615205585725
+    },
+    {
+      "recording_id": "VP002-nback3-block03",
+      "total_trials": 20,
+      "accepted_trials": 20,
+      "accepted_targets": 6,
+      "rejected_targets": 0,
+      "rejected_non_targets": 0,
+      "bad_or_edge_fraction": 0.06208288064566196
+    },
+    {
+      "recording_id": "VP002-nback3-block04",
+      "total_trials": 20,
+      "accepted_trials": 20,
+      "accepted_targets": 6,
+      "rejected_targets": 0,
+      "rejected_non_targets": 0,
+      "bad_or_edge_fraction": 0.06219872492613902
+    },
+    {
+      "recording_id": "VP002-nback3-block05",
+      "total_trials": 20,
+      "accepted_trials": 20,
+      "accepted_targets": 6,
+      "rejected_targets": 0,
+      "rejected_non_targets": 0,
+      "bad_or_edge_fraction": 0.13375154894671623
+    }
+  ],
+  "training_recordings": [
+    "VP002-nback3-block01",
+    "VP002-nback3-block02",
+    "VP002-nback3-block03",
+    "VP002-nback3-block04",
+    "VP002-nback3-block05",
+    "VP002-nback3-block06"
+  ],
+  "training_hashes": [
+    "fcd7d0e6e94936b2c408e10113604147db34aa73ce2684e7d8a267960ac5f86d",
+    "da4f6fb4f9577333a1b35e6efc2323f064dbc7f35909be741b39c1dd03a57a28",
+    "4d558e81b427e5e61731d494345c7ed68c7e4f20aaf23901b8ffdc607150c379",
+    "98555f805ec5171c681aaadfe6427d18aa84d68a4cfb2ee85d0ccb97d90bffe4",
+    "e9869fab971ec6007b1d6180099b64e527ba25d5f918cae9fbb63ebbcb15cceb",
+    "3bbf1d1b33f94ea27ae39861d1e6d43a005f0f0521ffdb075d0a1aef7d7ca7d1"
+  ],
+  "folds": [
+    {
+      "train_blocks": [
+        2,
+        4
+      ],
+      "validation_blocks": [
+        1,
+        3
+      ]
+    },
+    {
+      "train_blocks": [
+        1,
+        3
+      ],
+      "validation_blocks": [
+        2,
+        4
+      ]
+    }
+  ],
+  "C_grid": [
+    0.01,
+    0.1,
+    1,
+    10
+  ],
+  "channels": [
+    "Fp1",
+    "AFF5h",
+    "AFz",
+    "F1",
+    "FC5",
+    "FC1",
+    "T7",
+    "C3",
+    "Cz",
+    "CP5",
+    "CP1",
+    "P7",
+    "P3",
+    "Pz",
+    "POz",
+    "O1",
+    "Fp2",
+    "AFF6h",
+    "F2",
+    "FC2",
+    "FC6",
+    "C4",
+    "T8",
+    "CP2",
+    "CP6",
+    "P4",
+    "P8",
+    "O2"
+  ],
+  "sample_rate": 200,
+  "epoch_s": [
+    -0.1,
+    1.0
+  ],
+  "filter_hz": [
+    1,
+    30
+  ],
+  "baseline_s": [
+    -0.1,
+    0
+  ],
+  "artifact_amplitude_uv": 120,
+  "artifact_step_uv": 60,
+  "filter_guard_s": 2,
+  "quality_highpass_hz": 1.0,
+  "quality_lowpass_hz": 30.0,
+  "input_preprocessing": "Separate pre-task EOG projection required; coefficients saved in session acquisition audit.",
+  "interpretation": "Target-vs-nontarget EEG task proxy; sensory/motor/ocular contributions not isolated."
+}

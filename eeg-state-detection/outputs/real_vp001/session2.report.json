@@ -1,0 +1,555 @@
+{
+  "session": 2,
+  "session_id": "VP001-nback2",
+  "stretch_reference": {
+    "center": 2.316125808732416,
+    "scale": 0.2981538128159318
+  },
+  "stretch_config": {
+    "sample_rate": 200.0,
+    "channels": [
+      "Fp1",
+      "AFF5h",
+      "AFz",
+      "F1",
+      "FC5",
+      "FC1",
+      "T7",
+      "C3",
+      "Cz",
+      "CP5",
+      "CP1",
+      "P7",
+      "P3",
+      "Pz",
+      "POz",
+      "O1",
+      "Fp2",
+      "AFF6h",
+      "F2",
+      "FC2",
+      "FC6",
+      "C4",
+      "T8",
+      "CP2",
+      "CP6",
+      "P4",
+      "P8",
+      "O2"
+    ],
+    "frontal_channels": [
+      "Fp1",
+      "Fp2",
+      "AFF5h",
+      "AFF6h",
+      "AFz",
+      "F1",
+      "F2"
+    ],
+    "bands": [
+      [
+        4.0,
+        8.0
+      ],
+      [
+        8.0,
+        13.0
+      ],
+      [
+        13.0,
+        30.0
+      ]
+    ],
+    "window_s": 0.75,
+    "step_s": 0.25,
+    "context_offset_s": 2.0,
+    "filter_guard_s": 2.0,
+    "artifact_amplitude_uv": 120.0,
+    "artifact_step_uv": 60.0,
+    "flatline_std_uv": 0.05,
+    "quality_highpass_hz": 1.0,
+    "quality_lowpass_hz": 30.0,
+    "stretch_window_s": 2.0,
+    "stretch_z": 3.0,
+    "stretch_release_z": 1.5,
+    "stretch_min_s": 3.0,
+    "gate_radius_s": 3.0,
+    "separation_s": 2.0,
+    "min_score": 0.0
+  },
+  "training_blocks": 6,
+  "held_out_blocks": 3,
+  "aligned_erp": {
+    "mean_bins": {
+      "trials": 40,
+      "targets": 12,
+      "target_prevalence": 0.3,
+      "auroc": 0.7351190476190477,
+      "average_precision": 0.6250365242462943,
+      "balanced_accuracy_margin_zero": 0.6666666666666667
+    },
+    "xdawn": {
+      "trials": 40,
+      "targets": 12,
+      "target_prevalence": 0.3,
+      "auroc": 0.39880952380952384,
+      "average_precision": 0.3670178833558251,
+      "balanced_accuracy_margin_zero": 0.494047619047619
+    },
+    "eog_bins": {
+      "trials": 40,
+      "targets": 12,
+      "target_prevalence": 0.3,
+      "auroc": 0.35119047619047616,
+      "average_precision": 0.26321170691806967,
+      "balanced_accuracy_margin_zero": 0.39880952380952384
+    }
+  },
+  "blocks": [
+    {
+      "recording_id": "VP001-nback2-block07",
+      "condition": 3,
+      "original_offset_s": 451.903,
+      "stretch": {
+        "condition": 3,
+        "detected": [],
+        "task_interval_proxy": {
+          "truth_stretches": 1,
+          "returned": 0,
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "minimum_iou": 0.5,
+          "precision": null,
+          "recall": 0.0,
+          "mean_iou": null,
+          "mean_abs_onset_error_s": null,
+          "mean_abs_end_error_s": null
+        },
+        "task_vs_rest_theta_auroc": 0.6303680981595092,
+        "task_median_z": -0.16160943314833584,
+        "rest_median_z": -0.6808335553286626,
+        "task_valid_centers": 163,
+        "task_total_centers": 163,
+        "rest_valid_centers": 16,
+        "rest_total_centers": 17,
+        "off_task_detected_onsets": 0,
+        "interpretation": "Task intervals are behavioral proxies, not measured neural stretch truth."
+      },
+      "erp_quality": {
+        "total_trials": 20,
+        "accepted_trials": 20,
+        "accepted_targets": 6,
+        "rejected_targets": 0,
+        "rejected_non_targets": 0,
+        "accepted_marker_times_s": [
+          10.129999999999995,
+          12.323999999999955,
+          14.561999999999955,
+          16.786,
+          19.019000000000005,
+          21.20599999999996,
+          23.43199999999996,
+          25.649999999999977,
+          27.853999999999985,
+          30.101999999999975,
+          32.31099999999998,
+          34.573999999999955,
+          36.78899999999999,
+          39.02199999999999,
+          41.24799999999999,
+          43.48199999999997,
+          45.698999999999955,
+          47.95999999999998,
+          50.18000000000001,
+          52.38899999999995
+        ],
+        "bad_or_edge_fraction": 0.0632206144084191
+      },
+      "aligned_erp": {
+        "mean_bins": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.7738095238095238,
+          "average_precision": 0.6842592592592592,
+          "balanced_accuracy_margin_zero": 0.7261904761904762
+        },
+        "xdawn": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.369047619047619,
+          "average_precision": 0.3918472652218782,
+          "balanced_accuracy_margin_zero": 0.5119047619047619
+        },
+        "eog_bins": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.38095238095238093,
+          "average_precision": 0.3295751633986928,
+          "balanced_accuracy_margin_zero": 0.45238095238095233
+        }
+      },
+      "continuous_retrieval": {
+        "mean_bins": {
+          "all": {
+            "truth_events": 6,
+            "returned": 5,
+            "true_positives": 0,
+            "false_positives": 5,
+            "precision_of_returned": 0.0,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 6,
+            "candidate_recall": 1.0,
+            "eligible_centers": 595,
+            "valid_centers": 595,
+            "valid_center_fraction": 1.0,
+            "rejected_grid_centers": 41,
+            "selected": [
+              {
+                "anchor_s": 54.1,
+                "raw_score": 2.3669193160899384
+              },
+              {
+                "anchor_s": 60.00000000000001,
+                "raw_score": 1.7723932351279121
+              },
+              {
+                "anchor_s": 34.0,
+                "raw_score": 1.6963217322858226
+              },
+              {
+                "anchor_s": 57.400000000000006,
+                "raw_score": 1.5585032181381528
+              },
+              {
+                "anchor_s": 35.5,
+                "raw_score": 1.4449049147601132
+              }
+            ],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          },
+          "onset": {
+            "truth_events": 6,
+            "returned": 0,
+            "true_positives": 0,
+            "false_positives": 0,
+            "precision_of_returned": null,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 0,
+            "candidate_recall": 0.0,
+            "eligible_centers": 0,
+            "valid_centers": 595,
+            "valid_center_fraction": 0.0,
+            "rejected_grid_centers": 41,
+            "selected": [],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          }
+        },
+        "xdawn": {
+          "all": {
+            "truth_events": 6,
+            "returned": 5,
+            "true_positives": 1,
+            "false_positives": 4,
+            "precision_of_returned": 0.2,
+            "recall_at_budget": 0.16666666666666666,
+            "mean_localization_error_s": 0.019000000000001904,
+            "accessible_events": 6,
+            "candidate_recall": 1.0,
+            "eligible_centers": 595,
+            "valid_centers": 595,
+            "valid_center_fraction": 1.0,
+            "rejected_grid_centers": 41,
+            "selected": [
+              {
+                "anchor_s": 19.000000000000004,
+                "raw_score": 0.250895677994881
+              },
+              {
+                "anchor_s": 5.6,
+                "raw_score": 0.1097692710109392
+              },
+              {
+                "anchor_s": 36.800000000000004,
+                "raw_score": 0.0891225526831973
+              },
+              {
+                "anchor_s": 44.6,
+                "raw_score": 0.08051996830008556
+              },
+              {
+                "anchor_s": 25.700000000000003,
+                "raw_score": 0.04555686270594039
+              }
+            ],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          },
+          "onset": {
+            "truth_events": 6,
+            "returned": 0,
+            "true_positives": 0,
+            "false_positives": 0,
+            "precision_of_returned": null,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 0,
+            "candidate_recall": 0.0,
+            "eligible_centers": 0,
+            "valid_centers": 595,
+            "valid_center_fraction": 0.0,
+            "rejected_grid_centers": 41,
+            "selected": [],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          }
+        }
+      }
+    },
+    {
+      "recording_id": "VP001-nback2-block08",
+      "condition": 2,
+      "original_offset_s": 521.5,
+      "stretch": {
+        "condition": 2,
+        "detected": [],
+        "task_interval_proxy": {
+          "truth_stretches": 1,
+          "returned": 0,
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "minimum_iou": 0.5,
+          "precision": null,
+          "recall": 0.0,
+          "mean_iou": null,
+          "mean_abs_onset_error_s": null,
+          "mean_abs_end_error_s": null
+        },
+        "task_vs_rest_theta_auroc": 0.8678286129266521,
+        "task_median_z": -0.21739639322519033,
+        "rest_median_z": -1.7254142455699177,
+        "task_valid_centers": 162,
+        "task_total_centers": 162,
+        "rest_valid_centers": 17,
+        "rest_total_centers": 17,
+        "off_task_detected_onsets": 0,
+        "interpretation": "Task intervals are behavioral proxies, not measured neural stretch truth."
+      },
+      "erp_quality": {
+        "total_trials": 20,
+        "accepted_trials": 20,
+        "accepted_targets": 6,
+        "rejected_targets": 0,
+        "rejected_non_targets": 0,
+        "accepted_marker_times_s": [
+          10.128000000000043,
+          12.342999999999961,
+          14.572000000000003,
+          16.81899999999996,
+          19.065000000000055,
+          21.289999999999964,
+          23.464000000000055,
+          25.664999999999964,
+          27.895999999999958,
+          30.126999999999953,
+          32.34299999999996,
+          34.553999999999974,
+          36.764999999999986,
+          38.95500000000004,
+          41.172000000000025,
+          43.41300000000001,
+          45.601,
+          47.82899999999995,
+          50.025999999999954,
+          52.25599999999997
+        ],
+        "bad_or_edge_fraction": 0.062039550213260956
+      },
+      "aligned_erp": {
+        "mean_bins": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.7261904761904763,
+          "average_precision": 0.6316137566137566,
+          "balanced_accuracy_margin_zero": 0.6071428571428572
+        },
+        "xdawn": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.41666666666666663,
+          "average_precision": 0.41474867724867726,
+          "balanced_accuracy_margin_zero": 0.47619047619047616
+        },
+        "eog_bins": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.3214285714285714,
+          "average_precision": 0.2531128593628594,
+          "balanced_accuracy_margin_zero": 0.34523809523809523
+        }
+      },
+      "continuous_retrieval": {
+        "mean_bins": {
+          "all": {
+            "truth_events": 6,
+            "returned": 5,
+            "true_positives": 1,
+            "false_positives": 4,
+            "precision_of_returned": 0.2,
+            "recall_at_budget": 0.16666666666666666,
+            "mean_localization_error_s": 0.4539999999999722,
+            "accessible_events": 6,
+            "candidate_recall": 1.0,
+            "eligible_centers": 594,
+            "valid_centers": 594,
+            "valid_center_fraction": 1.0,
+            "rejected_grid_centers": 40,
+            "selected": [
+              {
+                "anchor_s": 8.1,
+                "raw_score": 2.3673745228063856
+              },
+              {
+                "anchor_s": 15.4,
+                "raw_score": 2.0548582229950902
+              },
+              {
+                "anchor_s": 34.1,
+                "raw_score": 1.8872877681674802
+              },
+              {
+                "anchor_s": 53.2,
+                "raw_score": 1.8107919972106943
+              },
+              {
+                "anchor_s": 21.6,
+                "raw_score": 1.7593382475336388
+              }
+            ],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          },
+          "onset": {
+            "truth_events": 6,
+            "returned": 0,
+            "true_positives": 0,
+            "false_positives": 0,
+            "precision_of_returned": null,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 0,
+            "candidate_recall": 0.0,
+            "eligible_centers": 0,
+            "valid_centers": 594,
+            "valid_center_fraction": 0.0,
+            "rejected_grid_centers": 40,
+            "selected": [],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          }
+        },
+        "xdawn": {
+          "all": {
+            "truth_events": 6,
+            "returned": 5,
+            "true_positives": 0,
+            "false_positives": 5,
+            "precision_of_returned": 0.0,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 6,
+            "candidate_recall": 1.0,
+            "eligible_centers": 594,
+            "valid_centers": 594,
+            "valid_center_fraction": 1.0,
+            "rejected_grid_centers": 40,
+            "selected": [
+              {
+                "anchor_s": 32.400000000000006,
+                "raw_score": 0.38371142031674066
+              },
+              {
+                "anchor_s": 44.400000000000006,
+                "raw_score": 0.30211404076753445
+              },
+              {
+                "anchor_s": 8.3,
+                "raw_score": 0.2089028528880914
+              },
+              {
+                "anchor_s": 48.900000000000006,
+                "raw_score": 0.2075238310533275
+              },
+              {
+                "anchor_s": 24.000000000000004,
+                "raw_score": 0.1687787909938146
+              }
+            ],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          },
+          "onset": {
+            "truth_events": 6,
+            "returned": 0,
+            "true_positives": 0,
+            "false_positives": 0,
+            "precision_of_returned": null,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 0,
+            "candidate_recall": 0.0,
+            "eligible_centers": 0,
+            "valid_centers": 594,
+            "valid_center_fraction": 0.0,
+            "rejected_grid_centers": 40,
+            "selected": [],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          }
+        }
+      }
+    },
+    {
+      "recording_id": "VP001-nback2-block09",
+      "condition": 0,
+      "original_offset_s": 591.048,
+      "stretch": {
+        "condition": 0,
+        "detected": [],
+        "task_interval_proxy": {
+          "truth_stretches": 1,
+          "returned": 0,
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "minimum_iou": 0.5,
+          "precision": null,
+          "recall": 0.0,
+          "mean_iou": null,
+          "mean_abs_onset_error_s": null,
+          "mean_abs_end_error_s": null
+        },
+        "task_vs_rest_theta_auroc": 0.6074800290486565,
+        "task_median_z": 0.3682292037354219,
+        "rest_median_z": -0.032749715604150846,
+        "task_valid_centers": 162,
+        "task_total_centers": 162,
+        "rest_valid_centers": 17,
+        "rest_total_centers": 17,
+        "off_task_detected_onsets": 0,
+        "interpretation": "Task intervals are behavioral proxies, not measured neural stretch truth."
+      }
+    }
+  ]
+}

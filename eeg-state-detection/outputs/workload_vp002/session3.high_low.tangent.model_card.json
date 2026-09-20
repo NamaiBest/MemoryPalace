@@ -1,0 +1,184 @@
+{
+  "kind": "tangent",
+  "target": "high_low",
+  "source": "replayed_eeg",
+  "session_id": "VP002-nback3",
+  "processing_id": "eog-regression-v1-81ec33e38a40095b6d9c53c954333707306c5f68dd89318d3184a77608ca085c",
+  "config": {
+    "sample_rate": 200.0,
+    "channels": [
+      "Fp1",
+      "AFF5h",
+      "AFz",
+      "F1",
+      "FC5",
+      "FC1",
+      "T7",
+      "C3",
+      "Cz",
+      "CP5",
+      "CP1",
+      "P7",
+      "P3",
+      "Pz",
+      "POz",
+      "O1",
+      "Fp2",
+      "AFF6h",
+      "F2",
+      "FC2",
+      "FC6",
+      "C4",
+      "T8",
+      "CP2",
+      "CP6",
+      "P4",
+      "P8",
+      "O2"
+    ],
+    "frontal_channels": [
+      "Fp1",
+      "Fp2",
+      "AFF5h",
+      "AFF6h",
+      "AFz",
+      "F1",
+      "F2"
+    ],
+    "bands": [
+      [
+        4.0,
+        8.0
+      ],
+      [
+        8.0,
+        13.0
+      ],
+      [
+        13.0,
+        30.0
+      ]
+    ],
+    "window_s": 2.0,
+    "step_s": 0.25,
+    "context_offset_s": 3.0,
+    "filter_guard_s": 2.0,
+    "artifact_amplitude_uv": 120.0,
+    "artifact_step_uv": 60.0,
+    "flatline_std_uv": 0.05,
+    "quality_highpass_hz": 1.0,
+    "quality_lowpass_hz": 30.0,
+    "stretch_window_s": 2.0,
+    "stretch_z": 3.0,
+    "stretch_release_z": 1.5,
+    "stretch_min_s": 3.0,
+    "gate_radius_s": 3.0,
+    "separation_s": 2.0,
+    "min_score": 0.0
+  },
+  "selected_C": 0.01,
+  "C_grid": [
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "selection_cv_auroc": 0.9981249999999999,
+  "cv_auroc_by_C": [
+    0.9981249999999999,
+    0.9981249999999999,
+    0.9981249999999999,
+    0.9981249999999999
+  ],
+  "cv_is_model_selection_only": true,
+  "training_windows": 120,
+  "positives": 80,
+  "training_recordings": [
+    "VP002-nback3-block01",
+    "VP002-nback3-block02",
+    "VP002-nback3-block03",
+    "VP002-nback3-block04",
+    "VP002-nback3-block05",
+    "VP002-nback3-block06"
+  ],
+  "training_sample_sha256": [
+    "fcd7d0e6e94936b2c408e10113604147db34aa73ce2684e7d8a267960ac5f86d",
+    "da4f6fb4f9577333a1b35e6efc2323f064dbc7f35909be741b39c1dd03a57a28",
+    "4d558e81b427e5e61731d494345c7ed68c7e4f20aaf23901b8ffdc607150c379",
+    "98555f805ec5171c681aaadfe6427d18aa84d68a4cfb2ee85d0ccb97d90bffe4",
+    "e9869fab971ec6007b1d6180099b64e527ba25d5f918cae9fbb63ebbcb15cceb",
+    "3bbf1d1b33f94ea27ae39861d1e6d43a005f0f0521ffdb075d0a1aef7d7ca7d1"
+  ],
+  "quality": [
+    {
+      "recording_id": "VP002-nback3-block01",
+      "condition": 0,
+      "labeled_windows": 20,
+      "accepted_windows": 20,
+      "positive_windows": 0
+    },
+    {
+      "recording_id": "VP002-nback3-block02",
+      "condition": 3,
+      "labeled_windows": 20,
+      "accepted_windows": 20,
+      "positive_windows": 20
+    },
+    {
+      "recording_id": "VP002-nback3-block03",
+      "condition": 2,
+      "labeled_windows": 20,
+      "accepted_windows": 20,
+      "positive_windows": 20
+    },
+    {
+      "recording_id": "VP002-nback3-block04",
+      "condition": 3,
+      "labeled_windows": 20,
+      "accepted_windows": 20,
+      "positive_windows": 20
+    },
+    {
+      "recording_id": "VP002-nback3-block05",
+      "condition": 2,
+      "labeled_windows": 20,
+      "accepted_windows": 20,
+      "positive_windows": 20
+    },
+    {
+      "recording_id": "VP002-nback3-block06",
+      "condition": 0,
+      "labeled_windows": 20,
+      "accepted_windows": 20,
+      "positive_windows": 0
+    }
+  ],
+  "folds": [
+    {
+      "train_blocks": [
+        3,
+        4,
+        5
+      ],
+      "validation_blocks": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "train_blocks": [
+        0,
+        1,
+        2
+      ],
+      "validation_blocks": [
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "score": "uncalibrated linear decision margin; >=0 for at least 3 seconds emits an interval",
+  "interpretation": "Task/rest or higher/lower n-back proxy, not a measured mental state."
+}

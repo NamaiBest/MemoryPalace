@@ -1,0 +1,315 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\SPD}[1]{\mathcal{S}^{#1}_{++}}
+\newcommand{\Tr}{\operatorname{tr}}
+\newcommand{\vect}{\operatorname{vec}}
+
+\title{Signal processing layer}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-3em}
+
+\section{Notation and setup}
+
+A single trial is a matrix
+\[
+X \in \Real^{C \times T},
+\]
+$C$ channels by $T$ time samples, already band-pass filtered and
+baseline-corrected. Rows are electrodes, columns are samples. Write
+$X_{i\cdot}$ for the $i$th channel's time course.
+
+A calibration set is $\{(X_n, y_n)\}_{n=1}^{N}$ with $y_n \in \{0,1\}$.
+All quantities below that are \emph{learned} are fitted on training
+folds only and then frozen; applying them to a test trial uses the
+stored values.
+
+\section{Covariance}
+
+\subsection{Definition}
+
+Assume each row is mean-centred, $\sum_t X_{it} = 0$. The sample
+covariance is
+\[
+\Sigma \;=\; \frac{1}{T-1} X X^\top \;\in\; \Real^{C \times C},
+\qquad
+\Sigma_{ij} \;=\; \frac{1}{T-1}\sum_{t=1}^{T} X_{it} X_{jt}.
+\]
+The diagonal holds per-channel variance; off-diagonals hold covariation
+between channel pairs.
+
+\subsection{Two properties}
+
+\textbf{Symmetry.} $\Sigma_{ij} = \Sigma_{ji}$, immediate from the
+definition, so $\Sigma = \Sigma^\top$.
+
+\textbf{Positive semi-definiteness.} For any $w \in \Real^C$,
+\[
+w^\top \Sigma w \;=\; \frac{1}{T-1}\, w^\top X X^\top w
+\;=\; \frac{1}{T-1}\,\big\| X^\top w \big\|_2^2 \;\ge\; 0 .
+\]
+The middle expression is the variance of the mixed signal $w^\top X$,
+which cannot be negative. It is strictly positive, giving
+$\Sigma \in \SPD{C}$, whenever no linear combination of channels is
+identically zero --- requiring $T \ge C$ and no exactly redundant
+channel.
+
+\subsection{Shrinkage}
+
+For short windows the empirical estimator is poorly conditioned, which
+makes the matrix logarithm of Section~4 numerically unstable. Use the
+Ledoit--Wolf estimator
+\[
+\hat\Sigma \;=\; (1-\alpha)\,\Sigma \;+\; \alpha\,\frac{\Tr(\Sigma)}{C}\, I,
+\qquad \alpha \in [0,1]
+\]
+with $\alpha$ chosen analytically. This pulls eigenvalues away from
+zero, and hence their logarithms away from $-\infty$.
+
+\subsection{Time invariance --- why this is not yet enough}
+
+Let $P$ be any $T \times T$ permutation. Then
+\[
+(XP)(XP)^\top = X P P^\top X^\top = X X^\top ,
+\]
+so $\Sigma$ is invariant to reordering the time samples. It encodes
+\emph{spatial} structure only. A response defined by its shape and
+latency is invisible to it, which is what Section~3 repairs.
+
+\section{Spatial filtering and prototype augmentation}
+
+\subsection{xDAWN}
+
+A spatial filter $w \in \Real^C$ produces a virtual channel $w^\top X$.
+Let $\bar{X}_1 \in \Real^{C\times T}$ be the average of the class-1
+trials (the evoked response, estimated by least squares under a
+superposition model), and let $\Sigma_{\text{sig}}$ and
+$\Sigma_{\text{tot}}$ be the covariances of $\bar{X}_1$ and of the raw
+data. xDAWN maximises the Rayleigh quotient
+\[
+w^\star \;=\; \arg\max_{w}\;
+\frac{w^\top \Sigma_{\text{sig}} \, w}{w^\top \Sigma_{\text{tot}}\, w},
+\]
+whose stationary points solve the generalized eigenvalue problem
+$\Sigma_{\text{sig}} w = \lambda \, \Sigma_{\text{tot}} w$. Keeping the
+top $K$ eigenvectors gives $W \in \Real^{C \times K}$.
+
+Two consequences worth stating. Weights may be negative, which lets the
+filter subtract channels carrying shared noise --- something no
+single-electrode choice can do. And hard selection is in the feasible
+set ($w = e_i$), so a learned filter cannot do worse than hand-picking
+except through estimation error.
+
+\subsection{Augmentation}
+
+Stack the filtered prototype on the filtered trial:
+\[
+\tilde{X} \;=\;
+\begin{bmatrix} W^\top \bar{X}_1 \\[2pt] W^\top X \end{bmatrix}
+\in \Real^{2K \times T},
+\qquad
+\Sigma \;=\; \frac{1}{T-1}\,\tilde{X}\tilde{X}^\top \in \SPD{2K}.
+\]
+In block form,
+\[
+\Sigma \;=\;
+\begin{bmatrix}
+\Sigma_{\bar{X}\bar{X}} & \Sigma_{\bar{X}X} \\[2pt]
+\Sigma_{X\bar{X}} & \Sigma_{XX}
+\end{bmatrix}.
+\]
+The off-diagonal block has entries
+\[
+\big(\Sigma_{\bar{X}X}\big)_{ij}
+= \frac{1}{T-1}\sum_{t} \big(W^\top \bar{X}_1\big)_{it}\,\big(W^\top X\big)_{jt},
+\]
+a correlation of the trial against a template with fixed time structure
+--- a matched filter. Permuting the trial's samples destroys it. The
+timing information lost in Section~2.4 re-enters here.
+
+The diagonal block $\Sigma_{XX}$ carries the trial's own noise level,
+so the classifier can weigh template match against the noise it sat in.
+
+\paragraph{Oscillatory variant.} If the target is a sustained rhythm
+rather than a time-locked response, drop the augmentation: band-pass to
+the band of interest and take $\Sigma = \frac{1}{T-1}XX^\top$ directly.
+Everything from Section~4 onward is unchanged. Time invariance is then
+a feature, not a defect.
+
+\section{The manifold}
+
+\subsection{Why not Euclidean}
+
+$\SPD{d}$ is an open convex cone inside the vector space of symmetric
+matrices, not a subspace: it is not closed under negation or
+subtraction. Treating it as flat distorts results. With
+$A=\operatorname{diag}(1,4)$ and $B=\operatorname{diag}(4,1)$, both of
+determinant $4$,
+\[
+\tfrac{1}{2}(A+B) = \operatorname{diag}(2.5,\,2.5), \quad \det = 6.25,
+\]
+spread that neither input had. Covariance composes multiplicatively:
+scaling a signal by $a$ scales its covariance by $a^2$. Arithmetic
+averaging is a rule for additive quantities.
+
+\subsection{Matrix functions}
+
+For $M \in \SPD{d}$ with eigendecomposition $M = V \Lambda V^\top$,
+$\Lambda = \operatorname{diag}(\lambda_1,\dots,\lambda_d)$,
+$\lambda_i > 0$, define
+\[
+M^{p} = V \Lambda^{p} V^\top, \qquad
+\log M = V (\log \Lambda) V^\top, \qquad
+\exp S = V (\exp \Lambda) V^\top .
+\]
+Eigenvectors are untouched; the scalar function acts on eigenvalues.
+Positive definiteness is exactly the condition making $\log M$ real and
+unique. Note this is \emph{not} the entrywise logarithm.
+
+\subsection{Affine-invariant metric}
+
+\[
+\delta(A,B) \;=\; \big\| \log\!\big(B^{-1/2} A B^{-1/2}\big) \big\|_F
+\;=\; \Big(\textstyle\sum_{i} \log^2 \lambda_i \Big)^{1/2},
+\]
+where $\lambda_i$ solve $\det(A - \lambda B)=0$. For any invertible
+$G \in \Real^{d\times d}$,
+\[
+\delta\big(GAG^\top,\; GBG^\top\big) \;=\; \delta(A,B).
+\]
+Volume conduction and re-referencing are linear maps on the sensors, so
+this geometry is blind to an entire class of nuisance transformations.
+
+\subsection{Geometric mean}
+
+\[
+M \;=\; \arg\min_{M \in \SPD{d}} \sum_{n=1}^{N} \delta^2(M, \Sigma_n).
+\]
+No closed form for $d>1$. Fixed-point iteration, from
+$M^{(0)} = \frac{1}{N}\sum_n \Sigma_n$:
+\[
+S^{(k)} = \frac{1}{N}\sum_{n=1}^{N}
+   \log\!\big(M^{(k)\,-1/2} \Sigma_n M^{(k)\,-1/2}\big),
+\qquad
+M^{(k+1)} = M^{(k)\,1/2} \exp\!\big(S^{(k)}\big) M^{(k)\,1/2},
+\]
+stopping when $\|S^{(k)}\|_F < \varepsilon$. The mean is characterised
+by its tangent-space mean being zero.
+
+\section{Tangent space}
+
+\subsection{The map}
+
+Fix the reference $M$ from Section 4.4. For a trial covariance $\Sigma$:
+
+\begin{enumerate}[label=\textbf{\arabic*.},leftmargin=*]
+\item \textbf{Whiten.}
+$\tilde\Sigma = M^{-1/2}\, \Sigma\, M^{-1/2}$.
+
+The two-sided form is forced: a linear map $x \mapsto Gx$ on the data
+sends $\Sigma \mapsto G\Sigma G^\top$, since covariance is a quadratic
+form. With $G = M^{-1/2}$ (symmetric), this is the sandwich. One-sided
+$M^{-1}\Sigma$ has the same eigenvalues but is not symmetric and leaves
+$\SPD{d}$.
+
+Check: $\Sigma = M \Rightarrow \tilde\Sigma = I$. The eigenvalues of
+$\tilde\Sigma$ are the generalized eigenvalues of $(\Sigma, M)$: the
+ratio of this trial's variance to typical, per direction, and so
+independent of overall gain.
+
+\item \textbf{Logarithm.} $S = \log \tilde\Sigma$.
+
+Now $\Sigma = M \Rightarrow S = 0$: the reference is the origin.
+A direction with $4\times$ typical variance maps to $+\log 4$, with
+$\tfrac{1}{4}\times$ to $-\log 4$. Multiplicative becomes additive.
+
+\item \textbf{Vectorize.} With $\mathcal{I} = \{(i,j): i \le j\}$,
+\[
+v = \vect(S) = \big[\, S_{11},\; \sqrt{2}\,S_{12},\; \dots,\;
+   S_{22},\; \dots \,\big] \in \Real^{d(d+1)/2}.
+\]
+The $\sqrt{2}$ on off-diagonals is required for the isometry
+$\|v\|_2 = \|S\|_F$, since each off-diagonal entry appears twice in
+$\|S\|_F^2$. Hence $\|v\|_2 = \delta(\Sigma, M)$: Euclidean distance on
+the chart equals manifold distance from the reference.
+\end{enumerate}
+
+For $K=3$ filters, $d = 2K = 6$ and $\dim v = 21$, against $C \cdot T$
+raw features --- the dimensionality reduction that makes the model
+trainable at a few hundred trials.
+
+\subsection{Interpretation}
+
+The chart is exact at $M$ and degrades with distance, like a flat map
+of a curved surface: accurate for a city, distorting for a hemisphere.
+Since $M$ is the mean of the training data, most trials sit near the
+point of tangency.
+
+\section{Classifier}
+
+Standardize each coordinate using training-fold statistics only:
+$z = (v - \mu) \oslash \sigma$. The chart is already centred near zero
+by construction, so this is about scale: diagonal entries are
+log-variance ratios, off-diagonals carry the $\sqrt{2}$ weight, and the
+$\ell_2$ penalty is not scale invariant.
+
+\[
+\hat\beta = \arg\min_{\beta,\beta_0}
+\; \sum_{n=1}^{N} c_{y_n} \log\!\Big(1 + e^{-\tilde{y}_n(\beta^\top z_n + \beta_0)}\Big)
+\;+\; \frac{1}{2C_{\mathrm{reg}}}\|\beta\|_2^2 ,
+\]
+with $\tilde{y}_n \in \{-1,+1\}$ and $c_{y}$ inverse class frequencies.
+
+\textbf{$\ell_2$, not $\ell_1$.} Covariance coordinates are strongly
+correlated; $\ell_1$ retains an arbitrary member of a correlated group
+and zeroes the rest, giving coefficients unstable across folds. There
+is no sparsity to gain at $21$ features.
+
+\textbf{$C_{\mathrm{reg}}$ must be retuned at every training size.} The
+optimum depends on $N$. Fixing it while sweeping $N$ measures a curve
+about a mis-set hyperparameter, not a learning curve. Use an inner
+cross-validation loop.
+
+\textbf{Score, not decision.} The output
+$s = \sigma(\hat\beta^\top z + \hat\beta_0)$ is used to rank candidate
+windows. Deployment class imbalance ($\approx 1{:}60$) is far from
+calibration imbalance ($\approx 1{:}5$), so $s$ is badly calibrated as
+a probability; ranking requires only monotonicity in the likelihood
+ratio, which is preserved.
+
+\section{Summary}
+
+\paragraph{Fit (once per subject per session).}
+\begin{enumerate}[label=\arabic*.,leftmargin=*,itemsep=1pt]
+\item Filter, epoch, reject artifacts.
+\item Learn $W$ and $\bar{X}_1$ from labeled trials.
+\item Per trial: augment, estimate $\Sigma_n$ with shrinkage.
+\item Iterate for $M$; store $M^{-1/2}$.
+\item Map all trials to $v_n$; fit $\mu,\sigma$ and $\hat\beta$,
+      tuning $C_{\mathrm{reg}}$ by inner cross-validation.
+\end{enumerate}
+
+\paragraph{Score.}
+Same $W$, $\bar{X}_1$, $M^{-1/2}$, $\mu$, $\sigma$, $\hat\beta$ ---
+all frozen. Whiten, log, vectorize, standardize, predict, rank.
+
+\paragraph{Leakage.} Recomputing $M$ (or $W$, $\bar{X}_1$, $\mu$,
+$\sigma$) on test data both leaks labels and places train and test
+features in different coordinate systems, voiding the fitted weights.
+
+\paragraph{Verification.} The following were checked numerically
+against an independent implementation and all hold to $\sim\!10^{-10}$:
+$M^{-1/2} M M^{-1/2} = I$; $\vect(\log(M^{-1/2}MM^{-1/2})) = 0$;
+$\|v\|_2 = \delta(\Sigma,M)$; affine invariance under random invertible
+$G$; and $\frac{1}{N}\sum_n v_n = 0$ at the geometric mean.
+
+\end{document}

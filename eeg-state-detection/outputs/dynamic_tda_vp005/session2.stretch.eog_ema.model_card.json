@@ -1,0 +1,133 @@
+{
+  "kind": "eog_ema",
+  "target": "task_rest",
+  "source": "replayed_eeg",
+  "session_id": "VP005-nback2",
+  "processing_id": "eog-regression-v1-5d9e042e25ff9446f5457740876fac62fc4fd4b4ba614871f4b88c90cce92938",
+  "training_recordings": [
+    "VP005-nback2-block01",
+    "VP005-nback2-block02",
+    "VP005-nback2-block03",
+    "VP005-nback2-block04",
+    "VP005-nback2-block05",
+    "VP005-nback2-block06"
+  ],
+  "training_sample_sha256": [
+    "bfda272a8bd4997569d23f779529b9022cdb28ca7e55e13a64362392aaf45d6c",
+    "96883a2d1dc2f6f84cc5af33a72ee89625d1abf85887608328a65d6e6ed9cf8f",
+    "1e0e0647d2d1cc754bbd6486d36a77c73875517f9b2486a55161e1b92765c56f",
+    "c42953284b5e0fdb690644160c9bd14bcdf8522dc06e566e03fa38fd635865d6",
+    "3c9a73ee5b0181e2e683d3dafa7d4888af8c5043f4a3d6d0d58a9f2e9298311a",
+    "ae30a3b7baec88339e6f2d6ac8f22d3791c80ec5a0bf51bf07d47e3dd303d522"
+  ],
+  "selected_C": 1.0,
+  "temporal_setting": 0.5,
+  "noise": {
+    "variance": 2.0477857570670848,
+    "phi": 0.8945149621247022
+  },
+  "calibration_candidates": [
+    {
+      "C": 0.01,
+      "setting": 0.5,
+      "balanced_accuracy": 0.46395348837209305,
+      "auroc": 0.33720930232558144
+    },
+    {
+      "C": 0.01,
+      "setting": 1.0,
+      "balanced_accuracy": 0.4372093023255814,
+      "auroc": 0.29767441860465116
+    },
+    {
+      "C": 0.01,
+      "setting": 2.0,
+      "balanced_accuracy": 0.44883720930232557,
+      "auroc": 0.23720930232558138
+    },
+    {
+      "C": 0.1,
+      "setting": 0.5,
+      "balanced_accuracy": 0.5197674418604651,
+      "auroc": 0.5046511627906975
+    },
+    {
+      "C": 0.1,
+      "setting": 1.0,
+      "balanced_accuracy": 0.5755813953488372,
+      "auroc": 0.4976744186046511
+    },
+    {
+      "C": 0.1,
+      "setting": 2.0,
+      "balanced_accuracy": 0.5255813953488373,
+      "auroc": 0.4883720930232558
+    },
+    {
+      "C": 1.0,
+      "setting": 0.5,
+      "balanced_accuracy": 0.6430232558139535,
+      "auroc": 0.5488372093023256
+    },
+    {
+      "C": 1.0,
+      "setting": 1.0,
+      "balanced_accuracy": 0.5930232558139534,
+      "auroc": 0.5372093023255813
+    },
+    {
+      "C": 1.0,
+      "setting": 2.0,
+      "balanced_accuracy": 0.5581395348837209,
+      "auroc": 0.5348837209302325
+    },
+    {
+      "C": 10.0,
+      "setting": 0.5,
+      "balanced_accuracy": 0.6162790697674418,
+      "auroc": 0.5465116279069766
+    },
+    {
+      "C": 10.0,
+      "setting": 1.0,
+      "balanced_accuracy": 0.6046511627906976,
+      "auroc": 0.5302325581395348
+    },
+    {
+      "C": 10.0,
+      "setting": 2.0,
+      "balanced_accuracy": 0.5755813953488371,
+      "auroc": 0.5139534883720931
+    }
+  ],
+  "selection": "balanced accuracy, then AUROC",
+  "folds": [
+    {
+      "train_blocks": [
+        3,
+        4,
+        5
+      ],
+      "validation_blocks": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "train_blocks": [
+        0,
+        1,
+        2
+      ],
+      "validation_blocks": [
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "adaptive_transition_matrix": null,
+  "uncertainty": "Conditional on plug-in parameters; adaptive uses IMM approximation; not cognitive-state confidence.",
+  "interpretation": "Task/rest proxy; same-session calibration; no spontaneous-event claim."
+}

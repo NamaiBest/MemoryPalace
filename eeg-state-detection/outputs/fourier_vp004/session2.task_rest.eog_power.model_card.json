@@ -1,0 +1,171 @@
+{
+  "kind": "eog_power",
+  "target": "task_rest",
+  "source": "replayed_eeg",
+  "session_id": "VP004-nback2",
+  "processing_id": "eog-regression-v1-a78b95b203667ebfe504c693e8dfa976159896152db8950d4a34e9ab793e6d0e",
+  "training_recordings": [
+    "VP004-nback2-block01",
+    "VP004-nback2-block02",
+    "VP004-nback2-block03",
+    "VP004-nback2-block04",
+    "VP004-nback2-block05",
+    "VP004-nback2-block06"
+  ],
+  "training_sample_sha256": [
+    "229d28d2fd367cb84d7d764b4e7f8134d4e00f79e0aed5c466269b053d353439",
+    "6abec512ee08cc7939c8b23272d1ae63c906904055505b4f53ad04af7ff06741",
+    "670026d923eceb7a8c5142b20fdff07d0a12264fc672e2c70ab7fa8f2e8fb2e5",
+    "5c53ef7cfe2fea39536792055bd8ac5a9c4e6a12b953973c10249c76a88ef563",
+    "b8e5621c1e5e690f4d8c4b1b4539870b8ee222409842b4bb10c520f9870e9134",
+    "774a8f590bfc4d09900b4575fabdbcfc92acf04f09f123a5a45625871a6ca577"
+  ],
+  "training_windows": 110,
+  "positives": 100,
+  "feature_count": 6,
+  "quality": [
+    {
+      "recording_id": "VP004-nback2-block01",
+      "condition": 2,
+      "labeled_windows": 22,
+      "accepted_windows": 20,
+      "by_label": {
+        "0": {
+          "labeled": 3,
+          "accepted": 1
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 19
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block02",
+      "condition": 0,
+      "labeled_windows": 22,
+      "accepted_windows": 16,
+      "by_label": {
+        "0": {
+          "labeled": 3,
+          "accepted": 2
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 14
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block03",
+      "condition": 3,
+      "labeled_windows": 22,
+      "accepted_windows": 17,
+      "by_label": {
+        "0": {
+          "labeled": 3,
+          "accepted": 1
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 16
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block04",
+      "condition": 0,
+      "labeled_windows": 22,
+      "accepted_windows": 21,
+      "by_label": {
+        "0": {
+          "labeled": 3,
+          "accepted": 2
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 19
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block05",
+      "condition": 3,
+      "labeled_windows": 22,
+      "accepted_windows": 15,
+      "by_label": {
+        "0": {
+          "labeled": 3,
+          "accepted": 2
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 13
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block06",
+      "condition": 2,
+      "labeled_windows": 22,
+      "accepted_windows": 21,
+      "by_label": {
+        "0": {
+          "labeled": 3,
+          "accepted": 2
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 19
+        }
+      }
+    }
+  ],
+  "selected_C": 1.0,
+  "C_grid": [
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "selection_cv_auroc": 0.5241930105375483,
+  "cv_auroc_by_C": [
+    0.5090869681205816,
+    0.5041850073362679,
+    0.510921035080699,
+    0.5241930105375483,
+    0.510404161664666
+  ],
+  "cv_is_model_selection_only": true,
+  "folds": [
+    {
+      "train_blocks": [
+        3,
+        4,
+        5
+      ],
+      "validation_blocks": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "train_blocks": [
+        0,
+        1,
+        2
+      ],
+      "validation_blocks": [
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "representation": "filtered band variance",
+  "spectrum": null,
+  "score": "Uncalibrated margin, same nonnegative-for-three-seconds segmentation.",
+  "limitations": "Task proxies, short rest, offline filtering, one participant and ocular/motor/sensory confounds."
+}

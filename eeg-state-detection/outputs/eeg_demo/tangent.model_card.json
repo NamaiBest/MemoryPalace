@@ -1,0 +1,97 @@
+{
+  "version": "0.1.0",
+  "kind": "tangent",
+  "source": "synthetic_eeg",
+  "session_id": "synthetic-session-19",
+  "config": {
+    "sample_rate": 128.0,
+    "channels": [
+      "Fp1",
+      "Fp2",
+      "F3",
+      "F4",
+      "C3",
+      "C4",
+      "P3",
+      "P4"
+    ],
+    "frontal_channels": [
+      "Fp1",
+      "Fp2",
+      "F3",
+      "F4"
+    ],
+    "bands": [
+      [
+        4.0,
+        8.0
+      ],
+      [
+        8.0,
+        13.0
+      ],
+      [
+        13.0,
+        30.0
+      ]
+    ],
+    "window_s": 0.75,
+    "step_s": 0.25,
+    "context_offset_s": 2.0,
+    "filter_guard_s": 2.0,
+    "artifact_amplitude_uv": 120.0,
+    "artifact_step_uv": 60.0,
+    "flatline_std_uv": 0.05,
+    "stretch_window_s": 2.0,
+    "stretch_z": 3.0,
+    "stretch_release_z": 1.5,
+    "stretch_min_s": 3.0,
+    "gate_radius_s": 3.0,
+    "separation_s": 2.0,
+    "min_score": 0.0
+  },
+  "training_recordings": [
+    "synthetic-mixed-1000",
+    "synthetic-mixed-1001",
+    "synthetic-mixed-1002",
+    "synthetic-mixed-1003",
+    "synthetic-mixed-1004",
+    "synthetic-mixed-1005"
+  ],
+  "training_sample_sha256": [
+    "909488c6d90d81c72f06181e665d0992a3bf2598de966e3bd1d095eb3992ee1c",
+    "341d1908edbdee6c22da3462ac7482746a272e2edd78e1d930fc795d46cb470b",
+    "085f80d8470cc0f90ee325a557fb8972a4bda917b6a9735a5009e94b6dfb2ab1",
+    "067a362dec1faec7650b6e52969174b2d98fc3f6b4acafad2d7b98daf24645a2",
+    "62ef41e8ba74cd8dfbceed533ee57d9e94f1b9a2a827e1f850bb87e951daae80",
+    "4218d5e0093fe67eb93bf5281b1f540cf74292f4b3a60bee7fdf69cdf294a32b"
+  ],
+  "training_windows": 590,
+  "positive_windows": 36,
+  "selected_C": 0.01,
+  "selection_cv_average_precision": 1.0,
+  "cv_C_values": [
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "cv_average_precision": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "cv_note": "Grouped calibration model-selection scores, not held-out performance.",
+  "stretch_reference": {
+    "center": 1.030990955783344,
+    "scale": 0.15291287388846567
+  },
+  "score": "Uncalibrated linear decision margin; accept >=0 then rank and suppress neighbors.",
+  "limitations": [
+    "Oscillatory packet target, no ERP template or P300 claim.",
+    "No cognitive meaning established for a flagged waveform.",
+    "Synthetic calibration cannot transfer to real EEG.",
+    "Offline zero-phase filtering and context limit timing precision."
+  ]
+}

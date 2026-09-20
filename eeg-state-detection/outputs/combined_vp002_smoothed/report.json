@@ -1,0 +1,46 @@
+{
+  "purpose": "integration replay; not fresh model validation",
+  "stretch_kind": "power_ema",
+  "reference_combined_run": "/home/albert/hackmit/outputs/combined_vp002",
+  "sessions": [
+    {
+      "session": 1,
+      "session_id": "VP002-nback1",
+      "stretch_kind": "power_ema",
+      "half_life_s": 2.0,
+      "stretch_events": 3,
+      "burst_events": 15,
+      "bursts_overlapping_stretches": 6,
+      "bursts_outside_stretches": 9,
+      "standalone_stretch_output_reproduced": true,
+      "burst_output_matches_reference": true,
+      "model_state_unchanged": true
+    },
+    {
+      "session": 2,
+      "session_id": "VP002-nback2",
+      "stretch_kind": "power_ema",
+      "half_life_s": 2.0,
+      "stretch_events": 4,
+      "burst_events": 15,
+      "bursts_overlapping_stretches": 15,
+      "bursts_outside_stretches": 0,
+      "standalone_stretch_output_reproduced": true,
+      "burst_output_matches_reference": true,
+      "model_state_unchanged": true
+    },
+    {
+      "session": 3,
+      "session_id": "VP002-nback3",
+      "stretch_kind": "power_ema",
+      "half_life_s": 0.5,
+      "stretch_events": 8,
+      "burst_events": 15,
+      "bursts_overlapping_stretches": 11,
+      "bursts_outside_stretches": 4,
+      "standalone_stretch_output_reproduced": true,
+      "burst_output_matches_reference": true,
+      "model_state_unchanged": true
+    }
+  ]
+}

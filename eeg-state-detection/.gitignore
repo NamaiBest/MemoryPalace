@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+data/
+outputs/**/*.traces.json
+outputs/**/*.audit.json
+outputs/**/*.npz
+outputs/new_block/
+outputs/workload_vp002_initial_guard_check/

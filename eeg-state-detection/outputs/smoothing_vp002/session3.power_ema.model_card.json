@@ -1,0 +1,276 @@
+{
+  "kind": "power_ema",
+  "target": "task_rest",
+  "source": "replayed_eeg",
+  "session_id": "VP002-nback3",
+  "processing_id": "eog-regression-v1-81ec33e38a40095b6d9c53c954333707306c5f68dd89318d3184a77608ca085c",
+  "config": {
+    "sample_rate": 200.0,
+    "channels": [
+      "Fp1",
+      "AFF5h",
+      "AFz",
+      "F1",
+      "FC5",
+      "FC1",
+      "T7",
+      "C3",
+      "Cz",
+      "CP5",
+      "CP1",
+      "P7",
+      "P3",
+      "Pz",
+      "POz",
+      "O1",
+      "Fp2",
+      "AFF6h",
+      "F2",
+      "FC2",
+      "FC6",
+      "C4",
+      "T8",
+      "CP2",
+      "CP6",
+      "P4",
+      "P8",
+      "O2"
+    ],
+    "frontal_channels": [
+      "Fp1",
+      "Fp2",
+      "AFF5h",
+      "AFF6h",
+      "AFz",
+      "F1",
+      "F2"
+    ],
+    "bands": [
+      [
+        4.0,
+        8.0
+      ],
+      [
+        8.0,
+        13.0
+      ],
+      [
+        13.0,
+        30.0
+      ]
+    ],
+    "window_s": 2.0,
+    "step_s": 0.25,
+    "context_offset_s": 3.0,
+    "filter_guard_s": 2.0,
+    "artifact_amplitude_uv": 120.0,
+    "artifact_step_uv": 60.0,
+    "flatline_std_uv": 0.05,
+    "quality_highpass_hz": 1.0,
+    "quality_lowpass_hz": 30.0,
+    "stretch_window_s": 2.0,
+    "stretch_z": 3.0,
+    "stretch_release_z": 1.5,
+    "stretch_min_s": 3.0,
+    "gate_radius_s": 3.0,
+    "separation_s": 2.0,
+    "min_score": 0.0
+  },
+  "selected_C": 10.0,
+  "C_grid": [
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "selection_cv_auroc": 0.8996527777777777,
+  "cv_auroc_by_C": [
+    0.8075231481481482,
+    0.8636574074074074,
+    0.8983796296296296,
+    0.8996527777777777
+  ],
+  "cv_is_model_selection_only": true,
+  "training_windows": 137,
+  "positives": 120,
+  "training_recordings": [
+    "VP002-nback3-block01",
+    "VP002-nback3-block02",
+    "VP002-nback3-block03",
+    "VP002-nback3-block04",
+    "VP002-nback3-block05",
+    "VP002-nback3-block06"
+  ],
+  "training_sample_sha256": [
+    "fcd7d0e6e94936b2c408e10113604147db34aa73ce2684e7d8a267960ac5f86d",
+    "da4f6fb4f9577333a1b35e6efc2323f064dbc7f35909be741b39c1dd03a57a28",
+    "4d558e81b427e5e61731d494345c7ed68c7e4f20aaf23901b8ffdc607150c379",
+    "98555f805ec5171c681aaadfe6427d18aa84d68a4cfb2ee85d0ccb97d90bffe4",
+    "e9869fab971ec6007b1d6180099b64e527ba25d5f918cae9fbb63ebbcb15cceb",
+    "3bbf1d1b33f94ea27ae39861d1e6d43a005f0f0521ffdb075d0a1aef7d7ca7d1"
+  ],
+  "quality": [
+    {
+      "recording_id": "VP002-nback3-block01",
+      "condition": 0,
+      "labeled_windows": 23,
+      "accepted_windows": 23,
+      "positive_windows": 20
+    },
+    {
+      "recording_id": "VP002-nback3-block02",
+      "condition": 3,
+      "labeled_windows": 23,
+      "accepted_windows": 23,
+      "positive_windows": 20
+    },
+    {
+      "recording_id": "VP002-nback3-block03",
+      "condition": 2,
+      "labeled_windows": 23,
+      "accepted_windows": 23,
+      "positive_windows": 20
+    },
+    {
+      "recording_id": "VP002-nback3-block04",
+      "condition": 3,
+      "labeled_windows": 23,
+      "accepted_windows": 23,
+      "positive_windows": 20
+    },
+    {
+      "recording_id": "VP002-nback3-block05",
+      "condition": 2,
+      "labeled_windows": 23,
+      "accepted_windows": 22,
+      "positive_windows": 20
+    },
+    {
+      "recording_id": "VP002-nback3-block06",
+      "condition": 0,
+      "labeled_windows": 23,
+      "accepted_windows": 23,
+      "positive_windows": 20
+    }
+  ],
+  "folds": [
+    {
+      "train_blocks": [
+        3,
+        4,
+        5
+      ],
+      "validation_blocks": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "train_blocks": [
+        0,
+        1,
+        2
+      ],
+      "validation_blocks": [
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "score": "Exponentially smoothed original linear decision margin; not mental-state confidence",
+  "interpretation": "Task/rest or higher/lower n-back proxy, not a measured mental state.",
+  "base_classifier_weights_unchanged": true,
+  "half_life_s": 0.5,
+  "smoothing_candidates": [
+    {
+      "half_life_s": 0.5,
+      "mean_balanced_accuracy": 0.8423611111111111,
+      "mean_auroc": 0.9114583333333333,
+      "fold_metrics": [
+        {
+          "windows": 69,
+          "positives": 60,
+          "positive_prevalence": 0.8695652173913043,
+          "auroc": 0.8833333333333333,
+          "average_precision": 0.9795598091759808,
+          "balanced_accuracy": 0.8305555555555555,
+          "sensitivity": 0.8833333333333333,
+          "specificity": 0.7777777777777778,
+          "threshold": 0.0
+        },
+        {
+          "windows": 68,
+          "positives": 60,
+          "positive_prevalence": 0.8823529411764706,
+          "auroc": 0.9395833333333333,
+          "average_precision": 0.9918224849108833,
+          "balanced_accuracy": 0.8541666666666667,
+          "sensitivity": 0.8333333333333334,
+          "specificity": 0.875,
+          "threshold": 0.0
+        }
+      ]
+    },
+    {
+      "half_life_s": 1.0,
+      "mean_balanced_accuracy": 0.8145833333333333,
+      "mean_auroc": 0.9224537037037037,
+      "fold_metrics": [
+        {
+          "windows": 69,
+          "positives": 60,
+          "positive_prevalence": 0.8695652173913043,
+          "auroc": 0.9074074074074074,
+          "average_precision": 0.9825586660251758,
+          "balanced_accuracy": 0.7833333333333333,
+          "sensitivity": 0.9,
+          "specificity": 0.6666666666666666,
+          "threshold": 0.0
+        },
+        {
+          "windows": 68,
+          "positives": 60,
+          "positive_prevalence": 0.8823529411764706,
+          "auroc": 0.9375,
+          "average_precision": 0.9911562563532418,
+          "balanced_accuracy": 0.8458333333333333,
+          "sensitivity": 0.8166666666666667,
+          "specificity": 0.875,
+          "threshold": 0.0
+        }
+      ]
+    },
+    {
+      "half_life_s": 2.0,
+      "mean_balanced_accuracy": 0.8,
+      "mean_auroc": 0.9060185185185186,
+      "fold_metrics": [
+        {
+          "windows": 69,
+          "positives": 60,
+          "positive_prevalence": 0.8695652173913043,
+          "auroc": 0.8870370370370371,
+          "average_precision": 0.9783209962275431,
+          "balanced_accuracy": 0.8166666666666667,
+          "sensitivity": 0.9666666666666667,
+          "specificity": 0.6666666666666666,
+          "threshold": 0.0
+        },
+        {
+          "windows": 68,
+          "positives": 60,
+          "positive_prevalence": 0.8823529411764706,
+          "auroc": 0.925,
+          "average_precision": 0.9890915235598564,
+          "balanced_accuracy": 0.7833333333333333,
+          "sensitivity": 0.8166666666666667,
+          "specificity": 0.75,
+          "threshold": 0.0
+        }
+      ]
+    }
+  ],
+  "selection": "Calibration out-of-fold balanced accuracy, then AUROC, then shorter half-life; original C fixed"
+}

@@ -1,0 +1,555 @@
+{
+  "session": 3,
+  "session_id": "VP001-nback3",
+  "stretch_reference": {
+    "center": 2.2696151824783186,
+    "scale": 0.4292564701225232
+  },
+  "stretch_config": {
+    "sample_rate": 200.0,
+    "channels": [
+      "Fp1",
+      "AFF5h",
+      "AFz",
+      "F1",
+      "FC5",
+      "FC1",
+      "T7",
+      "C3",
+      "Cz",
+      "CP5",
+      "CP1",
+      "P7",
+      "P3",
+      "Pz",
+      "POz",
+      "O1",
+      "Fp2",
+      "AFF6h",
+      "F2",
+      "FC2",
+      "FC6",
+      "C4",
+      "T8",
+      "CP2",
+      "CP6",
+      "P4",
+      "P8",
+      "O2"
+    ],
+    "frontal_channels": [
+      "Fp1",
+      "Fp2",
+      "AFF5h",
+      "AFF6h",
+      "AFz",
+      "F1",
+      "F2"
+    ],
+    "bands": [
+      [
+        4.0,
+        8.0
+      ],
+      [
+        8.0,
+        13.0
+      ],
+      [
+        13.0,
+        30.0
+      ]
+    ],
+    "window_s": 0.75,
+    "step_s": 0.25,
+    "context_offset_s": 2.0,
+    "filter_guard_s": 2.0,
+    "artifact_amplitude_uv": 120.0,
+    "artifact_step_uv": 60.0,
+    "flatline_std_uv": 0.05,
+    "quality_highpass_hz": 1.0,
+    "quality_lowpass_hz": 30.0,
+    "stretch_window_s": 2.0,
+    "stretch_z": 3.0,
+    "stretch_release_z": 1.5,
+    "stretch_min_s": 3.0,
+    "gate_radius_s": 3.0,
+    "separation_s": 2.0,
+    "min_score": 0.0
+  },
+  "training_blocks": 6,
+  "held_out_blocks": 3,
+  "aligned_erp": {
+    "mean_bins": {
+      "trials": 40,
+      "targets": 12,
+      "target_prevalence": 0.3,
+      "auroc": 0.8184523809523809,
+      "average_precision": 0.6779302283020818,
+      "balanced_accuracy_margin_zero": 0.7083333333333333
+    },
+    "xdawn": {
+      "trials": 40,
+      "targets": 12,
+      "target_prevalence": 0.3,
+      "auroc": 0.45238095238095233,
+      "average_precision": 0.2793559162093645,
+      "balanced_accuracy_margin_zero": 0.48809523809523814
+    },
+    "eog_bins": {
+      "trials": 40,
+      "targets": 12,
+      "target_prevalence": 0.3,
+      "auroc": 0.4494047619047619,
+      "average_precision": 0.29923372438493406,
+      "balanced_accuracy_margin_zero": 0.5119047619047619
+    }
+  },
+  "blocks": [
+    {
+      "recording_id": "VP001-nback3-block07",
+      "condition": 2,
+      "original_offset_s": 453.974,
+      "stretch": {
+        "condition": 2,
+        "detected": [],
+        "task_interval_proxy": {
+          "truth_stretches": 1,
+          "returned": 0,
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "minimum_iou": 0.5,
+          "precision": null,
+          "recall": 0.0,
+          "mean_iou": null,
+          "mean_abs_onset_error_s": null,
+          "mean_abs_end_error_s": null
+        },
+        "task_vs_rest_theta_auroc": 0.7078220858895705,
+        "task_median_z": 0.20141331690683878,
+        "rest_median_z": -0.34389216620866414,
+        "task_valid_centers": 163,
+        "task_total_centers": 163,
+        "rest_valid_centers": 16,
+        "rest_total_centers": 17,
+        "off_task_detected_onsets": 0,
+        "interpretation": "Task intervals are behavioral proxies, not measured neural stretch truth."
+      },
+      "erp_quality": {
+        "total_trials": 20,
+        "accepted_trials": 20,
+        "accepted_targets": 6,
+        "rejected_targets": 0,
+        "rejected_non_targets": 0,
+        "accepted_marker_times_s": [
+          10.136000000000024,
+          12.367000000000019,
+          14.584000000000003,
+          16.783000000000015,
+          19.02600000000001,
+          21.259000000000015,
+          23.456999999999994,
+          25.658999999999992,
+          27.906000000000006,
+          30.105999999999995,
+          32.317999999999984,
+          34.48200000000003,
+          36.733000000000004,
+          38.976,
+          41.196000000000026,
+          43.428,
+          45.62600000000003,
+          47.86900000000003,
+          50.105999999999995,
+          52.30400000000003
+        ],
+        "bad_or_edge_fraction": 0.06237892289810151
+      },
+      "aligned_erp": {
+        "mean_bins": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.7738095238095238,
+          "average_precision": 0.6371082621082621,
+          "balanced_accuracy_margin_zero": 0.6428571428571428
+        },
+        "xdawn": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.5,
+          "average_precision": 0.3267798786181139,
+          "balanced_accuracy_margin_zero": 0.6071428571428572
+        },
+        "eog_bins": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.40476190476190477,
+          "average_precision": 0.30442896456828344,
+          "balanced_accuracy_margin_zero": 0.48809523809523814
+        }
+      },
+      "continuous_retrieval": {
+        "mean_bins": {
+          "all": {
+            "truth_events": 6,
+            "returned": 5,
+            "true_positives": 1,
+            "false_positives": 4,
+            "precision_of_returned": 0.2,
+            "recall_at_budget": 0.16666666666666666,
+            "mean_localization_error_s": 0.4569999999999901,
+            "accessible_events": 6,
+            "candidate_recall": 1.0,
+            "eligible_centers": 594,
+            "valid_centers": 594,
+            "valid_center_fraction": 1.0,
+            "rejected_grid_centers": 41,
+            "selected": [
+              {
+                "anchor_s": 23.000000000000004,
+                "raw_score": 1.5506123860950973
+              },
+              {
+                "anchor_s": 37.900000000000006,
+                "raw_score": 1.4842251452674327
+              },
+              {
+                "anchor_s": 44.400000000000006,
+                "raw_score": 1.3489658230830794
+              },
+              {
+                "anchor_s": 5.5,
+                "raw_score": 1.3385624686263262
+              },
+              {
+                "anchor_s": 28.700000000000003,
+                "raw_score": 1.3258484049338728
+              }
+            ],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          },
+          "onset": {
+            "truth_events": 6,
+            "returned": 0,
+            "true_positives": 0,
+            "false_positives": 0,
+            "precision_of_returned": null,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 0,
+            "candidate_recall": 0.0,
+            "eligible_centers": 0,
+            "valid_centers": 594,
+            "valid_center_fraction": 0.0,
+            "rejected_grid_centers": 41,
+            "selected": [],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          }
+        },
+        "xdawn": {
+          "all": {
+            "truth_events": 6,
+            "returned": 5,
+            "true_positives": 1,
+            "false_positives": 4,
+            "precision_of_returned": 0.2,
+            "recall_at_budget": 0.16666666666666666,
+            "mean_localization_error_s": 0.03099999999997749,
+            "accessible_events": 6,
+            "candidate_recall": 1.0,
+            "eligible_centers": 594,
+            "valid_centers": 594,
+            "valid_center_fraction": 1.0,
+            "rejected_grid_centers": 41,
+            "selected": [
+              {
+                "anchor_s": 47.900000000000006,
+                "raw_score": 0.39939810483180593
+              },
+              {
+                "anchor_s": 36.7,
+                "raw_score": 0.2029898653436086
+              },
+              {
+                "anchor_s": 30.1,
+                "raw_score": 0.2005842170020216
+              },
+              {
+                "anchor_s": 25.700000000000003,
+                "raw_score": 0.14838155115600107
+              },
+              {
+                "anchor_s": 59.00000000000001,
+                "raw_score": 0.08743111934167527
+              }
+            ],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          },
+          "onset": {
+            "truth_events": 6,
+            "returned": 0,
+            "true_positives": 0,
+            "false_positives": 0,
+            "precision_of_returned": null,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 0,
+            "candidate_recall": 0.0,
+            "eligible_centers": 0,
+            "valid_centers": 594,
+            "valid_center_fraction": 0.0,
+            "rejected_grid_centers": 41,
+            "selected": [],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          }
+        }
+      }
+    },
+    {
+      "recording_id": "VP001-nback3-block08",
+      "condition": 0,
+      "original_offset_s": 523.587,
+      "stretch": {
+        "condition": 0,
+        "detected": [],
+        "task_interval_proxy": {
+          "truth_stretches": 1,
+          "returned": 0,
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "minimum_iou": 0.5,
+          "precision": null,
+          "recall": 0.0,
+          "mean_iou": null,
+          "mean_abs_onset_error_s": null,
+          "mean_abs_end_error_s": null
+        },
+        "task_vs_rest_theta_auroc": 0.7592592592592593,
+        "task_median_z": 0.13172426553851216,
+        "rest_median_z": -0.6573710116726788,
+        "task_valid_centers": 162,
+        "task_total_centers": 162,
+        "rest_valid_centers": 17,
+        "rest_total_centers": 17,
+        "off_task_detected_onsets": 0,
+        "interpretation": "Task intervals are behavioral proxies, not measured neural stretch truth."
+      }
+    },
+    {
+      "recording_id": "VP001-nback3-block09",
+      "condition": 3,
+      "original_offset_s": 593.078,
+      "stretch": {
+        "condition": 3,
+        "detected": [],
+        "task_interval_proxy": {
+          "truth_stretches": 1,
+          "returned": 0,
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "minimum_iou": 0.5,
+          "precision": null,
+          "recall": 0.0,
+          "mean_iou": null,
+          "mean_abs_onset_error_s": null,
+          "mean_abs_end_error_s": null
+        },
+        "task_vs_rest_theta_auroc": 0.7603485838779958,
+        "task_median_z": -0.4628184147972607,
+        "rest_median_z": -0.9559043688567748,
+        "task_valid_centers": 162,
+        "task_total_centers": 162,
+        "rest_valid_centers": 17,
+        "rest_total_centers": 17,
+        "off_task_detected_onsets": 0,
+        "interpretation": "Task intervals are behavioral proxies, not measured neural stretch truth."
+      },
+      "erp_quality": {
+        "total_trials": 20,
+        "accepted_trials": 20,
+        "accepted_targets": 6,
+        "rejected_targets": 0,
+        "rejected_non_targets": 0,
+        "accepted_marker_times_s": [
+          10.120000000000005,
+          12.322000000000003,
+          14.555000000000064,
+          16.734000000000037,
+          18.923000000000002,
+          21.132000000000062,
+          23.329000000000065,
+          25.548999999999978,
+          27.76800000000003,
+          30.008000000000038,
+          32.226999999999975,
+          34.47500000000002,
+          36.70500000000004,
+          38.952999999999975,
+          41.152000000000044,
+          43.36500000000001,
+          45.61200000000008,
+          47.82400000000007,
+          50.01200000000006,
+          52.240999999999985
+        ],
+        "bad_or_edge_fraction": 0.06205398696866274
+      },
+      "aligned_erp": {
+        "mean_bins": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.8571428571428572,
+          "average_precision": 0.7461640211640211,
+          "balanced_accuracy_margin_zero": 0.7738095238095238
+        },
+        "xdawn": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.4285714285714286,
+          "average_precision": 0.29018122400475344,
+          "balanced_accuracy_margin_zero": 0.369047619047619
+        },
+        "eog_bins": {
+          "trials": 20,
+          "targets": 6,
+          "target_prevalence": 0.3,
+          "auroc": 0.48809523809523814,
+          "average_precision": 0.3351132119514473,
+          "balanced_accuracy_margin_zero": 0.5357142857142857
+        }
+      },
+      "continuous_retrieval": {
+        "mean_bins": {
+          "all": {
+            "truth_events": 6,
+            "returned": 5,
+            "true_positives": 0,
+            "false_positives": 5,
+            "precision_of_returned": 0.0,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 6,
+            "candidate_recall": 1.0,
+            "eligible_centers": 594,
+            "valid_centers": 594,
+            "valid_center_fraction": 1.0,
+            "rejected_grid_centers": 40,
+            "selected": [
+              {
+                "anchor_s": 30.900000000000002,
+                "raw_score": 2.216542250835183
+              },
+              {
+                "anchor_s": 8.5,
+                "raw_score": 1.5998197616401775
+              },
+              {
+                "anchor_s": 61.00000000000001,
+                "raw_score": 1.5923380834475738
+              },
+              {
+                "anchor_s": 15.0,
+                "raw_score": 1.4827278126978922
+              },
+              {
+                "anchor_s": 17.200000000000003,
+                "raw_score": 1.386592933915759
+              }
+            ],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          },
+          "onset": {
+            "truth_events": 6,
+            "returned": 0,
+            "true_positives": 0,
+            "false_positives": 0,
+            "precision_of_returned": null,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 0,
+            "candidate_recall": 0.0,
+            "eligible_centers": 0,
+            "valid_centers": 594,
+            "valid_center_fraction": 0.0,
+            "rejected_grid_centers": 40,
+            "selected": [],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          }
+        },
+        "xdawn": {
+          "all": {
+            "truth_events": 6,
+            "returned": 5,
+            "true_positives": 1,
+            "false_positives": 4,
+            "precision_of_returned": 0.2,
+            "recall_at_budget": 0.16666666666666666,
+            "mean_localization_error_s": 0.05299999999996885,
+            "accessible_events": 6,
+            "candidate_recall": 1.0,
+            "eligible_centers": 594,
+            "valid_centers": 594,
+            "valid_center_fraction": 1.0,
+            "rejected_grid_centers": 40,
+            "selected": [
+              {
+                "anchor_s": 34.5,
+                "raw_score": 0.6761507599899691
+              },
+              {
+                "anchor_s": 36.7,
+                "raw_score": 0.581621917645639
+              },
+              {
+                "anchor_s": 43.400000000000006,
+                "raw_score": 0.3959806438764679
+              },
+              {
+                "anchor_s": 47.800000000000004,
+                "raw_score": 0.3380395736428299
+              },
+              {
+                "anchor_s": 38.900000000000006,
+                "raw_score": 0.29587623789857964
+              }
+            ],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          },
+          "onset": {
+            "truth_events": 6,
+            "returned": 0,
+            "true_positives": 0,
+            "false_positives": 0,
+            "precision_of_returned": null,
+            "recall_at_budget": 0.0,
+            "mean_localization_error_s": null,
+            "accessible_events": 0,
+            "candidate_recall": 0.0,
+            "eligible_centers": 0,
+            "valid_centers": 594,
+            "valid_center_fraction": 0.0,
+            "rejected_grid_centers": 40,
+            "selected": [],
+            "matching_tolerance_s": 0.5,
+            "review_budget": 5
+          }
+        }
+      }
+    }
+  ]
+}

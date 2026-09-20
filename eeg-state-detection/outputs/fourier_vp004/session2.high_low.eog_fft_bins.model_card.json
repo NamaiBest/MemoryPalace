@@ -1,0 +1,291 @@
+{
+  "kind": "eog_fft_bins",
+  "target": "high_low",
+  "source": "replayed_eeg",
+  "session_id": "VP004-nback2",
+  "processing_id": "eog-regression-v1-a78b95b203667ebfe504c693e8dfa976159896152db8950d4a34e9ab793e6d0e",
+  "training_recordings": [
+    "VP004-nback2-block01",
+    "VP004-nback2-block02",
+    "VP004-nback2-block03",
+    "VP004-nback2-block04",
+    "VP004-nback2-block05",
+    "VP004-nback2-block06"
+  ],
+  "training_sample_sha256": [
+    "229d28d2fd367cb84d7d764b4e7f8134d4e00f79e0aed5c466269b053d353439",
+    "6abec512ee08cc7939c8b23272d1ae63c906904055505b4f53ad04af7ff06741",
+    "670026d923eceb7a8c5142b20fdff07d0a12264fc672e2c70ab7fa8f2e8fb2e5",
+    "5c53ef7cfe2fea39536792055bd8ac5a9c4e6a12b953973c10249c76a88ef563",
+    "b8e5621c1e5e690f4d8c4b1b4539870b8ee222409842b4bb10c520f9870e9134",
+    "774a8f590bfc4d09900b4575fabdbcfc92acf04f09f123a5a45625871a6ca577"
+  ],
+  "training_windows": 100,
+  "positives": 67,
+  "feature_count": 52,
+  "quality": [
+    {
+      "recording_id": "VP004-nback2-block01",
+      "condition": 2,
+      "labeled_windows": 19,
+      "accepted_windows": 19,
+      "by_label": {
+        "0": {
+          "labeled": 0,
+          "accepted": 0
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 19
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block02",
+      "condition": 0,
+      "labeled_windows": 19,
+      "accepted_windows": 14,
+      "by_label": {
+        "0": {
+          "labeled": 19,
+          "accepted": 14
+        },
+        "1": {
+          "labeled": 0,
+          "accepted": 0
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block03",
+      "condition": 3,
+      "labeled_windows": 19,
+      "accepted_windows": 16,
+      "by_label": {
+        "0": {
+          "labeled": 0,
+          "accepted": 0
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 16
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block04",
+      "condition": 0,
+      "labeled_windows": 19,
+      "accepted_windows": 19,
+      "by_label": {
+        "0": {
+          "labeled": 19,
+          "accepted": 19
+        },
+        "1": {
+          "labeled": 0,
+          "accepted": 0
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block05",
+      "condition": 3,
+      "labeled_windows": 19,
+      "accepted_windows": 13,
+      "by_label": {
+        "0": {
+          "labeled": 0,
+          "accepted": 0
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 13
+        }
+      }
+    },
+    {
+      "recording_id": "VP004-nback2-block06",
+      "condition": 2,
+      "labeled_windows": 19,
+      "accepted_windows": 19,
+      "by_label": {
+        "0": {
+          "labeled": 0,
+          "accepted": 0
+        },
+        "1": {
+          "labeled": 19,
+          "accepted": 19
+        }
+      }
+    }
+  ],
+  "selected_C": 0.1,
+  "C_grid": [
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "selection_cv_auroc": 0.6144803974221267,
+  "cv_auroc_by_C": [
+    0.5720361170784103,
+    0.5870065789473684,
+    0.6144803974221267,
+    0.6039574382384534,
+    0.6114963748657358
+  ],
+  "cv_is_model_selection_only": true,
+  "folds": [
+    {
+      "train_blocks": [
+        3,
+        4,
+        5
+      ],
+      "validation_blocks": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "train_blocks": [
+        0,
+        1,
+        2
+      ],
+      "validation_blocks": [
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "representation": "windowed Fourier PSD",
+  "spectrum": {
+    "sample_rate": 200,
+    "window_s": 2,
+    "hop_s": 0.25,
+    "fft_samples": 400,
+    "window": "periodic Hann",
+    "detrend": "window mean",
+    "broad_filter_hz": [
+      1,
+      40
+    ],
+    "density_units": "uV^2/Hz",
+    "fine_bands_hz": [
+      [
+        4.0,
+        5.0
+      ],
+      [
+        5.0,
+        6.0
+      ],
+      [
+        6.0,
+        7.0
+      ],
+      [
+        7.0,
+        8.0
+      ],
+      [
+        8.0,
+        9.0
+      ],
+      [
+        9.0,
+        10.0
+      ],
+      [
+        10.0,
+        11.0
+      ],
+      [
+        11.0,
+        12.0
+      ],
+      [
+        12.0,
+        13.0
+      ],
+      [
+        13.0,
+        14.0
+      ],
+      [
+        14.0,
+        15.0
+      ],
+      [
+        15.0,
+        16.0
+      ],
+      [
+        16.0,
+        17.0
+      ],
+      [
+        17.0,
+        18.0
+      ],
+      [
+        18.0,
+        19.0
+      ],
+      [
+        19.0,
+        20.0
+      ],
+      [
+        20.0,
+        21.0
+      ],
+      [
+        21.0,
+        22.0
+      ],
+      [
+        22.0,
+        23.0
+      ],
+      [
+        23.0,
+        24.0
+      ],
+      [
+        24.0,
+        25.0
+      ],
+      [
+        25.0,
+        26.0
+      ],
+      [
+        26.0,
+        27.0
+      ],
+      [
+        27.0,
+        28.0
+      ],
+      [
+        28.0,
+        29.0
+      ],
+      [
+        29.0,
+        30.0
+      ]
+    ],
+    "power_floor_uv2": 1e-12,
+    "feature_order": "band-major then channel; natural log integrated power"
+  },
+  "score": "Uncalibrated margin, same nonnegative-for-three-seconds segmentation.",
+  "limitations": "Task proxies, short rest, offline filtering, one participant and ocular/motor/sensory confounds."
+}

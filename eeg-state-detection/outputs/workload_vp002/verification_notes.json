@@ -1,0 +1,13 @@
+{
+  "initial_run_directory": "outputs/workload_vp002_initial_guard_check",
+  "change": "Repaired final integrity check to compare the same in-memory object before/after scoring, rather than comparing its joblib hash to a deserialized object. Serialization alone changed that hash on an independent calibration-only check.",
+  "model_settings_changed": false,
+  "protocol_changed": false,
+  "all_21_saved_model_files_byte_identical": true,
+  "all_session_metrics_and_scores_identical": true,
+  "all_event_exports_byte_identical": true,
+  "changed_source_files": [
+    "eeg_moments/workload_benchmark.py"
+  ],
+  "note": "The repeat is a software verification run on the same held-out data, not a second independent experiment."
+}

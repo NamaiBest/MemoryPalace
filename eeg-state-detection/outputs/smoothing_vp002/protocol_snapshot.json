@@ -1,0 +1,37 @@
+{
+  "started_utc": "2026-09-20T01:29:13.952635+00:00",
+  "purpose": "known-data smoothing-only follow-up; not fresh validation",
+  "protocol": "# Smoothing the original VP002 band-power output\n\nThis is an exploratory follow-up on already inspected VP002, not fresh validation.\nIts purpose is to isolate exponential smoothing using the exact saved task/rest\nband-power classifiers from `outputs/workload_vp002`. No electrode changes, new\nfeature representation, classifier refitting for evaluation, or threshold tuning.\n\nUse the same 28 EEG channels, preprocessing, two-second features, 0.25-second scan\ngrid, six calibration blocks and final three evaluation blocks per session. Restore\nthe original preprocessing identity and verify calibration sample hashes. Preserve\nthe original classifier weights, selected regularization, feature scaler and zero\ndecision boundary. Invalid windows remain NaN and reset smoothing. A nonnegative\nscore must persist for three seconds to create an interval, unchanged from before.\n\nSelect a smoothing half-life from 0.5, 1 and 2 seconds separately per session. To\navoid selecting from resubstitution scores, clone the saved classifier architecture\nwith its already-selected C and refit temporary classifiers within the original two\nwhole-block calibration folds. Fit on nonoverlapping labeled two-second windows;\nscore all valid centers in the opposite calibration blocks and smooth their margins.\nChoose mean fold balanced accuracy at zero, then mean AUROC, then shorter half-life.\nThe original C was selected on these calibration blocks; these conditional CV scores\nare model selection only, not an independent accuracy estimate. Temporary fold fits\nnever replace or alter the original saved classifier. Freeze all three half-lives\nbefore accessing any evaluation scores in this run.\n\nFor evaluation, compute one margin sequence from each saved classifier. The two\nalternatives are exactly that sequence and its exponentially smoothed version:\nalpha = 1 - 2^(-0.25 / half_life). Initialize at the first usable margin of each\ncontiguous region; rejected centers end a region. Score classification on the same\nnonoverlapping labeled centers and assess intervals on the same nine task blocks\nand 72 seconds of labeled rest. Check identical masks, raw scores against the prior\nreports (numerical tolerance 1e-12), and exact reproduction of the original 34 event\nexports. Saved model bytes and in-memory fitted state must remain unchanged.\n\nReport per-session and mean balanced accuracy/AUROC, sensitivity, specificity,\nwhole-task matches at IoU >=0.5, task coverage, rest included, interval count, and\nmatched-boundary errors. Descriptive improvement requires more whole-task matches,\nno lower mean balanced accuracy, and no extra labeled rest overlap. Report tradeoffs\nwhen this joint condition fails. No significance, generalization, spontaneous\ncognitive-state or phone-video corroboration claims. All exports are replay EEG.\n",
+  "protocol_sha256": "c2486658f7782235a41a6ee7a4efd77969b74834f5ce0ec541381d416ef7df32",
+  "input_model_sha256": {
+    "/home/albert/hackmit/outputs/workload_vp002/session1.task_rest.power.joblib": "43c4b7b3a810d8a18bce17d1dfa4071dccf5aa31ce9b086265f918aa71e63159",
+    "/home/albert/hackmit/outputs/workload_vp002/session2.task_rest.power.joblib": "3791c47c95f95ecf4c52363f6e0f1ae17532da7eac524deee29e83e3604b2ef1",
+    "/home/albert/hackmit/outputs/workload_vp002/session3.task_rest.power.joblib": "5b6f2790069aaeb4f6657130768c17a7b136cdc406ada68bff53bb9d4dd0ad5a"
+  },
+  "source_sha256": {
+    "eeg_moments/__init__.py": "99869d13a94e7e1e8c23e8b536a43cdca6374067dbcaecd6ca6aa7bf522ca7a7",
+    "eeg_moments/__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "eeg_moments/benchmark.py": "df20d0fcf40820d5976334c3232c1fff69b3814a3e6aaef319bf9b4c4e08e027",
+    "eeg_moments/cli.py": "90c3081e3d42895d41d3ea971999d87ed59927a621479274ba537e97b0afb11f",
+    "eeg_moments/combined.py": "8ef20d5d0b8318b7e529ab3f13bdb67db060e8e52f58a70442b7abd7541145fb",
+    "eeg_moments/combined_replay.py": "34eb3d6f8898f1de3a1e3fb45b03df6c79ad25191c855a9b4cb601e6196244d0",
+    "eeg_moments/data.py": "f671b2796655af996f643d3ae95c363ff4f54447e5f197b98443ed4b8cec876e",
+    "eeg_moments/dynamic.py": "582197b41444b7476255076142369d3ab9117c089b6a1761ff9f39f7090bd25d",
+    "eeg_moments/dynamic_tda_benchmark.py": "6e118c97f07c98d1e5f7603747c0a128150c881d537898b07745f27e3718e4aa",
+    "eeg_moments/erp.py": "88d9ea6da8a6955c09afe69054527446b2ff4efbc47993320458aaf93101c7d8",
+    "eeg_moments/fourier.py": "dfd96c3838f6abb37e5d2c0093cffd956105c068582af12c6cdc47dc0416bffc",
+    "eeg_moments/fourier_benchmark.py": "a3040c041c2802916a7a55d7a6b4a28bd16348e51c8d4b8d3227be33117eb245",
+    "eeg_moments/model.py": "300626e722165ab0fac01899093cf66fda9d8897af1adf040ea43f6d1c27cf44",
+    "eeg_moments/real_benchmark.py": "e465d53316f7a7a0f81440f95438f81717f4d656ec0753ecef9328d4565ebff0",
+    "eeg_moments/shin.py": "fa17a3704d916fcaf7528255b99b1deb3a51685e34a93dd6f34a73dc5087c73b",
+    "eeg_moments/signal.py": "bccefc32996433786ba1a980a0651051141f968a36e3f9af4d1a71bb39090194",
+    "eeg_moments/smoothing.py": "b703b20e06426801c89b64b5d8d70c590fa47ba4c106253d3636a06e89d19dc0",
+    "eeg_moments/smoothing_benchmark.py": "39a57488f70f0ce145fbfadadce4044ef1aa6c70a6d98e152cbcd5361ed1d901",
+    "eeg_moments/synthetic.py": "9380bb6fe0ab50d3b87b7a0d4473506e75ec805753dfd6d49331a32e1b6c7bcf",
+    "eeg_moments/topology.py": "108e157700fbe520f2976a7d189b7dae36560c0daa6e39516aecd63c2144245e",
+    "eeg_moments/volatility.py": "8e21a5c5be0983272bafd62922167dbb978e5fe085b7c9df9c388ee59cd86acb",
+    "eeg_moments/volatility_benchmark.py": "2135a9974d00c4b425c5049693e89e541ec8381d864e7b8b09f6b39f61334dcb",
+    "eeg_moments/workload.py": "5f2f773b649f077e93188a51d2db1dad51525b6ba316fe96f1d0afc45cf2b312",
+    "eeg_moments/workload_benchmark.py": "90c2e499716ca8720a8a8a619d0ed733004fdce261ffe14525175067db232b62"
+  }
+}

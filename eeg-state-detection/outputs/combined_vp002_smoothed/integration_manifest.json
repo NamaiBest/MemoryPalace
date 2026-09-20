@@ -1,0 +1,52 @@
+{
+  "started_utc": "2026-09-20T02:38:54.528271+00:00",
+  "purpose": "integration replay; not fresh model validation",
+  "participant": "VP002",
+  "stretch_kind": "power_ema",
+  "workload_model": "selected frozen power/task_rest classifier wrapped in calibration-selected exponential smoothing; peak smoothed margins",
+  "stretch_half_lives_s": {
+    "session1": 2.0,
+    "session2": 2.0,
+    "session3": 0.5
+  },
+  "stretch_model_directory": "/home/albert/hackmit/outputs/smoothing_vp002",
+  "burst_model": "mean_bins, fitted separately on each session's calibration blocks",
+  "burst_top_k_per_excerpt": 5,
+  "burst_margin_threshold": 0,
+  "burst_separation_s": 1.5,
+  "stretch_minimum_s": 3,
+  "selection": "both branches scan every valid center in each evaluation excerpt",
+  "reference_combined_run": "/home/albert/hackmit/outputs/combined_vp002",
+  "limitations": "Block excerpts were selected by task markers. Scanners receive no markers. This is not an unsegmented full-session evaluation or a cognitive-event accuracy estimate.",
+  "input_model_sha256": {
+    "/home/albert/hackmit/outputs/smoothing_vp002/session1.power_ema.joblib": "ea49438a8f54b72e94feafe1b6a273ef34f22c3a5b4c2bc1d705d7e1ab9f5a2b",
+    "/home/albert/hackmit/outputs/smoothing_vp002/session2.power_ema.joblib": "58edcca54a880ca7c542c4f7dd879eb899b9f69875562dbb22056194f240f47e",
+    "/home/albert/hackmit/outputs/smoothing_vp002/session3.power_ema.joblib": "cfe44cfbd853957c07f1c3587c15c9bb37777b38d511f79e3b5256698748c325"
+  },
+  "source_sha256": {
+    "eeg_moments/__init__.py": "99869d13a94e7e1e8c23e8b536a43cdca6374067dbcaecd6ca6aa7bf522ca7a7",
+    "eeg_moments/__main__.py": "6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+    "eeg_moments/benchmark.py": "df20d0fcf40820d5976334c3232c1fff69b3814a3e6aaef319bf9b4c4e08e027",
+    "eeg_moments/cli.py": "5e453923988562e63edcc6e96abcddd0151563f440350dec7f8a36adf19d6dd5",
+    "eeg_moments/combined.py": "01ccaab2608c16f467e8f9b7f13dba98a16eaa2429a9c55db89960e65d601b3b",
+    "eeg_moments/combined_replay.py": "d311d830a8b0d197f8a5ac0cc8f3e70ca7c610a0f4a5532193131e357c457a76",
+    "eeg_moments/data.py": "f671b2796655af996f643d3ae95c363ff4f54447e5f197b98443ed4b8cec876e",
+    "eeg_moments/dynamic.py": "582197b41444b7476255076142369d3ab9117c089b6a1761ff9f39f7090bd25d",
+    "eeg_moments/dynamic_tda_benchmark.py": "6e118c97f07c98d1e5f7603747c0a128150c881d537898b07745f27e3718e4aa",
+    "eeg_moments/erp.py": "88d9ea6da8a6955c09afe69054527446b2ff4efbc47993320458aaf93101c7d8",
+    "eeg_moments/fourier.py": "dfd96c3838f6abb37e5d2c0093cffd956105c068582af12c6cdc47dc0416bffc",
+    "eeg_moments/fourier_benchmark.py": "a3040c041c2802916a7a55d7a6b4a28bd16348e51c8d4b8d3227be33117eb245",
+    "eeg_moments/model.py": "300626e722165ab0fac01899093cf66fda9d8897af1adf040ea43f6d1c27cf44",
+    "eeg_moments/real_benchmark.py": "e465d53316f7a7a0f81440f95438f81717f4d656ec0753ecef9328d4565ebff0",
+    "eeg_moments/shin.py": "fa17a3704d916fcaf7528255b99b1deb3a51685e34a93dd6f34a73dc5087c73b",
+    "eeg_moments/signal.py": "bccefc32996433786ba1a980a0651051141f968a36e3f9af4d1a71bb39090194",
+    "eeg_moments/smoothing.py": "b703b20e06426801c89b64b5d8d70c590fa47ba4c106253d3636a06e89d19dc0",
+    "eeg_moments/smoothing_benchmark.py": "39a57488f70f0ce145fbfadadce4044ef1aa6c70a6d98e152cbcd5361ed1d901",
+    "eeg_moments/synthetic.py": "9380bb6fe0ab50d3b87b7a0d4473506e75ec805753dfd6d49331a32e1b6c7bcf",
+    "eeg_moments/topology.py": "108e157700fbe520f2976a7d189b7dae36560c0daa6e39516aecd63c2144245e",
+    "eeg_moments/volatility.py": "8e21a5c5be0983272bafd62922167dbb978e5fe085b7c9df9c388ee59cd86acb",
+    "eeg_moments/volatility_benchmark.py": "2135a9974d00c4b425c5049693e89e541ec8381d864e7b8b09f6b39f61334dcb",
+    "eeg_moments/workload.py": "5f2f773b649f077e93188a51d2db1dad51525b6ba316fe96f1d0afc45cf2b312",
+    "eeg_moments/workload_benchmark.py": "90c2e499716ca8720a8a8a619d0ed733004fdce261ffe14525175067db232b62"
+  }
+}

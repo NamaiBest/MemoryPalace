@@ -1,0 +1,32 @@
+{
+  "purpose": "integration replay; not fresh model validation",
+  "sessions": [
+    {
+      "session": 1,
+      "session_id": "VP002-nback1",
+      "stretch_events": 10,
+      "burst_events": 15,
+      "bursts_overlapping_stretches": 8,
+      "existing_stretch_output_unchanged": true,
+      "model_state_unchanged": true
+    },
+    {
+      "session": 2,
+      "session_id": "VP002-nback2",
+      "stretch_events": 11,
+      "burst_events": 15,
+      "bursts_overlapping_stretches": 14,
+      "existing_stretch_output_unchanged": true,
+      "model_state_unchanged": true
+    },
+    {
+      "session": 3,
+      "session_id": "VP002-nback3",
+      "stretch_events": 13,
+      "burst_events": 15,
+      "bursts_overlapping_stretches": 9,
+      "existing_stretch_output_unchanged": true,
+      "model_state_unchanged": true
+    }
+  ]
+}
