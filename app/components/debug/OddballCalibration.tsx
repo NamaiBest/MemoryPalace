@@ -13,16 +13,20 @@ import { cn } from "@/lib/cn";
  *
  * Parameters follow Decoding P300 as a shared neural mechanism for oddball target
  * detection and working memory updating (PMC12907112): 30% targets, each stimulus shown
- * for 500 ms then a fixation cross for 1500 ms, a button press on targets, P300 read at
- * Pz in the 250–650 ms window. The paper used X/O; counting numbers versus letters keeps
- * the same standard/deviant structure with a more legible standard.
+ * for 500 ms, a button press on targets, P300 read at
+ * Pz in the 250–650 ms window. The paper's 1500 ms fixation is shortened to 500 ms here to
+ * run twice as fast; the paper used X/O; counting numbers versus letters keeps the same
+ * standard/deviant structure with a more legible standard.
  *
  * Every onset is sent to the backend as a marker so EEG windows can be labelled after
  * the fact. Timestamps are recorded here too and exportable, in case the backend is off.
  */
 
+// Stimulus stays at the paper's 500 ms so it remains readable; the fixation gap is
+// cut from 1500 ms to 500 ms, doubling the pace. The 250–650 ms P300 window still
+// closes before the next onset at 1000 ms.
 const STIMULUS_MS = 500;
-const FIXATION_MS = 1500;
+const FIXATION_MS = 500;
 const TARGET_PROBABILITY = 0.3;
 const DEFAULT_TRIALS = 60;
 const PAPER_TRIALS = 180;
@@ -246,8 +250,8 @@ export function OddballCalibration() {
           A count runs up; now and then a letter appears instead. Press <kbd className="rounded border border-line-strong px-1 font-mono text-[11px]">space</kbd> (or tap
           the stage) only on letters. Letters are rare, so they evoke the large response;
           numbers evoke the small one. Recording EEG through a block gives the floor and
-          ceiling a detection threshold must sit between. 30% targets, 500 ms on, 1500 ms
-          fixation — after PMC12907112.
+          ceiling a detection threshold must sit between. 30% targets, 500 ms on, 500 ms
+          fixation — after PMC12907112, at twice its pace.
         </p>
       </div>
 
@@ -314,9 +318,9 @@ export function OddballCalibration() {
                 onChange={(e) => setTrialCount(Number(e.target.value))}
                 className="border border-line-strong bg-bg px-2 py-1 text-fg"
               >
-                <option value={30}>30 · quick (1 min)</option>
-                <option value={60}>60 · default (2 min)</option>
-                <option value={PAPER_TRIALS}>180 · as in the paper (6 min)</option>
+                <option value={30}>30 · quick (30 s)</option>
+                <option value={60}>60 · default (1 min)</option>
+                <option value={PAPER_TRIALS}>180 · as in the paper (3 min)</option>
               </select>
             </label>
           </>

@@ -319,15 +319,18 @@ through a block gives the two amplitudes a detection threshold must sit between 
 this wearer, today.
 
 Parameters follow PMC12907112 (*Decoding P300 as a shared neural mechanism for oddball
-target detection and working memory updating*): 30% targets, 500 ms stimulus then
-1500 ms fixation, button press on targets, P300 at Pz in 250–650 ms. That paper used
-X/O; numbers versus letters keeps the same standard/deviant structure with a more
-legible standard. Blocks of 30, 60 (default) or the paper's 180.
+target detection and working memory updating*): 30% targets, 500 ms stimulus, button
+press on targets, P300 at Pz in 250–650 ms. **One deliberate deviation: the paper's
+1500 ms fixation is cut to 500 ms**, so trials run at 1 s rather than 2 s — a 30-trial
+block takes 30 s, 60 takes a minute, the paper's 180 takes three. The stimulus keeps
+its 500 ms so it stays readable, and the 250–650 ms P300 window still closes before
+the next onset. That paper used X/O; numbers versus letters keeps the same
+standard/deviant structure with a more legible standard.
 
 **Every onset is posted to the backend as a marker** (`oddball_standard` /
 `oddball_target`, with `calibration_start` / `calibration_end` bounding the block) and
 lands in the session's `events.jsonl` with trial index, stimulus and onset time, so EEG
-windows can be labelled afterwards. Measured cadence holds within ~7 ms of 2000 ms.
+windows can be labelled afterwards. Measured cadence: mean 1001.9 ms, jitter 1001–1003 ms.
 The trial log is also exportable as JSON from the page, in case the backend is off.
 
 To read the result: compare the detector's z-scores in the 250–650 ms window after
